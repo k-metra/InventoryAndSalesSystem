@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import api from './../axios/api';
+import sanctumApi from './../axios/sanctum';
 
 interface User {
     username: string;
@@ -44,7 +45,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
             throw new Error('Invalid credentials');
         }
 
-        await api.get('/sanctum/csrf-cookie') // CSRF TOKEN
+        sanctumApi.get('/me') // CSRF TOKEN
         .then(() => {
             api.post('/login', credentials)
             .then(response => {
