@@ -1,52 +1,73 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import api from './../axios/api';
 
 interface User {
-    full_name: string;
     username: string;
     role: string;
 }
 
 interface AuthContextType {
-    isAuthenticated: boolean;
+    loading: boolean;
     login: (credentials: { username: string; password: string }) => Promise<void>;
     logout: () => Promise<void>;
     user: User | null;   
 }
 
-export const AuthContext = createContext<AuthContextType>({
-    isAuthenticated: false,
-    login: async () => {},
-    logout: async () => {},
-    user: null,
-});
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Implementation of authentication logic would go here
     const [user, setUser] = useState<User | null>(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const login = async (credentials: { username: string; password: string }) => {
-
-        if (isAuthenticated) {
-            throw new Error('Tried to log in but already authenticated');
+    useEffect(() => {
+        async function fetchUser() {
+            api.get('/api/me')
+            .then(response => {
+                setUser(response.data.user);
+            })
+            .catch(error => {
+                setUser(null);
+                console.log("Received an error:", error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
         }
 
+        fetchUser();
+
+    }, []);
+
+    const login = async (credentials: { username: string; password: string }) => {
         if (credentials.username.length <= 1 || credentials.password.length <= 6) {
             throw new Error('Invalid credentials');
         }
 
-        // TODO: api login here
+        await api.get('/sanctum/csrf-cookie') // CSRF TOKEN
+        .then(() => {
+            api.post('/login', credentials)
+            .then(response => {
+                setUser(response.data.user);
+            })
+            .catch(error => {
+                throw new Error(error.response?.data?.message || 'Login failed');
+            })
+        });
+
+    
     }
 
     const logout = async () => {
-        if (!isAuthenticated) {
-            throw new Error('Tried to log out but not authenticated');
-        }
+        if (!user) return;
+
+        await api.post('/logout');
+
+        setUser(null);
     }
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout }}>
             { children }
         </AuthContext.Provider>
     )
