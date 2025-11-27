@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import api from './../axios/api';
 import sanctumApi from './../axios/sanctum';
 
-interface User {
+export interface User {
     username: string;
     role: string;
 }
@@ -16,30 +16,10 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-function AuthProvider({ children }: { children: ReactNode }) {
-    // Implementation of authentication logic would go here
-    const [user, setUser] = useState<User | null>(null);
+function AuthProvider({ children, initialUser }: { children: ReactNode, initialUser: User | null }) {
+    const [user, setUser] = useState<User | null>(initialUser);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        async function fetchUser() {
-            setLoading(true);
-            api.get('/me')
-            .then(response => {
-                setUser(response.data.user);
-            })
-            .catch(error => {
-                setUser(null);
-                console.log("Received an error:", error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-        }
-
-        fetchUser();
-
-    }, []);
 
     const login = async (credentials: { username: string; password: string }) => {
         if (credentials.username.length <= 1 || credentials.password.length <= 6) {
