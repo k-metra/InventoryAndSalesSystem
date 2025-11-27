@@ -3,6 +3,9 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaGear } from "react-icons/fa6";
 import AccountModal from "../components/accountModal";
 
+import sidebarLayout from "../config/sidebarLayout";
+import SidebarItem from "../components/sidebarItem";
+
 export default function Dashboard() {
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -27,8 +30,23 @@ export default function Dashboard() {
                     <FaGear size={20} className="hover:rotate-90 transition-transform duration-1000 ease-out"/>
                 </button>
             </header>
-            <aside id="sidebar" className="bg-secondary border-r border-black/25 h-full fixed top-16 left-0 transition-all duration-500 ease-out" style={{ width: sidebarCollapsed ? '4rem' : '14rem'}}>
-                hello
+            <aside id="sidebar" className={`overflow-visible bg-secondary border-r border-black/25 h-[calc(100vh-4rem)] fixed top-16 left-0 transition-all duration-500 ease-out`} style={{ width: sidebarCollapsed ? '4rem' : '14rem'}}>
+                <div className="px-3 py-4 pb-4 flex flex-col gap-4 overflow-y-auto overflow-x-visible h-full scroll-smooth scroll-m-0.5 scroll-ml-1 custom-scrollbar">
+                    {sidebarLayout.map((section) => (
+                    <div key={section.label} className="flex flex-col gap-1">
+                        {!section.children ? (
+                            <SidebarItem icon={<section.icon size={20} className="text-text" />} href={section.href} label={section.label} collapsed={sidebarCollapsed} />
+                        ) : (
+                            <>
+                                {!sidebarCollapsed && <small className="text-muted">{section.label}</small>}
+                                {section.children.map((child) => (
+                                    <SidebarItem key={child.label} icon={<child.icon size={20} className="text-text" />} href={child.href} label={child.label} collapsed={sidebarCollapsed} />
+                                ))}
+                            </>
+                        )}
+                    </div>
+                ))}
+                </div>
             </aside>
         </>
     )
