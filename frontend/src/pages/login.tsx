@@ -5,9 +5,9 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { CgSpinner } from "react-icons/cg";
 
 export default function LoginPage() {
-    const { login } = useAuth();
+    const { login, loading } = useAuth();
 
-    const [loading, setLoading] = useState(false);
+
     const [error, setError] = useState<string | null>(null);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
 
@@ -16,7 +16,7 @@ export default function LoginPage() {
 
     const handleLogIn = async (e: FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+
         setError(null);
 
         // TODO: Add remember me functionality
@@ -26,9 +26,6 @@ export default function LoginPage() {
         })
         .catch((err) => {
             setError(err.message);
-        })
-        .finally(() => {
-            setLoading(false);
         })
     }
 
