@@ -1,13 +1,28 @@
 
 import './App.css'
 import LoginPage from './pages/login'
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
   
 
   return (
     <>
-      <LoginPage />
+      <BrowserRouter>
+        <Routes>
+
+    
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <div>Dashboard Page - Protected</div>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
