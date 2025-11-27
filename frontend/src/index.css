@@ -5,14 +5,13 @@
 
   --color-background: #f7f7f7;
   --color-primary: #246dff;
-  --color-secondary: #e0e0e0;
+  --color-secondary: #F0F0F0;
   --color-accent: #505050;
+  --color-text: #222222;
 }
 
-h1, h2, h3, h4, h5, h6, p, small {
+html {
   font-family: var(--font-display);
-  color: #222222;
-  margin-bottom: 1rem;
 }
 
 h1 {
