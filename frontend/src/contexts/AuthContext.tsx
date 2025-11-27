@@ -19,10 +19,11 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 function AuthProvider({ children }: { children: ReactNode }) {
     // Implementation of authentication logic would go here
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function fetchUser() {
+            setLoading(true);
             api.get('/me')
             .then(response => {
                 setUser(response.data.user);
@@ -45,16 +46,22 @@ function AuthProvider({ children }: { children: ReactNode }) {
             throw new Error('Invalid credentials');
         }
 
-        sanctumApi.get('/csrf-cookie') // CSRF TOKEN
+        setLoading(true);
+
+        return sanctumApi.get('/csrf-cookie') // CSRF TOKEN
         .then(() => {
-            api.post('/login', credentials)
+            return api.post('/login', credentials)
             .then(response => {
                 setUser(response.data.user);
             })
             .catch(error => {
-                throw new Error(error.response?.data?.message || 'Login failed');
+                throw new Error(error.response?.data?.message || 'Login Failed');
             })
-        });
+        }).catch((error) => {
+            throw new Error(error);
+        }).finally(() => {
+            setLoading(false);
+        })
 
     
     }
@@ -62,7 +69,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const logout = async () => {
         if (!user) return;
 
+        setLoading(true);
         await api.post('/logout');
+        setLoading(false);
 
         setUser(null);
     }
