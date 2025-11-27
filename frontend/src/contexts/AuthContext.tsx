@@ -23,7 +23,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         async function fetchUser() {
-            api.get('/api/me')
+            api.get('/me')
             .then(response => {
                 setUser(response.data.user);
             })
