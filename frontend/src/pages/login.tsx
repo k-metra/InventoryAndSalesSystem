@@ -19,6 +19,7 @@ export default function LoginPage() {
         setLoading(true);
         setError(null);
 
+        // TODO: Add remember me functionality
         login(credentials)
         .then(() => {
             // Successful login handled by AuthContext
