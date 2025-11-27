@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaGear } from "react-icons/fa6";
+import AccountModal from "../components/accountModal";
 
 export default function Dashboard() {
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [showAccountModal, setShowAccountModal] = useState(false);
 
     return (
         <>
+            <AccountModal showModal={showAccountModal} onClose={() => setShowAccountModal(false)} />
             <header className="bg-secondary border-b border-black/25 w-screen h-16 flex justify-between">
                 <div className="flex flex-row items-center justify-center pl-6">
                     <button onClick={() => setSidebarCollapsed(curr => !curr)} className="text-text cursor-pointer bg-transparent rounded-full p-2 transition-colors duration-200 hover:bg-black/10">
@@ -20,7 +23,7 @@ export default function Dashboard() {
 
                 </div>
 
-                <button className="h-full pr-10 flex items-center cursor-pointer text-text">
+                <button onClick={() => setShowAccountModal(curr => !curr)} className="h-full pr-10 flex items-center cursor-pointer text-text">
                     <FaGear size={20} className="hover:rotate-90 transition-transform duration-1000 ease-out"/>
                 </button>
             </header>
