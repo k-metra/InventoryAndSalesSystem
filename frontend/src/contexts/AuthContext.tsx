@@ -14,7 +14,7 @@ interface AuthContextType {
     user: User | null;   
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 function AuthProvider({ children }: { children: ReactNode }) {
     // Implementation of authentication logic would go here
