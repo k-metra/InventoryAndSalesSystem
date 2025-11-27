@@ -45,7 +45,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
             throw new Error('Invalid credentials');
         }
 
-        sanctumApi.get('/me') // CSRF TOKEN
+        sanctumApi.get('/csrf-cookie') // CSRF TOKEN
         .then(() => {
             api.post('/login', credentials)
             .then(response => {
