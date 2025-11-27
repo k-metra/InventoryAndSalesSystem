@@ -14,8 +14,6 @@ export default function Dashboard() {
     const [showAccountModal, setShowAccountModal] = useState(false);
     const path = useLocation().pathname;
 
-    console.log(path);
-
     return (
         <>
             <AccountModal showModal={showAccountModal} onClose={() => setShowAccountModal(false)} />
