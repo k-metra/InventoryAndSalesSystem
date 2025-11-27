@@ -3,6 +3,7 @@ import './App.css'
 import LoginPage from './pages/login'
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from './routes/ProtectedRoute';
+import PublicRoute from './routes/PublicRoute';
 
 function App() {
   
@@ -18,8 +19,11 @@ function App() {
               <div>Dashboard Page - Protected</div>
             </ProtectedRoute>
           } />
-          
-          <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/login" element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
