@@ -1,7 +1,7 @@
 import { Suspense, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaGear } from "react-icons/fa6";
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import AccountModal from "../components/accountModal";
 
 import sidebarLayout from "../config/sidebarLayout";
@@ -12,6 +12,9 @@ export default function Dashboard() {
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showAccountModal, setShowAccountModal] = useState(false);
+    const path = useLocation().pathname;
+
+    console.log(path);
 
     return (
         <>
@@ -37,12 +40,12 @@ export default function Dashboard() {
                     {sidebarLayout.map((section) => (
                     <div key={section.label} className="flex flex-col gap-1">
                         {!section.children ? (
-                            <SidebarItem icon={<section.icon size={20} className="text-text" />} href={section.href} label={section.label} collapsed={sidebarCollapsed} />
+                            <SidebarItem icon={<section.icon size={20} className={`${path === section.href ? 'text-white' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
                         ) : (
                             <>
                                 {!sidebarCollapsed && <small className="text-muted">{section.label}</small>}
                                 {section.children.map((child) => (
-                                    <SidebarItem key={child.label} icon={<child.icon size={20} className="text-text" />} href={child.href} label={child.label} collapsed={sidebarCollapsed} />
+                                    <SidebarItem key={child.label} icon={<child.icon size={20} className={`${path === child.href ? 'text-white' : 'text-text'}`} />} href={child.href} label={child.label} collapsed={sidebarCollapsed} active={path === child.href} />
                                 ))}
                             </>
                         )}
