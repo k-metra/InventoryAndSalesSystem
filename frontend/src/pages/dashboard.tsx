@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaGear } from "react-icons/fa6";
+import { Outlet } from 'react-router-dom'
 import AccountModal from "../components/accountModal";
 
 import sidebarLayout from "../config/sidebarLayout";
 import SidebarItem from "../components/sidebarItem";
+import LoadingScreen from "./loadingScreen";
 
 export default function Dashboard() {
 
@@ -14,7 +16,7 @@ export default function Dashboard() {
     return (
         <>
             <AccountModal showModal={showAccountModal} onClose={() => setShowAccountModal(false)} />
-            <header className="bg-secondary border-b border-black/25 w-screen h-16 flex justify-between">
+            <header className="fixed bg-secondary border-b border-black/25 w-screen h-16 flex justify-between">
                 <div className="flex flex-row items-center justify-center pl-6">
                     <button onClick={() => setSidebarCollapsed(curr => !curr)} className="text-text cursor-pointer bg-transparent rounded-full p-2 transition-colors duration-200 hover:bg-black/10">
                         <GiHamburgerMenu size={25} />
@@ -48,6 +50,14 @@ export default function Dashboard() {
                 ))}
                 </div>
             </aside>
+            <main
+                className="fixed p-4 top-16 h-[calc(100vh-4rem)] overflow-auto transition-all duration-500 ease-out"
+                style={{ marginLeft: sidebarCollapsed ? '4rem' : '14rem' }}
+            >
+                <Suspense fallback={<LoadingScreen />}>
+                    <Outlet />
+                </Suspense>
+            </main>
         </>
     )
 }
