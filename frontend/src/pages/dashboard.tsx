@@ -52,7 +52,7 @@ export default function Dashboard() {
                 </div>
             </aside>
             <main
-                className="fixed p-4 top-16 h-[calc(100vh-4rem)] overflow-auto transition-all duration-500 ease-out"
+                className="fixed p-4 top-16 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-500 ease-out"
                 style={{ marginLeft: sidebarCollapsed ? '4rem' : '14rem' }}
             >
                 <Suspense fallback={<LoadingScreen />}>
