@@ -2,15 +2,23 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { FaUser } from "react-icons/fa";
 import { FaUserAltSlash } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 export default function AccountModal({ showModal, onClose }: { showModal: boolean, onClose: () => void}) {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const modalRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     const displayName = useMemo(() => {
         if (!user) return 'N/A';
         return user.username;
     }, [user]);
+
+    const handleLogout = async () => {
+        await logout();
+
+        navigate('/login');
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -42,7 +50,7 @@ export default function AccountModal({ showModal, onClose }: { showModal: boolea
             <hr className="border-t border-black/25 mt-2 mb-4" />
             <div className="w-full flex flex-col gap-2">
                 <button className="text-center w-full px-3 py-2 rounded-md text-text bg-black/10 hover:bg-black/20 font-semibold transition-colors duration-200 text-sm">Account Settings</button>
-                <button className="text-center w-full px-3 py-2 rounded-md text-red-500 bg-black/10 hover:bg-black/20 font-semibold transition-colors duration-200 text-sm">Logout</button>
+                <button onClick={handleLogout} className="text-center w-full px-3 py-2 rounded-md text-red-500 bg-black/10 hover:bg-black/20 font-semibold transition-colors duration-200 text-sm">Logout</button>
             </div>
         </div>
     )
