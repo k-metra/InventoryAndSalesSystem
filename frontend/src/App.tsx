@@ -23,7 +23,16 @@ function AppContent() {
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            } />
+            }>
+              <Route index element={<div>Dashboard Home</div>} />
+
+              <Route 
+                path="products"
+                element={
+                  <div>Products Page</div>
+                }
+              />
+            </Route>
 
             <Route path="/dashboard/*" element={
               <ProtectedRoute>
