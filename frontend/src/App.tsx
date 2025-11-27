@@ -9,6 +9,7 @@ import { AuthProvider, type User } from './contexts/AuthContext';
 import { Suspense, use } from 'react';
 import LoadingScreen from './pages/loadingScreen';
 import fetchUserPromise from './utils/fetchUser';
+import DashboardHome from './pages/dashboard/dashboardHome';
 
 function AppContent() {
   // Use React 18's use() hook directly with a Promise
@@ -24,7 +25,7 @@ function AppContent() {
                 <Dashboard />
               </ProtectedRoute>
             }>
-              <Route index element={<div>Dashboard Home</div>} />
+              <Route index element={<DashboardHome />} />
 
               <Route 
                 path="products"
