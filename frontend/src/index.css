@@ -46,3 +46,17 @@ p {
 small {
   font-size: 0.833rem;
 }
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-secondary);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-muted);
+  }
+}
