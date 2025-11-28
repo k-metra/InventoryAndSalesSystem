@@ -1,3 +1,6 @@
+import ChartCard from "../../components/chartCard";
+import InventoryTrends from "../../components/charts/inventoryTrends";
+import SalesOverTime from "../../components/charts/salesOverTime";
 import KpiCard from "../../components/kpiCard";
 
 export default function DashboardHome() {
@@ -9,6 +12,32 @@ export default function DashboardHome() {
                 <KpiCard title="Total Inventory Value" value={"$87,001.00"} subtitle={"Current value of all products"} />
                 <KpiCard title="Total Sales" value={127} subtitle={"This month"} />
                 <KpiCard title="Total Customers" value={10} subtitle="Active Customers"/>
+            </div>
+            <div className="w-full grid grid-cols-4 gap-4">
+                <ChartCard title="Sales Over Time">
+                    <SalesOverTime data={[
+                    { date: 'Jan', sales: 30 },
+                    { date: 'Feb', sales: 45 },
+                    { date: 'Mar', sales: 60 },
+                    { date: 'Apr', sales: 120 },
+                    { date: 'May', sales: 80 },
+                    { date: 'Jun', sales: 150 },
+                    { date: 'Jul', sales: 200 },
+                ]} />
+                </ChartCard>
+                <ChartCard title="Inventory Trends">
+                    <InventoryTrends data={[
+                    { date: 'Jan', inventory: 500 },
+                    { date: 'Feb', inventory: 480 },
+                    { date: 'Mar', inventory: 450 },
+                    { date: 'Apr', inventory: 400 },
+                    { date: 'May', inventory: 420 },
+                    { date: 'Jun', inventory: 390 },
+                    { date: 'Jul', inventory: 350 },
+                    ]}
+                    />
+                </ChartCard>
+                    
             </div>
         </div>
     )
