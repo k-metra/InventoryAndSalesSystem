@@ -22,8 +22,8 @@
   - stock  
   - category_id  
   - supplier_id  
-- [ ] CRUD endpoints  
-- [ ] Stock increment/decrement helpers  
+- [x] CRUD endpoints  
+- [x] Stock increment/decrement helpers  
 - [ ] Fetch low-stock items (threshold)
 
 ### Frontend
