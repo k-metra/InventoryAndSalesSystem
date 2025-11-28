@@ -65,7 +65,7 @@ export default function Dashboard() {
                 </div>
             </aside>
             <main
-                className={`custom-scrollbar fixed p-4 top-16 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-500 ease-out mb-8 pb-8 ${sidebarCollapsed ? 'left-16 w-[calc(100vw-4rem)]' : 'left-56 w-[calc(100vw-14rem)]'}`}
+                className={`custom-scrollbar absolute p-4 top-16 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-500 ease-out mb-8 pb-8 ${sidebarCollapsed ? 'left-16 w-[calc(100vw-4rem)]' : 'left-56 w-[calc(100vw-14rem)]'}`}
             >
                 <Suspense fallback={<LoadingScreen />}>
                     <Outlet />
