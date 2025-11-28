@@ -7,8 +7,10 @@ import AccountModal from "../components/accountModal";
 import sidebarLayout from "../config/sidebarLayout";
 import SidebarItem from "../components/sidebarItem";
 import LoadingScreen from "./loadingScreen";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Dashboard() {
+    const { user } = useAuth();
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showAccountModal, setShowAccountModal] = useState(false);
@@ -35,20 +37,31 @@ export default function Dashboard() {
             </header>
             <aside id="sidebar" className={`z-9999 overflow-visible bg-secondary border-r border-black/25 h-[calc(100vh-4rem)] fixed top-16 left-0 transition-all duration-500 ease-out`} style={{ width: sidebarCollapsed ? '4rem' : '14rem'}}>
                 <div className="px-3 py-4 pb-4 flex flex-col gap-4 overflow-y-auto overflow-x-visible h-full scroll-smooth scroll-m-0.5 scroll-ml-1 custom-scrollbar">
-                    {sidebarLayout.map((section) => (
-                    <div key={section.label} className="flex flex-col gap-1">
-                        {!section.children ? (
-                            <SidebarItem icon={<section.icon size={20} className={`${path === section.href ? 'text-primary' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
-                        ) : (
-                            <>
+                    {sidebarLayout.map((section) => {
+                        const shouldShow =
+                            section.adminOnly === true ?
+                            user?.role === 'Admin'
+                            : true;
+
+                        if (!shouldShow) return null;
+
+                        if (!section.children) {
+                            return (
+                                <SidebarItem icon={<section.icon size={20} className={`${path === section.href ? 'text-primary' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
+                            )
+                        }
+
+                        return (
+                            <div key={section.label} className="flex flex-col gap-2">
                                 {!sidebarCollapsed && <small className="text-muted">{section.label}</small>}
+
                                 {section.children.map((child) => (
                                     <SidebarItem key={child.label} icon={<child.icon size={20} className={`${path === child.href ? 'text-primary' : 'text-text'}`} />} href={child.href} label={child.label} collapsed={sidebarCollapsed} active={path === child.href} />
-                                ))}
-                            </>
-                        )}
-                    </div>
-                ))}
+                    ))}
+                            </div>
+                        );
+
+                })}
                 </div>
             </aside>
             <main
