@@ -33,7 +33,7 @@ export default function Dashboard() {
                     <FaGear size={20} className="hover:rotate-90 transition-transform duration-1000 ease-out"/>
                 </button>
             </header>
-            <aside id="sidebar" className={`overflow-visible bg-secondary border-r border-black/25 h-[calc(100vh-4rem)] fixed top-16 left-0 transition-all duration-500 ease-out`} style={{ width: sidebarCollapsed ? '4rem' : '14rem'}}>
+            <aside id="sidebar" className={`z-9999 overflow-visible bg-secondary border-r border-black/25 h-[calc(100vh-4rem)] fixed top-16 left-0 transition-all duration-500 ease-out`} style={{ width: sidebarCollapsed ? '4rem' : '14rem'}}>
                 <div className="px-3 py-4 pb-4 flex flex-col gap-4 overflow-y-auto overflow-x-visible h-full scroll-smooth scroll-m-0.5 scroll-ml-1 custom-scrollbar">
                     {sidebarLayout.map((section) => (
                     <div key={section.label} className="flex flex-col gap-1">
@@ -52,8 +52,7 @@ export default function Dashboard() {
                 </div>
             </aside>
             <main
-                className="fixed p-4 top-16 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-500 ease-out"
-                style={{ marginLeft: sidebarCollapsed ? '4rem' : '14rem' }}
+                className={`fixed p-4 top-16 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-500 ease-out ${sidebarCollapsed ? 'left-16 w-[calc(100vw-4rem)]' : 'left-56 w-[calc(100vw-14rem)]'}`}
             >
                 <Suspense fallback={<LoadingScreen />}>
                     <Outlet />
