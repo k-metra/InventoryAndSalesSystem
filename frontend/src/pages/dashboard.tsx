@@ -38,12 +38,12 @@ export default function Dashboard() {
                     {sidebarLayout.map((section) => (
                     <div key={section.label} className="flex flex-col gap-1">
                         {!section.children ? (
-                            <SidebarItem icon={<section.icon size={20} className={`${path === section.href ? 'text-white' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
+                            <SidebarItem icon={<section.icon size={20} className={`${path === section.href ? 'text-primary' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
                         ) : (
                             <>
                                 {!sidebarCollapsed && <small className="text-muted">{section.label}</small>}
                                 {section.children.map((child) => (
-                                    <SidebarItem key={child.label} icon={<child.icon size={20} className={`${path === child.href ? 'text-white' : 'text-text'}`} />} href={child.href} label={child.label} collapsed={sidebarCollapsed} active={path === child.href} />
+                                    <SidebarItem key={child.label} icon={<child.icon size={20} className={`${path === child.href ? 'text-primary' : 'text-text'}`} />} href={child.href} label={child.label} collapsed={sidebarCollapsed} active={path === child.href} />
                                 ))}
                             </>
                         )}

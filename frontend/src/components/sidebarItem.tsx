@@ -20,7 +20,7 @@ export default function SidebarItem({ icon, label, href, collapsed=false, active
     }
 
     return (
-        <button onMouseEnter={handleHover} onClick={() => navigate(href)} className={`transition-colors duration-300 ease-out group min-w-4 w-full flex items-center gap-3 p-2 cursor-pointer rounded-md ${active ? 'bg-primary text-white hover:bg-primary/90' : 'bg-black/5 hover:bg-black/10 text-text'}`}>
+        <button onMouseEnter={handleHover} onClick={() => navigate(href)} className={`transition-colors duration-300 ease-out group min-w-4 w-full flex items-center gap-3 p-2 cursor-pointer rounded-md bg-black/5 hover:bg-black/10 ${active ? 'text-primary font-semibold border-l-5 border-primary' : 'text-text'}`}>
             {icon}
             { !collapsed && <span className={`inline-block  text-sm origin-left transition-transform-opacity duration-300 overflow-hidden whitespace-nowrap ${collapsed ? 'w-0 opacity-0' : 'w-auto opacity-100'}`}>{label}</span> }
             {collapsed && (
