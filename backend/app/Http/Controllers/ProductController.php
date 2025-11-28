@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -86,7 +87,11 @@ class ProductController extends Controller
     }
 
     public function count() {
-        $count = Product::count();
-        return response()->json(['count' => $count]);
+        $totalProducts = Product::count();
+        $totalInventoryValue = Product::sum(DB::raw('cost * stock'));
+        return response()->json([
+            'totalProducts' => $totalProducts,
+            'totalInventoryValue' => $totalInventoryValue
+        ]);
     }
 }
