@@ -24,7 +24,7 @@ export default function SidebarItem({ icon, label, href, collapsed=false, active
             {icon}
             { !collapsed && <span className={`inline-block  text-sm origin-left transition-transform-opacity duration-300 overflow-hidden whitespace-nowrap ${collapsed ? 'w-0 opacity-0' : 'w-auto opacity-100'}`}>{label}</span> }
             {collapsed && (
-                <span style={{ top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }} className="fixed z-9999 ml-2 px-2 py-1 bg-secondary border-black/10 border text-text text-sm rounded-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap">
+                <span style={{ top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }} className="fixed shadow-[0px_1px_2px_rgba(0,0,0,0.25)] z-9999 ml-2 px-2 py-1 bg-secondary border-black/10 border text-text text-sm rounded-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap">
                     {label}
                 </span>
             )}
