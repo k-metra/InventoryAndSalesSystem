@@ -5,7 +5,7 @@ import KpiCard from "../../components/kpiCard";
 
 export default function DashboardHome() {
     return (
-        <div id="container" className="p-4 w-full h-full flex flex-col gap-4">
+        <div id="container" className="p-4 mb-8 pb-8 w-full h-full flex flex-col gap-4">
             <h3 className="font-bold text-text">Dashboard</h3>
             <div className="grid grid-cols-4 gap-4 w-full">
                 <KpiCard title="Total Products" value={56} subtitle={"Total amount in inventory"} />
