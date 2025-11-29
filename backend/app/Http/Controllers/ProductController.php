@@ -13,7 +13,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return response()->json(['products' => Product::all()]);
+        $products = Product::with(['category', 'supplier'])->get();
+        return response()->json(['products' => $products]);
     }
 
     /**
@@ -45,7 +46,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with(['category', 'supplier'])->findOrFail($id);
         return response()->json(['product' => $product]);
     }
 
