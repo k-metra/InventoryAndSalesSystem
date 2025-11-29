@@ -47,7 +47,7 @@ export default function Dashboard() {
 
                         if (!section.children) {
                             return (
-                                <SidebarItem icon={<section.icon size={20} className={`${path === section.href ? 'text-primary' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
+                                <SidebarItem key={section.label} icon={<section.icon size={20} className={`${path === section.href ? 'text-primary' : 'text-text'}`} />} href={section.href} label={section.label} collapsed={sidebarCollapsed} active={path === section.href} />
                             )
                         }
 
