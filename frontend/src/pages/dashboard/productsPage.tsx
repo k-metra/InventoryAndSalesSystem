@@ -1,5 +1,6 @@
-import { use, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useRef, useState } from 'react';
 import { CiSearch } from "react-icons/ci";
+import { MdClear } from "react-icons/md";
 import { FaChevronUp } from "react-icons/fa";
 import fetchProducts from './../../utils/fetchProducts';
 import { useQuery } from '@tanstack/react-query';
@@ -12,11 +13,48 @@ export default function ProductsPage() {
         queryFn: fetchProducts
     });
 
+    const searchRef = useRef<HTMLInputElement>(null);
+
     const products = useMemo(() => data || [], [data]);
 
-    const [query, setQuery] = useState("");
     const [category, setCategory] = useState("All");
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('search') || "";
+
+    const [search, setSearch] = useState(query);
+
+    const updateURLParams = (key: string, value: string) => {
+        const params = new URLSearchParams(window.location.search);
+
+        if (value.length > 0) {
+            params.set(key, value);
+        } else {
+            params.delete(key);
+        }
+
+        window.history.replaceState(
+            {},
+            "",
+            `${window.location.pathname}?${params.toString()}`
+        );
+    }
+
+    const handleSearch = () => {
+        if (searchRef.current) updateURLParams("search", searchRef.current.value);
+    }
+
+    const handleSearchClear = () => {
+        if (searchRef.current) setSearch("");
+        updateURLParams("search", "");
+    }
+
+    const updateSearchBar = () => {
+        setSearch(query);
+    }
+
+    useEffect(updateSearchBar, [query]);
 
     if (isFetching) return <LoadingScreen />;
     if (isError) return <div className="w-full h-full text-red-500 flex items-center justify-center">
@@ -30,13 +68,21 @@ export default function ProductsPage() {
             <div className="w-full flex justify-between items-center">
                 <label className="relative w-1/3">
                     <input
+                    ref={searchRef}
+                    value={search}
                     type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search"
                     className="focus:outline-primary transition-all duration-200 ease-in focus:outline-3 focus:shadow-[0px_2px_10px_4px_rgba(59,130,246,0.35)] border border-black/25 rounded-md p-2 pr-10 bg-secondary text-text w-full"
                 />
-                    <CiSearch className="z-10 absolute right-4 top-1/2 transform -translate-y-1/2 text-black" />
+                    <button onClick={handleSearchClear} className={`${search.length < 1 ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} bg-transparent transition-colors-opacity duration-400 hover:bg-black/10 p-1 rounded-lg absolute z-10 right-10 top-1/2 -translate-y-1/2 text-black cursor-pointer`}>
+                        <MdClear size={16} />
+                    </button>
+
+                    <button onClick={handleSearch} className="bg-transparent transition-colors duration-200 hover:bg-black/10 p-1 rounded-lg absolute z-10 right-4 top-1/2 -translate-y-1/2 text-black cursor-pointer">
+                        <CiSearch size={16} />
+                    </button>
+                    
                 </label>
 
                 <div className="flex gap-2">
