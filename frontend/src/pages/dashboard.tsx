@@ -18,7 +18,7 @@ export default function Dashboard() {
     return (
         <>
             <AccountModal showModal={showAccountModal} onClose={() => setShowAccountModal(false)} />
-            <header className="fixed bg-secondary border-b border-black/25 w-screen h-16 flex justify-between">
+            <header className="fixed z-20 bg-secondary border-b border-black/25 w-screen h-16 flex justify-between">
                 <div className="flex flex-row items-center justify-center pl-6">
                     <button onClick={() => setSidebarCollapsed(curr => !curr)} className="text-text cursor-pointer bg-transparent rounded-full p-2 transition-colors duration-200 hover:bg-black/10">
                         <GiHamburgerMenu size={25} />
@@ -64,7 +64,7 @@ export default function Dashboard() {
                 </div>
             </aside>
             <main
-                className={`custom-scrollbar absolute p-4 top-16 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-500 ease-out mb-8 pb-8 ${sidebarCollapsed ? 'left-16 w-[calc(100vw-4rem)]' : 'left-56 w-[calc(100vw-14rem)]'}`}
+                className={`custom-scrollbar absolute p-4 top-16 min-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden transition-all duration-500 ease-out mb-8 ${sidebarCollapsed ? 'left-12 w-[calc(100vw-4rem)]' : 'left-52 w-[calc(100vw-14rem)]'}`}
             >
                 <Outlet key={location.pathname + Math.random().toString()} />
             </main>
