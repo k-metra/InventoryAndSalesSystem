@@ -10,18 +10,19 @@ export type Product = {
     stock: number;
 }
 
-const fetchProducts = async () => {
-    console.log("Fetching products...");
+const fetchProducts = async ({ queryKey }: { queryKey: [string, number | string, string] }) => {
+    const [_key, page, search] = queryKey;
 
-    const products = await api.get('/products')
-    .then(res => res.data.products)
-    .catch((err) => {
-        console.log("Error fetching products", err);
-        return [];
+    const params = new URLSearchParams({
+        page: String(page || 1),
     });
 
-    console.log(products);
-    return products;
+    if (search) params.set('search', search);
+
+    const products = await api.get(`/products?${params.toString()}`);
+
+    console.log(products.data);
+    return products.data;
 }
 
 
