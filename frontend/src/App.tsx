@@ -64,7 +64,7 @@ function AppContent() {
 
 function App() {
   return (
-    <Suspense fallback={<LoadingScreen fullscreen />}>
+    <Suspense fallback={<LoadingScreen />}>
       <AppContent />
     </Suspense>
   )
