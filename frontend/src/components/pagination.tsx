@@ -1,5 +1,7 @@
 import { IoChevronBackOutline } from "react-icons/io5";
 import { GrFormNext } from "react-icons/gr";
+import { BiFirstPage } from "react-icons/bi";
+import { MdLastPage } from "react-icons/md";
 import { useCallback } from "react";
 
 type PaginationProps = {
@@ -64,6 +66,14 @@ export default function Pagination({ page, setPage, lastPage }: PaginationProps)
     return (
         <div className="flex gap-3 items-center justify-center">
             <button
+                onClick={() => setPage(1)}
+                disabled={page <= 1}
+                className="px-4 py-1 cursor-pointer bg-background border border-black/25 hover:bg-black/5 rounded disabled:opacity-50"
+            >
+                <BiFirstPage size={20} />
+            </button>
+
+            <button
                 onClick={() => setPage(page - 1)}
                 disabled={page <= 1}
                 className="px-4 py-1 cursor-pointer bg-background border border-black/25 hover:bg-black/5 rounded disabled:opacity-50"
@@ -78,6 +88,14 @@ export default function Pagination({ page, setPage, lastPage }: PaginationProps)
                 className="px-4 py-1 cursor-pointer bg-background border border-black/25 hover:bg-black/5 rounded disabled:opacity-50"
             >
                 <GrFormNext size={20} />
+            </button>
+
+            <button
+                onClick={() => setPage(lastPage)}
+                disabled={page === lastPage}
+                className="px-4 py-1 cursor-pointer bg-background border border-black/25 hover:bg-black/5 rounded disabled:opacity-50"
+            >
+                <MdLastPage size={20} />
             </button>
         </div>
     );
