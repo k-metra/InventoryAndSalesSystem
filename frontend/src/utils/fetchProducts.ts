@@ -1,15 +1,17 @@
 import api from './../axios/api';
 
-const fetchProducts = new Promise(async (resolve, _) => {
-    const products = await api.get('/products')
-    .then(resp => resp.data.products)
-    .catch((err) => {
-        console.log("Encountered an error fetching products:", err);
-        return {};
-    })
+const fetchProducts = async () => {
+    console.log("Fetching products...");
 
-    resolve(products);
-});
+    const products = api.get('/products')
+    .then(res => res.data)
+    .catch((err) => {
+        console.log("Error fetching products", err);
+        return [];
+    });
+
+    return products;
+}
 
 
 export default fetchProducts;
