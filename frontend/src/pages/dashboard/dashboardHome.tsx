@@ -52,12 +52,12 @@ export default function DashboardHome() {
     }, [])
 
     if (isFetching) return <LoadingScreen />;
-    if (isError) return <div className="w-full h-full text-red-500 flex items-center justify-center">
+    if (isError) return <div className="p-4 w-full h-full text-red-500 flex items-center justify-center">
         <p>Ran into an error loading the dashboard data.</p>
     </div>
 
     return (
-        <div id="container" className="p-4 mb-8 pb-8 w-full h-full flex flex-col gap-4">
+        <div id="container" className="custom-scrollbar p-4 overflow-y-auto overflow-x-hidden w-full h-full flex flex-col gap-4">
             <div className="flex justify-between items-center w-full">
                 <h3 className="font-bold text-text">Dashboard</h3>
 
