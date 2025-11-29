@@ -6,10 +6,17 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
 import Dashboard from './pages/dashboard';
 import { AuthProvider, type User } from './contexts/AuthContext';
-import { Suspense, use } from 'react';
+import { lazy, Suspense, use } from 'react';
 import LoadingScreen from './pages/loadingScreen';
 import fetchUserPromise from './utils/fetchUser';
-import DashboardHome from './pages/dashboard/dashboardHome';
+
+import {
+  QueryClient,
+  QueryClientProvider
+} from '@tanstack/react-query';
+
+const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
+const ProductsPage = lazy(() => import('./pages/dashboard/productsPage'));
 
 function AppContent() {
   // Use React 18's use() hook directly with a Promise
@@ -17,6 +24,7 @@ function AppContent() {
 
   return (
     <>
+      <QueryClientProvider client={new QueryClient()}>
         <AuthProvider initialUser={initialUser}>
         <BrowserRouter>
           <Routes>    
@@ -30,7 +38,7 @@ function AppContent() {
               <Route 
                 path="products"
                 element={
-                  <div>Products Page</div>
+                  <ProductsPage />
                 }
               />
             </Route>
@@ -49,13 +57,14 @@ function AppContent() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </QueryClientProvider>
     </>
   )
 }
 
 function App() {
   return (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<LoadingScreen fullscreen />}>
       <AppContent />
     </Suspense>
   )
