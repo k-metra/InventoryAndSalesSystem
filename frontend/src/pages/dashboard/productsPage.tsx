@@ -6,26 +6,43 @@ import fetchProducts from './../../utils/fetchProducts';
 import { useQuery } from '@tanstack/react-query';
 import LoadingScreen from '../loadingScreen';
 import ProductsTable from '../../components/productsPage/productsTable';
+import Pagination from '../../components/pagination';
+
+type dataProps = {
+    current_page: number;
+    data: any[];
+    first_page_url: string;
+    last_page: number;
+    last_page_url: string;
+    links: any[];
+    per_page: number;
+    total: number;
+}
 
 export default function ProductsPage() {
+    const params = new URLSearchParams(window.location.search);
+
+    const initialPage = parseInt(params.get("page") || "1");
+    const initialSearch = params.get("search") || "";
+
+    const [activeSearch, setActiveSearch] = useState(initialSearch);
+
+    const [page, setPage] = useState<number>(initialPage);
+    const [search, setSearch] = useState<string>(initialSearch);
+
     // @ts-ignore
-    const { data, isFetching, isError } = useQuery({
-        queryKey: ['productsPage'],
-        queryFn: fetchProducts
+    const { data, isPending, isError }: { data: dataProps, isPending: boolean, isError: boolean } = useQuery({
+        queryKey: ['productsPage', page, activeSearch],
+        queryFn: fetchProducts,
+        keepPreviousData: true,
     });
 
     const searchRef = useRef<HTMLInputElement>(null);
 
-    const products = useMemo(() => data || [], [data]);
-
     const [category, setCategory] = useState("All");
+
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
-    const params = new URLSearchParams(window.location.search);
-    const query = params.get('search') || "";
-
-    const [search, setSearch] = useState(query);
-    const [activeQuery, setActiveQuery] = useState(query);
 
     const updateURLParams = (key: string, value: string) => {
         const params = new URLSearchParams(window.location.search);
@@ -46,41 +63,46 @@ export default function ProductsPage() {
     const handleSearch = () => {
         if (searchRef.current) {
             const newQuery = searchRef.current.value;
-            setActiveQuery(newQuery);
             updateURLParams("search", newQuery);
-
+            setActiveSearch(newQuery);
         }
     }
 
     const handleSearchClear = () => {
         if (searchRef.current) setSearch("");
-        setActiveQuery("");
         updateURLParams("search", "");
     }
 
     const updateSearchBar = () => {
-        setSearch(query);
-        setActiveQuery(query);
+        setSearch(initialSearch);
+        setActiveSearch(initialSearch);
     }
 
-    useEffect(updateSearchBar, [query]);
+    useEffect(updateSearchBar, [initialSearch]);
 
-    if (isFetching) return <LoadingScreen />;
+    if (isPending) return <LoadingScreen />;
     if (isError) return <div className="w-full h-full text-red-500 flex items-center justify-center">
         <p>Ran into an error loading the products.</p>
     </div>
 
     return (
-        <div className="w-full h-full p-4 flex flex-col gap-4">
+        <div className="custom-scrollbar w-full h-full p-4 flex flex-col gap-4">
             <h3 className="font-bold text-text">Products</h3>
             
-            <div className="w-full flex justify-between items-center">
+            <div className="custom-scrollbar w-full flex justify-between items-center">
                 <label className="relative w-1/3">
                     <input
                     ref={searchRef}
                     value={search}
                     type="text"
                     onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            setSearch(e.currentTarget.value);
+                            handleSearch();
+                        }
+                    }}
+
                     placeholder="Search"
                     className="focus:outline-primary transition-all duration-200 ease-in focus:outline-3 focus:shadow-[0px_2px_10px_4px_rgba(59,130,246,0.35)] border border-black/25 rounded-md p-2 pr-10 bg-secondary text-text w-full"
                 />
@@ -105,8 +127,18 @@ export default function ProductsPage() {
                 </div>
             </div>
             
-            <ProductsTable data={products} searchQuery={activeQuery} />
-            
+            {/* @ts-ignore */}
+            <ProductsTable data={data?.data || []} searchQuery={search} />
+            <div className="my-5 flex justify-end w-full">
+                <Pagination 
+                page={page} 
+                setPage={(newPage: number) => {
+                    setPage(newPage);
+                    updateURLParams("page", String(newPage));
+                }}
+                lastPage={data?.last_page}
+            />
+            </div>
         </div>
     )
 }
