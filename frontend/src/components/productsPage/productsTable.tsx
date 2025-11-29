@@ -36,10 +36,7 @@ export default function ProductsTable({ data, searchQuery }:  ProductsTableProps
     const memoizedFilterData = useCallback(filterData, []);
 
     useEffect(() => {
-        const result = memoizedFilterData(searchQuery || "", data, productFields.map(field => field.key));
-        setFilteredData(result);
-
-        console.log(result);
+        setFilteredData(data);
     }, [searchQuery, data]);
 
     return (
