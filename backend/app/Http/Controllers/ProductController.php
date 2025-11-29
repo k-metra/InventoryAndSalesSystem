@@ -11,10 +11,26 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $products = Product::with(['category', 'supplier'])->get();
-        return response()->json(['products' => $products]);
+    public function index(Request $request)
+    {   
+        $search = $request->query('search');
+        $category = $request->query('category');
+
+
+        $query = Product::with(['category', 'supplier']);
+
+        if ($search) {
+            $query->where('name','like', "%{$search}%")
+            ->orWhere('sku','like', "%{$search}%");
+        }
+
+        if ($category) {
+            $query->where('category_id', $category);
+        }
+
+        $products = $query->paginate(10)->withQueryString();
+
+        return response()->json($products);
     }
 
     /**
