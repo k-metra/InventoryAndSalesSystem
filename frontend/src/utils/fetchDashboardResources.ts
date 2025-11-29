@@ -1,8 +1,6 @@
 import api from "./../axios/api";
 import formatCurrency from "./formatCurrency";
 
-type dashboardResources = Record<string, number | string>;
-
 const fetchDashboardResources = async () => {
     console.log("Fetching dashboard resources...");
 

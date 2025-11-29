@@ -5,7 +5,7 @@ import KpiCard from "../../components/kpiCard";
 import fetchDashboardResources from "../../utils/fetchDashboardResources";
 import LoadingScreen from "../loadingScreen";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from 'react';
 
 import { AiOutlineReload } from "react-icons/ai";

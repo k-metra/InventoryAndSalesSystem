@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 import { FaChevronUp } from "react-icons/fa";

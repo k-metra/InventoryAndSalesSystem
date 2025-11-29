@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaGear } from "react-icons/fa6";
 import { Outlet, useLocation } from 'react-router-dom'
@@ -6,7 +6,6 @@ import AccountModal from "../components/accountModal";
 
 import sidebarLayout from "../config/sidebarLayout";
 import SidebarItem from "../components/sidebarItem";
-import LoadingScreen from "./loadingScreen";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Dashboard() {
