@@ -2,7 +2,7 @@ import { type Product } from '../../utils/fetchProducts';
 import filterData from '../../utils/filterData';
 import getNestedValue from '../../utils/getNestedValue';
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const tableHeaders = [
     "ID",
@@ -33,8 +33,10 @@ type ProductsTableProps = {
 export default function ProductsTable({ data, searchQuery }:  ProductsTableProps ) {
     const [filteredData ,setFilteredData] = useState<Product[]>(data);
 
+    const memoizedFilterData = useCallback(filterData, []);
+
     useEffect(() => {
-        const result = filterData(searchQuery || "", data, productFields.map(field => field.key));
+        const result = memoizedFilterData(searchQuery || "", data, productFields.map(field => field.key));
         setFilteredData(result);
 
         console.log(result);
