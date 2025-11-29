@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 import { FaChevronUp } from "react-icons/fa";
 import fetchProducts from './../../utils/fetchProducts';
 import { useQuery } from '@tanstack/react-query';
 import LoadingScreen from '../loadingScreen';
-import ProductsTable from '../../components/productsPage/productsTable';
 import Pagination from '../../components/pagination';
+import DataTable from '../../components/DataTable';
 
 type dataProps = {
     current_page: number;
@@ -19,12 +19,23 @@ type dataProps = {
     total: number;
 }
 
+const productFields = [
+    { label: "ID", key: "id" },
+    { label: "Name", key: "name" },
+    { label: "SKU", key: "sku" },
+    { label: "Stock", key: "stock" },
+    { label: "Category", key: "category.name" },
+    { label: "Supplier", key: "supplier.name" },
+];
+
 export default function ProductsPage() {
     const params = new URLSearchParams(window.location.search);
 
     const initialPage = parseInt(params.get("page") || "1");
     const initialSearch = params.get("search") || "";
+    const initialCategory = params.get("category") || "";
 
+    const [category, setCategory] = useState(initialCategory);
     const [activeSearch, setActiveSearch] = useState(initialSearch);
 
     const [page, setPage] = useState<number>(initialPage);
@@ -38,8 +49,6 @@ export default function ProductsPage() {
     });
 
     const searchRef = useRef<HTMLInputElement>(null);
-
-    const [category, setCategory] = useState("All");
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
@@ -127,8 +136,7 @@ export default function ProductsPage() {
                 </div>
             </div>
             
-            {/* @ts-ignore */}
-            <ProductsTable data={data?.data || []} searchQuery={search} />
+            <DataTable data={data?.data || []} columns={productFields} />
             <div className="my-5 flex justify-end w-full">
                 <Pagination 
                 page={page} 
