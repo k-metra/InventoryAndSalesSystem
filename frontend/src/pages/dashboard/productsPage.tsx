@@ -5,6 +5,7 @@ import { FaChevronUp } from "react-icons/fa";
 import fetchProducts from './../../utils/fetchProducts';
 import { useQuery } from '@tanstack/react-query';
 import LoadingScreen from '../loadingScreen';
+import ProductsTable from '../../components/productsPage/productsTable';
 
 export default function ProductsPage() {
     // @ts-ignore
@@ -24,6 +25,7 @@ export default function ProductsPage() {
     const query = params.get('search') || "";
 
     const [search, setSearch] = useState(query);
+    const [activeQuery, setActiveQuery] = useState(query);
 
     const updateURLParams = (key: string, value: string) => {
         const params = new URLSearchParams(window.location.search);
@@ -42,16 +44,23 @@ export default function ProductsPage() {
     }
 
     const handleSearch = () => {
-        if (searchRef.current) updateURLParams("search", searchRef.current.value);
+        if (searchRef.current) {
+            const newQuery = searchRef.current.value;
+            setActiveQuery(newQuery);
+            updateURLParams("search", newQuery);
+
+        }
     }
 
     const handleSearchClear = () => {
         if (searchRef.current) setSearch("");
+        setActiveQuery("");
         updateURLParams("search", "");
     }
 
     const updateSearchBar = () => {
         setSearch(query);
+        setActiveQuery(query);
     }
 
     useEffect(updateSearchBar, [query]);
@@ -95,6 +104,9 @@ export default function ProductsPage() {
                     </label>
                 </div>
             </div>
+            
+            <ProductsTable data={products} searchQuery={activeQuery} />
+            
         </div>
     )
 }
