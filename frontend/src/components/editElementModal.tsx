@@ -12,6 +12,7 @@ import setNestedValue from '../utils/setNestedValue';
 import { ImSpinner7 } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 import { FaPencil } from "react-icons/fa6";
+import { useToast } from '../contexts/ToastContext';
 
 type EditElementModalProps = {
     application: string;
@@ -22,7 +23,7 @@ type EditElementModalProps = {
 
 
 export default function EditElementModal({application, fields, editId, onClose }: EditElementModalProps) {
-
+    const { addToast } = useToast();
     const queryClient = useQueryClient();
 
     const { data, isPending, isError } = useQuery({
@@ -72,7 +73,13 @@ export default function EditElementModal({application, fields, editId, onClose }
 
         onSuccess: () => {
             onClose();
+            addToast(`Successfully updated Product ID ${editId}.`, 'success');
             queryClient.invalidateQueries({ queryKey: [application] });
+        },
+
+        onError: (error: any) => {
+            console.error('Error updating element:', error);
+            addToast(`Failed to update ${application} ID ${editId}.`, 'error');
         }
     })
 
