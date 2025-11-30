@@ -12,6 +12,7 @@ import EditElementModal from '../../components/editElementModal';
 import { type Field } from '../../types/fields';
 import api from '../../axios/api';
 import { IoMdAdd } from "react-icons/io";
+import { useToast } from '../../contexts/ToastContext';
 
 type dataProps = {
     current_page: number;
@@ -75,6 +76,7 @@ const productEditFields: Field[] = [
 ];
 
 export default function ProductsPage() {
+    const { addToast } = useToast();
     const params = new URLSearchParams(window.location.search);
 
     const initialPage = parseInt(params.get("page") || "1");
@@ -175,9 +177,10 @@ export default function ProductsPage() {
                 </label>
 
                 <button
+                    onClick={() => addToast("test toast", "success")}
                     className="relative to-blue-500 group from-blue-400 bg-linear-to-r hover:to-blue-600 hover:from-blue-500 text-white p-2 rounded-md transition-colors duration-300 cursor-pointer"
                 >
-                    <div className="z-20 text-sm text-black w-28 bg-background border border-black/25 p-1 absolute top-0 -translate-y-9 rounded-md left-1/2 -translate-x-1/2 hidden pointer-events-none group-hover:inline-block">
+                    <div  className="z-20 text-sm text-black w-28 bg-background border border-black/25 p-1 absolute top-0 -translate-y-9 rounded-md left-1/2 -translate-x-1/2 hidden pointer-events-none group-hover:inline-block">
                         Add Product
                     </div>
                     <IoMdAdd size={24} className="inline-block" />
