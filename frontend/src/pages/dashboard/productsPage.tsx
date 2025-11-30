@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 import { FaChevronUp } from "react-icons/fa";
@@ -8,6 +8,9 @@ import LoadingScreen from '../loadingScreen';
 import Pagination from '../../components/pagination';
 import DataTable from '../../components/DataTable';
 import updateURLParams from '../../utils/updateURLParams';
+import EditElementModal from '../../components/editElementModal';
+import { type Field } from '../../types/fields';
+import api from '../../axios/api';
 
 type dataProps = {
     current_page: number;
@@ -20,24 +23,67 @@ type dataProps = {
     total: number;
 }
 
-const productFields = [
-    { label: "ID", key: "id" },
-    { label: "Name", key: "name" },
-    { label: "SKU", key: "sku" },
-    { label: "Stock", key: "stock" },
-    { label: "Category", key: "category.name" },
-    { label: "Supplier", key: "supplier.name" },
+const productFields: Field[] = [
+    { label: "ID", key: "id", type: "readonly" },
+    { label: "Name", key: "name", type: "text" },
+    { label: "SKU", key: "sku", type: "text" },
+    { label: "Stock", key: "stock", type: "number" },
+    { label: "Category", 
+        key: "category.name", 
+        type: "options",
+        fetchOptions: async () => {
+            const resp = await api.get('/categories');
+            return resp.data;
+        }
+    
+    },
+    { label: "Supplier", 
+        key: "supplier.name", 
+        type: "options",
+        fetchOptions: async () => {
+            const resp = await api.get('/suppliers');
+            return resp.data;
+        }
+    },
+];
+
+const productEditFields: Field[] = [
+    { label: "ID", key: "id", type: "readonly" },
+    { label: "Name", key: "name", type: "text" },
+    { label: "SKU", key: "sku", type: "text" },
+    { label: "Price", key: "price", type: "number" },
+    { label: "Cost", key: "cost", type: "number" },
+    { label: "Stock", key: "stock", type: "number" },
+    { label: "Category", 
+        key: "category.name", 
+        type: "options",
+        fetchOptions: async () => {
+            const resp = await api.get('/categories');
+            return resp.data;
+        }
+    
+    },
+    { label: "Supplier", 
+        key: "supplier.name", 
+        type: "options",
+        fetchOptions: async () => {
+            const resp = await api.get('/suppliers');
+            return resp.data;
+        }
+    },
 ];
 
 export default function ProductsPage() {
     const params = new URLSearchParams(window.location.search);
 
     const initialPage = parseInt(params.get("page") || "1");
+    const initialEditId = params.get("edit") || "";
     const initialSearch = params.get("search") || "";
     const initialCategory = params.get("category") || "";
 
     const [category, setCategory] = useState(initialCategory);
     const [activeSearch, setActiveSearch] = useState(initialSearch);
+    const [editId, setEditId] = useState<string | null>(initialEditId);
 
     const [page, setPage] = useState<number>(initialPage);
     const [search, setSearch] = useState<string>(initialSearch);
@@ -71,6 +117,18 @@ export default function ProductsPage() {
         setActiveSearch(initialSearch);
     }
 
+    const onEdit = useCallback((id?: number | string) => {
+        if (!id) { 
+            updateURLParams("edit", ""); 
+            setEditId(null);
+            return; 
+        }
+
+        console.log("Edit product with ID:", id);
+        updateURLParams("edit", String(id));
+        setEditId(String(id));
+    }, []);
+
     useEffect(updateSearchBar, [initialSearch]);
 
     if (isPending) return <LoadingScreen />;
@@ -79,6 +137,7 @@ export default function ProductsPage() {
     </div>
 
     return (
+        <>
         <div className="custom-scrollbar w-full h-full p-4 flex flex-col gap-4">
             <h3 className="font-bold text-text">Products</h3>
             
@@ -120,7 +179,7 @@ export default function ProductsPage() {
                 </div>
             </div>
             
-            <DataTable data={data?.data || []} columns={productFields} />
+            <DataTable onEdit={onEdit} data={data?.data || []} columns={productFields} />
             <div className="my-5 flex justify-end w-full">
                 <Pagination 
                 page={page} 
@@ -132,5 +191,9 @@ export default function ProductsPage() {
             />
             </div>
         </div>
+        
+        {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onClose={() => onEdit() } />}
+
+        </>
     )
 }
