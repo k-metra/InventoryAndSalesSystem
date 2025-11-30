@@ -25,8 +25,6 @@ export default function EditElementModal({application, fields, editId, onClose }
 
     const queryClient = useQueryClient();
 
-    const [saving, setSaving] = useState(false);
-
     const { data, isPending, isError } = useQuery({
         queryKey: [`${application}`, editId],
         queryFn: async ({ queryKey }) => {
@@ -69,12 +67,10 @@ export default function EditElementModal({application, fields, editId, onClose }
 
     const mutation = useMutation({
         mutationFn: (updatedData: Record<string, any>) => {
-            setSaving(true);
             return api.put(`/${application}/${editId}`, updatedData).then(res => res.data);
         },
 
         onSuccess: () => {
-            setSaving(false);
             onClose();
             queryClient.invalidateQueries({ queryKey: [application] });
         }
@@ -163,12 +159,12 @@ export default function EditElementModal({application, fields, editId, onClose }
                         </div>
 
                         <div className="flex border-t border-black/25 justify-end items-center gap-2 bottom-0 left-0 sticky p-2 bg-white *:cursor-pointer">
-                            <button onClick={handleSave} disabled={saving} className={`inline-flex items-center gap-2 bg-primary text-white px-4 py-2 disabled:opacity-50 rounded`}>
-                                {saving && <ImSpinner7 size={20} className="inline-block text-white animate-spin" />}
+                            <button onClick={handleSave} disabled={mutation.isPending} className={`inline-flex items-center gap-2 bg-primary text-white px-4 py-2 disabled:opacity-50 rounded`}>
+                                {mutation.isPending && <ImSpinner7 size={20} className="inline-block text-white animate-spin" />}
                                 Save Edits
                                 <FaPencil className="inline-block text-white" size={15} />
                             </button>
-                            <button onClick={onClose} disabled={saving} className="inline-flex items-center gap-2 bg-red-500 disabled:opacity-50 text-white px-4 py-2 rounded">
+                            <button onClick={onClose} disabled={mutation.isPending} className="inline-flex items-center gap-2 bg-red-500 disabled:opacity-50 text-white px-4 py-2 rounded">
                                 Cancel
                                 <IoMdClose className="inline-block text-white" size={24} />
                             </button>
