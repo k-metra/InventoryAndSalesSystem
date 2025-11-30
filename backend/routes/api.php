@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
 
 Route::middleware(['web'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -18,12 +20,17 @@ Route::middleware(['auth:sanctum'])->get('/me', function (Request $request) {
     ]);
 });
 
-// Products
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    // Products
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/all', [ProductController::class, 'count']); // Move this before {id} route
     Route::post('/products', [ProductController::class, 'store']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+    //Suppliers
+
+    Route::get('/suppliers', [SupplierController::class, 'index']);
 });
