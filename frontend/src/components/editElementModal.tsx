@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import api from '../axios/api';
 import LoadingScreen from '../pages/loadingScreen';
 import { type Field, type OptionField } from '../types/fields';
@@ -18,35 +18,36 @@ type EditElementModalProps = {
     fields: Field[];
     editId: string;
     onClose: () => void;
-    onSave: () => void;
 }
 
 
-export default function EditElementModal({application, fields, editId, onClose, onSave }: EditElementModalProps) {
+export default function EditElementModal({application, fields, editId, onClose }: EditElementModalProps) {
+
+    const queryClient = useQueryClient();
 
     const [saving, setSaving] = useState(false);
 
     const { data, isPending, isError } = useQuery({
-        queryKey: ['elementDetails', application, editId],
+        queryKey: [`${application}`, editId],
         queryFn: async ({ queryKey }) => {
-            const [_key, application, editId] = queryKey;
+            const [key, editId] = queryKey;
 
-            const resp = await api.get(`/${application}/${editId}`)
+            const resp = await api.get(`/${key}/${editId}`)
             .then(res => res.data)
             .catch((err) => {
-                console.log(`Error fetching ${application} details`, err);
+                console.log(`Error fetching ${key} details`, err);
                 return null;
             });
 
             return resp;
-        }
+        } 
     });
 
     const optionsQueries = useQueries({
         queries: fields
         .filter((field): field is OptionField => field.type === 'options' && !!field.fetchOptions)
         .map((field) => ({
-            queryKey: [`${application}-${field.key}-options`],
+            queryKey: [`${application}`, field.key, 'options'],
             queryFn: field.fetchOptions!
         }))
     });
@@ -66,6 +67,20 @@ export default function EditElementModal({application, fields, editId, onClose, 
         if (data) setFormState(data);
     }, [data]);
 
+    const mutation = useMutation({
+        mutationFn: (updatedData: Record<string, any>) => {
+            setSaving(true);
+            return api.put(`/${application}/${editId}`, updatedData).then(res => res.data);
+        },
+
+        onSuccess: () => {
+            setSaving(false);
+            onClose();
+            queryClient.invalidateQueries({ queryKey: [`${application}Details`, application, editId]});
+            queryClient.invalidateQueries({ queryKey: [application] });
+        }
+    })
+
     const handleChange = (key: string, value: any) => {
         setFormState(prev => {
             const copy = { ... prev };
@@ -77,17 +92,7 @@ export default function EditElementModal({application, fields, editId, onClose, 
     };
 
     const handleSave = async () => {
-        setSaving(true);
-        try {
-            const resp = await api.put(`/${application}/${editId}`, formState);
-            console.log("Save response:", resp.data);
-            onSave();
-        } catch (err) {
-            console.log(`Error saving ${application} details`, err);
-        } finally {
-            setSaving(false);
-            onClose();
-        }
+        mutation.mutate(formState);
     }
 
 

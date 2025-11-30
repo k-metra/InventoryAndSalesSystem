@@ -11,6 +11,7 @@ import updateURLParams from '../../utils/updateURLParams';
 import EditElementModal from '../../components/editElementModal';
 import { type Field } from '../../types/fields';
 import api from '../../axios/api';
+import { IoMdAdd } from "react-icons/io";
 
 type dataProps = {
     current_page: number;
@@ -90,7 +91,7 @@ export default function ProductsPage() {
 
     // @ts-ignore
     const { data, isPending, isError, refetch }: { data: dataProps, isPending: boolean, isError: boolean, refetch: () => void } = useQuery({
-        queryKey: ['productsPage', page, activeSearch],
+        queryKey: ['products', page, activeSearch],
         queryFn: fetchProducts,
         keepPreviousData: true,
     });
@@ -104,6 +105,11 @@ export default function ProductsPage() {
             const newQuery = searchRef.current.value;
             updateURLParams("search", newQuery);
             setActiveSearch(newQuery);
+
+            if (newQuery.length > 1) {
+                updateURLParams("page", "1");
+                setPage(1);
+            }
         }
     }
 
@@ -142,7 +148,8 @@ export default function ProductsPage() {
             <h3 className="font-bold text-text">Products</h3>
             
             <div className="custom-scrollbar w-full flex justify-between items-center">
-                <label className="relative w-1/3">
+                <div className="w-1/3 gap-4 flex flex-row">
+                    <label className="relative w-full">
                     <input
                     ref={searchRef}
                     value={search}
@@ -165,8 +172,17 @@ export default function ProductsPage() {
                     <button onClick={handleSearch} className="bg-transparent transition-colors duration-200 hover:bg-black/10 p-1 rounded-lg absolute z-10 right-4 top-1/2 -translate-y-1/2 text-black cursor-pointer">
                         <CiSearch size={16} />
                     </button>
-                    
                 </label>
+
+                <button
+                    className="relative to-blue-500 group from-blue-400 bg-linear-to-r hover:to-blue-600 hover:from-blue-500 text-white p-2 rounded-md transition-colors duration-300 cursor-pointer"
+                >
+                    <div className="z-20 text-sm text-black w-28 bg-background border border-black/25 p-1 absolute top-0 -translate-y-9 rounded-md left-1/2 -translate-x-1/2 hidden pointer-events-none group-hover:inline-block">
+                        Add Product
+                    </div>
+                    <IoMdAdd size={24} className="inline-block" />
+                </button>
+                </div>
 
                 <div className="flex gap-2">
                     <label className="relative">
@@ -192,7 +208,7 @@ export default function ProductsPage() {
             </div>
         </div>
         
-        {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onSave={() => refetch() } onClose={() => onEdit() } />}
+        {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onClose={() => onEdit() } />}
 
         </>
     )
