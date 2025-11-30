@@ -3,13 +3,10 @@ A web-based Inventory & Sales System designed to help businesses manage products
 
 ---
 ## Table of Contents
-- Features
-- Tech Stack
-- Installation
-- Usage
-- Planned Features
-- Contributing
-- License
+- [Features](#features)
+- [Tech Stack](#technological-stack)
+- [Contributing](#contributing)
+- [License](#license)
 ---
 ## Features
 - [x] **Dashboard Tab**: Provides a quick overview of system metrics and key performance indicators.
@@ -53,3 +50,9 @@ Feel free to:
 - Submit pull requests
 
 Please follow standard GitHub contribution guidelines.
+
+---
+## License
+This project is available under the [CC-BY-NC-SA-4.0](https://github.com/k-metra/InventoryAndSalesSystem/blob/main/LICENSE) license.
+
+You are free to use, share, and modify this project for __non-commercial purposes__, as long as you credit the original author and release any derivatives under the same license.
