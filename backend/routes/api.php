@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CategoryController;
 
 Route::middleware(['web'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -31,6 +32,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
     //Suppliers
-
     Route::get('/suppliers', [SupplierController::class, 'index']);
+
+    // Categories
+    Route::get('/categories', [CategoryController::class, 'index']);
 });
