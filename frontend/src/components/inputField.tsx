@@ -11,8 +11,12 @@ export default function InputField({ type, data, value, onChange }: InputFieldPr
 
     if (type === "options") {
         return (
-            <select required className="w-full border border-black/25 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                <option value={value ? value : ""}>Select an option</option>
+            <select 
+                value={value ?? ""}
+                onChange={onChange}
+                required 
+                className="w-full border border-black/25 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                <option value="">Select an option</option>
                 {data && data.map((option) => (
                     <option key={option.id} value={option.id}>{option.name}</option>
                 ))}
