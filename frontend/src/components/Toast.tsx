@@ -1,7 +1,6 @@
 import { FaInfo, FaCheck, FaExclamation } from "react-icons/fa";
 import { MdNearbyError } from "react-icons/md";
 
-import { useState } from "react";
 
 type ToastProps = {
     type: 'success' | 'error' | 'info' | 'warning';
