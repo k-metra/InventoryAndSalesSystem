@@ -55,7 +55,7 @@ const productEditFields: Field[] = [
     { label: "Cost", key: "cost", type: "number" },
     { label: "Stock", key: "stock", type: "number" },
     { label: "Category", 
-        key: "category.name", 
+        key: "category_id", 
         type: "options",
         fetchOptions: async () => {
             const resp = await api.get('/categories');
@@ -64,7 +64,7 @@ const productEditFields: Field[] = [
     
     },
     { label: "Supplier", 
-        key: "supplier.name", 
+        key: "supplier_id", 
         type: "options",
         fetchOptions: async () => {
             const resp = await api.get('/suppliers');
@@ -89,7 +89,7 @@ export default function ProductsPage() {
     const [search, setSearch] = useState<string>(initialSearch);
 
     // @ts-ignore
-    const { data, isPending, isError }: { data: dataProps, isPending: boolean, isError: boolean } = useQuery({
+    const { data, isPending, isError, refetch }: { data: dataProps, isPending: boolean, isError: boolean, refetch: () => void } = useQuery({
         queryKey: ['productsPage', page, activeSearch],
         queryFn: fetchProducts,
         keepPreviousData: true,
@@ -192,7 +192,7 @@ export default function ProductsPage() {
             </div>
         </div>
         
-        {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onClose={() => onEdit() } />}
+        {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onSave={() => refetch() } onClose={() => onEdit() } />}
 
         </>
     )
