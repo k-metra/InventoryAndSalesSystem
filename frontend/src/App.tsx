@@ -14,6 +14,7 @@ import {
   QueryClient,
   QueryClientProvider
 } from '@tanstack/react-query';
+import { ToastProvider } from './contexts/ToastContext';
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
 const ProductsPage = lazy(() => import('./pages/dashboard/productsPage'));
@@ -65,7 +66,9 @@ function AppContent() {
 function App() {
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </Suspense>
   )
 }
