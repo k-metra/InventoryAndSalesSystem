@@ -7,16 +7,24 @@ import InputField from './inputField';
 
 import { useEffect, useState, type ChangeEvent } from 'react';
 import getNestedValue from '../utils/getNestedValue';
+import setNestedValue from '../utils/setNestedValue';
+
+import { ImSpinner7 } from "react-icons/im";
+import { IoMdClose } from "react-icons/io";
+import { FaPencil } from "react-icons/fa6";
 
 type EditElementModalProps = {
     application: string;
     fields: Field[];
     editId: string;
     onClose: () => void;
+    onSave: () => void;
 }
 
 
-export default function EditElementModal({application, fields, editId, onClose }: EditElementModalProps) {
+export default function EditElementModal({application, fields, editId, onClose, onSave }: EditElementModalProps) {
+
+    const [saving, setSaving] = useState(false);
 
     const { data, isPending, isError } = useQuery({
         queryKey: ['elementDetails', application, editId],
@@ -59,8 +67,28 @@ export default function EditElementModal({application, fields, editId, onClose }
     }, [data]);
 
     const handleChange = (key: string, value: any) => {
-        setFormState(prev => ( {...prev, [key]: value }) );
+        setFormState(prev => {
+            const copy = { ... prev };
+            setNestedValue(copy, key, value);
+
+            return copy;
+        })
+        ;
     };
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const resp = await api.put(`/${application}/${editId}`, formState);
+            console.log("Save response:", resp.data);
+            onSave();
+        } catch (err) {
+            console.log(`Error saving ${application} details`, err);
+        } finally {
+            setSaving(false);
+            onClose();
+        }
+    }
 
 
     return (
@@ -131,7 +159,15 @@ export default function EditElementModal({application, fields, editId, onClose }
                         </div>
 
                         <div className="flex border-t border-black/25 justify-end items-center gap-2 bottom-0 left-0 sticky p-2 bg-white *:cursor-pointer">
-                            <button onClick={onClose} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
+                            <button onClick={handleSave} disabled={saving} className={`inline-flex items-center gap-2 bg-primary text-white px-4 py-2 disabled:opacity-50 rounded`}>
+                                {saving && <ImSpinner7 size={20} className="inline-block text-white animate-spin" />}
+                                Save Edits
+                                <FaPencil className="inline-block text-white" size={15} />
+                            </button>
+                            <button onClick={onClose} disabled={saving} className="inline-flex items-center gap-2 bg-red-500 disabled:opacity-50 text-white px-4 py-2 rounded">
+                                Cancel
+                                <IoMdClose className="inline-block text-white" size={24} />
+                            </button>
                         </div>
                     </div>
                 )  
