@@ -18,11 +18,11 @@ export default function Toast({ type, message }: ToastProps) {
 
 
     return (
-        <div className={`border-l-4 bg-secondary relative min-w-[250px] max-w-md px-2 py-4 animate-toast-fade-left overflow-hidden flex justify-between items-center gap-4 rounded shadow-md text-text
-            ${type === 'success' ? 'border-green-500' : ''}
-            ${type === 'error' ? 'border-red-500' : ''}
-            ${type === 'info' ? 'border-blue-500' : ''}
-            ${type === 'warning' ? 'border-yellow-500' : ''}`}>
+        <div className={`border border-black/25 border-l-4 bg-white relative min-w-[250px] max-w-md px-2 py-4 animate-toast-fade-left overflow-hidden flex justify-between items-center gap-4 rounded shadow-md text-text
+            ${type === 'success' ? 'border-l-green-500' : ''}
+            ${type === 'error' ? 'border-l-red-500' : ''}
+            ${type === 'info' ? 'border-l-blue-500' : ''}
+            ${type === 'warning' ? 'border-l-yellow-500' : ''}`}>
 
             <div className={`flex items-center justify-center rounded-full w-8 h-8
                 ${type === 'success' ? 'text-green-100 bg-green-600' : ''}
