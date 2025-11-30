@@ -76,7 +76,6 @@ export default function EditElementModal({application, fields, editId, onClose }
         onSuccess: () => {
             setSaving(false);
             onClose();
-            queryClient.invalidateQueries({ queryKey: [`${application}Details`, application, editId]});
             queryClient.invalidateQueries({ queryKey: [application] });
         }
     })
