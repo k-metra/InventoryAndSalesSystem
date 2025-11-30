@@ -1,5 +1,6 @@
 import getNestedValue from '../utils/getNestedValue';
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import { useState, useEffect, useCallback } from 'react';
 
 
 type TableProps = {
@@ -11,6 +12,20 @@ type TableProps = {
 
 
 export default function DataTable({ data, columns, noActions = false }:  TableProps ) {
+
+    const [activeRow, setActiveRow] = useState<number | null>(null);
+
+    const handleClickOutside = useCallback(() => {
+        setActiveRow(null);
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener('click', handleClickOutside);
+
+        return () => {
+            window.removeEventListener('click', handleClickOutside);
+        }
+    }, [handleClickOutside]);
 
 
     return (
@@ -43,10 +58,16 @@ export default function DataTable({ data, columns, noActions = false }:  TablePr
 
                         })}
 
-                        {!noActions && <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <button className="text-text text-center cursor-pointer bg-transparent rounded-full p-2 hover:bg-black/10 transition-colors duration-200">
+                        {!noActions && <td className="relative inline-block px-6 py-4 whitespace-nowrap text-sm text-gray-900 group">
+                            <button onClick={(e) => { e.stopPropagation(); setActiveRow(rowIndex); }} className="text-text text-center cursor-pointer bg-transparent rounded-full p-2 hover:bg-black/10 transition-colors duration-200">
                                 <IoEllipsisHorizontalSharp size={18} />
                             </button>
+
+                            <div className={`${activeRow === rowIndex ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-0 pointer-events-none'} transition-opacity-transform duration-300 ease-out origin-bottom z-50 flex flex-col absolute top-0 -translate-y-15 left-1/2 -translate-x-1/2 bg-white border border-black/25 rounded-md shadow-lg *:cursor-pointer`}>
+                                <button className="w-full text-center px-4 text-[12px] py-1 hover:bg-black/5">View Details</button>
+                                <button className="w-full text-center px-4 text-[12px] py-1 text-primary hover:bg-black/5">Edit</button>
+                                <button className="w-full text-center px-4 text-[12px] py-1 text-red-500 hover:bg-black/5">Delete</button>
+                            </div>
                         </td>}
                     </tr>
                 ))}
