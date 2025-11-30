@@ -1,0 +1,45 @@
+import { FaInfo, FaCheck, FaExclamation } from "react-icons/fa";
+import { MdNearbyError } from "react-icons/md";
+
+import { useState } from "react";
+
+type ToastProps = {
+    type: 'success' | 'error' | 'info' | 'warning';
+    message: string;
+}
+
+
+export default function Toast({ type, message }: ToastProps) {
+
+    function capitalize(string: string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+
+
+    return (
+        <div className={`border-l-4 bg-secondary relative min-w-[250px] max-w-md px-2 py-4 animate-toast-fade-left overflow-hidden flex justify-between items-center gap-4 rounded shadow-md text-text
+            ${type === 'success' ? 'border-green-500' : ''}
+            ${type === 'error' ? 'border-red-500' : ''}
+            ${type === 'info' ? 'border-blue-500' : ''}
+            ${type === 'warning' ? 'border-yellow-500' : ''}`}>
+
+            <div className={`flex items-center justify-center rounded-full w-8 h-8
+                ${type === 'success' ? 'text-green-100 bg-green-600' : ''}
+                ${type === 'error' ? 'text-red-100 bg-red-600' : ''}
+                ${type === 'info' ? 'text-blue-100 bg-blue-600' : ''}
+                ${type === 'warning' ? 'text-yellow-100 bg-yellow-600' : ''}`}>
+
+                {type === 'success' && <FaCheck size={16} />}
+                {type === 'error' && <MdNearbyError size={16} />}
+                {type === 'info' && <FaInfo size={16} />}
+                {type === 'warning' && <FaExclamation size={16} />}
+            </div>
+
+            <div className="flex-1 flex flex-col">
+                <span className="font-semibold text-[14px]">{capitalize(type)}</span>
+                <span className="text-[12px] text-text/80">{message}</span>
+            </div>
+        </div>
+    )
+}
