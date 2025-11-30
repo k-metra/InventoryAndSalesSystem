@@ -23,7 +23,7 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 const ToastProvider = ({ children } : {children: React.ReactNode }) => {
     const [toasts, setToasts] = useState<ToastObjectType[]>([]);
 
-    const addToast = (message: string, type: ToastType = 'info', duration: number = 4000) => {
+    const addToast = useCallback((message: string, type: ToastType = 'info', duration: number = 4000) => {
         const toastId = crypto.randomUUID();
         console.log('Adding toast:', { id: toastId, type, message, duration });
         setToasts((prevToasts) => [{ id: toastId, type: type, message: message, duration: duration }, ...prevToasts]);
@@ -31,11 +31,11 @@ const ToastProvider = ({ children } : {children: React.ReactNode }) => {
         setTimeout(() => {
             removeToast(toastId);
         }, duration);
-    };
+    }, []);
 
-    const removeToast = (id: string) => {
+    const removeToast = useCallback((id: string) => {
         setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
-    };
+    }, []);
 
     return <ToastContext.Provider value={{ addToast }}>
         { children }
