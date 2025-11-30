@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import LoadingScreen from '../loadingScreen';
 import Pagination from '../../components/pagination';
 import DataTable from '../../components/DataTable';
+import updateURLParams from '../../utils/updateURLParams';
 
 type dataProps = {
     current_page: number;
@@ -51,23 +52,6 @@ export default function ProductsPage() {
     const searchRef = useRef<HTMLInputElement>(null);
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-
-
-    const updateURLParams = (key: string, value: string) => {
-        const params = new URLSearchParams(window.location.search);
-
-        if (value.length > 0) {
-            params.set(key, value);
-        } else {
-            params.delete(key);
-        }
-
-        window.history.replaceState(
-            {},
-            "",
-            `${window.location.pathname}?${params.toString()}`
-        );
-    }
 
     const handleSearch = () => {
         if (searchRef.current) {
