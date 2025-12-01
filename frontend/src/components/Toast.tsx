@@ -5,10 +5,11 @@ import { MdNearbyError } from "react-icons/md";
 type ToastProps = {
     type: 'success' | 'error' | 'info' | 'warning';
     message: string;
+    duration: number;
 }
 
 
-export default function Toast({ type, message }: ToastProps) {
+export default function Toast({ type, message, duration }: ToastProps) {
 
     function capitalize(string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -39,6 +40,8 @@ export default function Toast({ type, message }: ToastProps) {
                 <span className="font-semibold text-[14px]">{capitalize(type)}</span>
                 <span className="text-[12px] text-text/80">{message}</span>
             </div>
+        
+        <div className='absolute bottom-0 left-0 bg-primary h-1 animate-toast-progress' style={{ animationDuration: `${duration}ms` }}></div>
         </div>
     )
 }
