@@ -1,9 +1,15 @@
-export default function getSingularForm(word: string): string {
+export default function getSingularForm(word: string, capitalize: boolean = false): string {
+    let newWord = word;
+
     if (word.endsWith('ies')) {
-        return word.slice(0, -3) + 'y';
+        newWord = word.slice(0, -3) + 'y';
     } else if (word.endsWith('s')) {
-        return word.slice(0, -1);
+        newWord = word.slice(0, -1);
     }
 
-    return word;
+    if (capitalize) {
+        newWord = newWord.charAt(0).toUpperCase() + newWord.slice(1);
+    }
+
+    return newWord;
 }
