@@ -17,7 +17,7 @@ export default function Toast({ type, message }: ToastProps) {
 
 
     return (
-        <div className={`border border-black/25 border-l-4 bg-white relative min-w-[250px] max-w-md px-2 py-4 animate-toast-fade-left overflow-hidden flex justify-between items-center gap-4 rounded shadow-md text-text
+        <div className={`border border-black/25 border-l-4 bg-[#FEFEEE] relative min-w-[250px] max-w-md px-2 py-4 animate-toast-fade-left overflow-hidden flex justify-between items-center gap-4 rounded shadow-[0px_0px_15px_10px_rgba(0,0,0,0.1)] text-text
             ${type === 'success' ? 'border-l-green-500' : ''}
             ${type === 'error' ? 'border-l-red-500' : ''}
             ${type === 'info' ? 'border-l-blue-500' : ''}
