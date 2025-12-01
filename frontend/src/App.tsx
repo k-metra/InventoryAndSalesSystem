@@ -8,14 +8,16 @@ import Dashboard from './pages/dashboard';
 import { AuthProvider, type User } from './contexts/AuthContext';
 import { lazy, Suspense, use } from 'react';
 import LoadingScreen from './pages/loadingScreen';
-import fetchUserPromise from './utils/fetchUser';
+import fetchUserPromise from './utils/fetchUser'; 
+
+import { ConfirmationProvider } from './contexts/ConfirmationContext';
 
 import {
   QueryClient,
   QueryClientProvider
 } from '@tanstack/react-query';
 import { ToastProvider } from './contexts/ToastContext';
-import { ConfirmationProvider } from './contexts/confirmationContext';
+
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
 const ProductsPage = lazy(() => import('./pages/dashboard/productsPage'));

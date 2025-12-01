@@ -13,7 +13,7 @@ import { type Field } from '../../types/fields';
 import api from '../../axios/api';
 import { IoMdAdd } from "react-icons/io";
 import { useToast } from '../../contexts/ToastContext';
-import { useConfirmation } from '../../contexts/confirmationContext';
+import { useConfirmation } from '../../contexts/ConfirmationContext';
 
 type dataProps = {
     current_page: number;
