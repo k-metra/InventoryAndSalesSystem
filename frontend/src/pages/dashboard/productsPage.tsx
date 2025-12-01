@@ -14,6 +14,7 @@ import api from '../../axios/api';
 import { IoMdAdd } from "react-icons/io";
 import { useToast } from '../../contexts/ToastContext';
 import { useConfirmation } from '../../contexts/ConfirmationContext';
+import CreateElementModal from '../../components/createElementModal';
 
 type dataProps = {
     current_page: number;
@@ -90,6 +91,7 @@ export default function ProductsPage() {
     const initialCategory = params.get("category") || "";
 
     const [category, setCategory] = useState(initialCategory);
+    const [showCreate, setShowCreate] = useState(params.get("create") === "true");
     const [activeSearch, setActiveSearch] = useState(initialSearch);
     const [editId, setEditId] = useState<string | null>(initialEditId);
 
@@ -117,6 +119,11 @@ export default function ProductsPage() {
                 queryClient.invalidateQueries({ queryKey: ['products'] })
             }
     })
+
+    const handleCreate = (open: boolean) => {
+        updateURLParams("create", open ? "true" : "false");
+        setShowCreate(open);
+    }
 
     const handleSearch = () => {
         if (searchRef.current) {
@@ -209,7 +216,7 @@ export default function ProductsPage() {
                 </label>
 
                 <button
-                    onClick={() => addToast("test toast", "success")}
+                    onClick={() => handleCreate(true)}
                     className="relative to-blue-500 group from-blue-400 bg-linear-to-r hover:to-blue-600 hover:from-blue-500 text-white p-2 rounded-md transition-colors duration-300 cursor-pointer"
                 >
                     <div  className="z-20 text-sm text-black w-28 bg-background border border-black/25 p-1 absolute top-0 -translate-y-9 rounded-md left-1/2 -translate-x-1/2 hidden pointer-events-none group-hover:inline-block">
@@ -244,6 +251,7 @@ export default function ProductsPage() {
         </div>
         
         {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onClose={() => onEdit() } />}
+        {params.get("create") === "true" && <CreateElementModal fields={productEditFields} application='products' onClose={() => { handleCreate(false) } } />}
 
         </>
     )
