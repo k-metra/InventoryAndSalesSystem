@@ -3,7 +3,7 @@ import { CiSearch } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 import { FaChevronUp } from "react-icons/fa";
 import fetchProducts from './../../utils/fetchProducts';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import LoadingScreen from '../loadingScreen';
 import Pagination from '../../components/pagination';
 import DataTable from '../../components/DataTable';
@@ -13,6 +13,7 @@ import { type Field } from '../../types/fields';
 import api from '../../axios/api';
 import { IoMdAdd } from "react-icons/io";
 import { useToast } from '../../contexts/ToastContext';
+import { useConfirmation } from '../../contexts/confirmationContext';
 
 type dataProps = {
     current_page: number;
@@ -76,8 +77,12 @@ const productEditFields: Field[] = [
 ];
 
 export default function ProductsPage() {
+    const queryClient = useQueryClient();
+
     const { addToast } = useToast();
     const params = new URLSearchParams(window.location.search);
+
+    const { confirm } = useConfirmation();
 
     const initialPage = parseInt(params.get("page") || "1");
     const initialEditId = params.get("edit") || "";
@@ -101,6 +106,17 @@ export default function ProductsPage() {
     const searchRef = useRef<HTMLInputElement>(null);
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+     const deleteMutation = useMutation({
+            mutationFn: (id: number | string) => {
+                return api.delete(`/products/${id}`).then(res => res.data);
+            },
+
+            onSuccess: () => {
+                addToast("Product deleted successfully.", "success");
+                queryClient.invalidateQueries({ queryKey: ['products'] })
+            }
+    })
 
     const handleSearch = () => {
         if (searchRef.current) {
@@ -135,6 +151,22 @@ export default function ProductsPage() {
         console.log("Edit product with ID:", id);
         updateURLParams("edit", String(id));
         setEditId(String(id));
+    }, []);
+
+    const onDelete = useCallback(async (id?: number | string) => {
+        if (!id) return;
+
+        console.log("Delete product with ID:", id);
+
+
+        const confirmation: boolean = await confirm(
+            "Are you sure you want to delete this product? This action cannot be undone."
+        );
+
+        if (confirmation) {
+            deleteMutation.mutate(id);
+        }
+        
     }, []);
 
     useEffect(updateSearchBar, [initialSearch]);
@@ -198,7 +230,7 @@ export default function ProductsPage() {
                 </div>
             </div>
             
-            <DataTable onEdit={onEdit} data={data?.data || []} columns={productFields} />
+            <DataTable onDelete={onDelete} onEdit={onEdit} data={data?.data || []} columns={productFields} />
             <div className="my-5 flex justify-end w-full">
                 <Pagination 
                 page={page} 
