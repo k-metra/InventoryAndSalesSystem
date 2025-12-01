@@ -46,6 +46,7 @@ const ToastProvider = ({ children } : {children: React.ReactNode }) => {
                     key={toast.id} 
                     type={toast.type}
                     message={toast.message}
+                    duration={toast.duration}
                 />
             ))}
         </div>
