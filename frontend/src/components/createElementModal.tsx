@@ -12,6 +12,7 @@ import { ImSpinner7 } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 import { FaPencil } from "react-icons/fa6";
 import { useToast } from '../contexts/ToastContext';
+import getSingularForm from '../utils/getSingularForm';
 
 type CreateElementModalProps = {
     application: string;
@@ -81,7 +82,7 @@ export default function CreateElementModal({application, fields, onClose }: Crea
         <div className="fixed h-screen w-screen bg-black/60 top-0 left-0 flex items-center justify-center z-10000">
                     <div className="custom-scrollbar relative bg-white rounded-lg max-w-[70vh] max-h-[80vh] overflow-y-auto">
                         <div className="p-6">
-                            <h5 className="font-bold text-text mb-4">Create {application.charAt(0).toUpperCase() + application.slice(1)}</h5>
+                            <h5 className="font-bold text-text mb-4">Create New {getSingularForm(application, true)}</h5>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                  {fields.map((field) => {
