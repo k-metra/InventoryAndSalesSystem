@@ -15,6 +15,7 @@ import {
   QueryClientProvider
 } from '@tanstack/react-query';
 import { ToastProvider } from './contexts/ToastContext';
+import { ConfirmationProvider } from './contexts/confirmationContext';
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
 const ProductsPage = lazy(() => import('./pages/dashboard/productsPage'));
@@ -26,6 +27,7 @@ function AppContent() {
   return (
     <>
       <QueryClientProvider client={new QueryClient()}>
+        <ConfirmationProvider>
         <AuthProvider initialUser={initialUser}>
         <BrowserRouter>
           <Routes>    
@@ -58,6 +60,7 @@ function AppContent() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </ConfirmationProvider>
       </QueryClientProvider>
     </>
   )
