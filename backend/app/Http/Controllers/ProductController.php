@@ -15,6 +15,7 @@ class ProductController extends Controller
     {   
         $search = $request->query('search');
         $category = $request->query('category');
+        $supplier = $request->query('supplier');
 
 
         $query = Product::with(['category', 'supplier']);
@@ -26,6 +27,10 @@ class ProductController extends Controller
 
         if ($category) {
             $query->where('category_id', $category);
+        }
+
+        if ($supplier) {
+            $query->where('supplier_id', $supplier);
         }
 
         $products = $query->paginate(10)->withQueryString();
