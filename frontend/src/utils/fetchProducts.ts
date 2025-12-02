@@ -10,14 +10,16 @@ export type Product = {
     stock: number;
 }
 
-const fetchProducts = async ({ queryKey }: { queryKey: [string, number | string, string] }) => {
-    const [_key, page, search] = queryKey;
+const fetchProducts = async ({ queryKey }: { queryKey: [string, number | string, string, string] }) => {
+    const [_key, page, search, category] = queryKey;
 
     const params = new URLSearchParams({
         page: String(page || 1),
     });
 
     if (search) params.set('search', search);
+
+    if (category) params.set('category', category);
 
     const products = await api.get(`/products?${params.toString()}`);
 

@@ -16,6 +16,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useConfirmation } from '../../contexts/ConfirmationContext';
 import CreateElementModal from '../../components/createElementModal';
 import type { AxiosError } from 'axios';
+import { type Category } from '../../types/objects';
 
 type dataProps = {
     current_page: number;
@@ -101,7 +102,7 @@ export default function ProductsPage() {
 
     // @ts-ignore
     const { data, isPending, isError, refetch }: { data: dataProps, isPending: boolean, isError: boolean, refetch: () => void } = useQuery({
-        queryKey: ['products', page, activeSearch],
+        queryKey: ['products', page, activeSearch, category],
         queryFn: fetchProducts,
         keepPreviousData: true,
     });
@@ -109,6 +110,17 @@ export default function ProductsPage() {
     const searchRef = useRef<HTMLInputElement>(null);
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+    const { data: categoryList, isPending: isCategoryPending } = useQuery({
+        queryKey: ['categories', 'getCategories'],
+        queryFn: async () => {
+            const resp = await api.get('/categories');
+
+            return resp.data;
+        },
+    });
+
+    const selectedCategoryName = categoryList?.find((cat: Category) => String(cat.id) === category)?.name || "";
 
      const deleteMutation = useMutation({
             mutationFn: (id: number | string) => {
@@ -239,11 +251,36 @@ export default function ProductsPage() {
 
                 <div className="flex gap-2">
                     <label className="relative">
-                        <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text px-4 py-2 pr-10 rounded-md transition-colors duration-200">Category</button>
+                        <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text px-4 py-2 pr-10 rounded-md transition-colors duration-200">{category !== "" ? `Category: ${selectedCategoryName}` : "Category"}</button>
                         <FaChevronUp 
                             size={12}
                             className={`absolute cursor-pointer text-text right-3 top-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${showCategoryDropdown ? '' : 'rotate-180'}`}
                         />
+
+                        <div className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showCategoryDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                            <div 
+                                onClick={() => {
+                                    setCategory("");
+                                    updateURLParams("category", "");
+                                    setShowCategoryDropdown(false);
+                                }}
+                                className={`px-4 py-2 hover:bg-black/10 cursor-pointer ${category === "" ? "border-l-8 font-semibold border-l-primary" : ""}`}
+                            >   All Categories</div>
+                            {categoryList && categoryList.map((cat: Category) => (
+                                 <div
+                                    key={cat.id}
+                                    onClick={() => {
+                                        setCategory(String(cat.id));
+                                        updateURLParams("category", String(cat.id));
+                                        setShowCategoryDropdown(false);
+                                    }}
+                                    className={`px-4 py-2 hover:bg-black/10 cursor-pointer ${category === String(cat.id) ? "border-l-8 font-semibold border-l-primary" : ""}`}
+                                >
+                                    {cat.name}
+                                </div>
+                            ))}
+                            { isCategoryPending && <div className="p-4 text-center text-sm text-black/50">Loading Categories...</div> }
+                        </div>
                     </label>
                 </div>
             </div>
