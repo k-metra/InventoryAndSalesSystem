@@ -4,4 +4,13 @@ type Category = {
     description: string;
 }
 
-export { type Category };
+type Supplier = {
+    id: number;
+    name: string;
+    email: string;
+    contact_person: string;
+    phone: string;
+    address: string;
+}
+
+export { type Category, type Supplier };
