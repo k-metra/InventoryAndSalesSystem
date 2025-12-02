@@ -16,7 +16,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useConfirmation } from '../../contexts/ConfirmationContext';
 import CreateElementModal from '../../components/createElementModal';
 import type { AxiosError } from 'axios';
-import { type Category } from '../../types/objects';
+import { type Category, type Supplier } from '../../types/objects';
 
 type dataProps = {
     current_page: number;
@@ -91,8 +91,13 @@ export default function ProductsPage() {
     const initialEditId = params.get("edit") || "";
     const initialSearch = params.get("search") || "";
     const initialCategory = params.get("category") || "";
+    const initialSupplier = params.get("supplier") || "";
+
+    const categoryDropdownRef = useRef<HTMLDivElement>(null);
+    const supplierDropdownRef = useRef<HTMLDivElement>(null);
 
     const [category, setCategory] = useState(initialCategory);
+    const [supplier, setSupplier] = useState(initialSupplier);
     const [showCreate, setShowCreate] = useState(params.get("create") === "true");
     const [activeSearch, setActiveSearch] = useState(initialSearch);
     const [editId, setEditId] = useState<string | null>(initialEditId);
@@ -102,7 +107,7 @@ export default function ProductsPage() {
 
     // @ts-ignore
     const { data, isPending, isError, refetch }: { data: dataProps, isPending: boolean, isError: boolean, refetch: () => void } = useQuery({
-        queryKey: ['products', page, activeSearch, category],
+        queryKey: ['products', page, activeSearch, category, supplier],
         queryFn: fetchProducts,
         keepPreviousData: true,
     });
@@ -110,6 +115,7 @@ export default function ProductsPage() {
     const searchRef = useRef<HTMLInputElement>(null);
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+    const [showSupplierDropdown, setShowSupplierDropdown] = useState(false);
 
     const { data: categoryList, isPending: isCategoryPending } = useQuery({
         queryKey: ['categories', 'getCategories'],
@@ -120,7 +126,15 @@ export default function ProductsPage() {
         },
     });
 
+    const { data: supplierList, isPending: isSupplierPending } = useQuery({
+        queryKey: ['suppliers', 'getSuppliers'],
+        queryFn: async () => {
+            return await api.get('/suppliers').then(res => res.data);
+        }
+    })
+
     const selectedCategoryName = categoryList?.find((cat: Category) => String(cat.id) === category)?.name || "";
+    const selectedSupplierName = supplierList?.find((sup: Supplier) => String(sup.id) === supplier)?.name || "";
 
      const deleteMutation = useMutation({
             mutationFn: (id: number | string) => {
@@ -201,6 +215,24 @@ export default function ProductsPage() {
 
     useEffect(updateSearchBar, [initialSearch]);
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+                setShowCategoryDropdown(false);
+            }
+
+            if (supplierDropdownRef.current && !supplierDropdownRef.current.contains(event.target as Node)) {
+                setShowSupplierDropdown(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     if (isPending) return <LoadingScreen />;
     if (isError) return <div className="w-full h-full text-red-500 flex items-center justify-center">
         <p>Ran into an error loading the products.</p>
@@ -251,13 +283,50 @@ export default function ProductsPage() {
 
                 <div className="flex gap-2">
                     <label className="relative">
+                        <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            e.stopPropagation();
+                            setShowSupplierDropdown(!showSupplierDropdown);
+                        }} className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text pr-10 px-4 py-2 rounded-md transition-colors duration-200">{selectedSupplierName !== '' ? `Supplier: ${selectedSupplierName}` : "Suppliers"}</button>
+
+                        <FaChevronUp 
+                            size={12}
+                            className={`absolute cursor-pointer text-text right-3 top-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${showSupplierDropdown ? '' : 'rotate-180'}`}
+                        />
+
+                        <div ref={supplierDropdownRef} className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showSupplierDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                            <div 
+                                onClick={() => {
+                                    setSupplier("");
+                                    updateURLParams("supplier", "");
+                                    setShowSupplierDropdown(false);
+                                }}
+                                className={`px-4 py-2 hover:bg-black/10 cursor-pointer ${supplier === "" ? "border-l-8 font-semibold border-l-primary" : ""}`}
+                            >   All Suppliers</div>
+                            {supplierList && supplierList.map((sup: Supplier) => (
+                                 <div
+                                    key={sup.id}
+                                    onClick={() => {
+                                        setSupplier(String(sup.id));
+                                        updateURLParams("supplier", String(sup.id));
+                                        setShowSupplierDropdown(false);
+                                    }}
+                                    className={`px-4 py-2 hover:bg-black/10 cursor-pointer ${supplier === String(sup.id) ? "border-l-8 font-semibold border-l-primary" : ""}`}
+                                >
+                                    {sup.name}
+                                </div>
+                            ))}
+                            { isSupplierPending && <div className="p-4 text-center text-sm text-black/50">Loading Suppliers...</div> }
+                        </div>
+                    </label>
+
+                    <label className="relative">
                         <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text px-4 py-2 pr-10 rounded-md transition-colors duration-200">{category !== "" ? `Category: ${selectedCategoryName}` : "Category"}</button>
                         <FaChevronUp 
                             size={12}
                             className={`absolute cursor-pointer text-text right-3 top-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${showCategoryDropdown ? '' : 'rotate-180'}`}
                         />
 
-                        <div className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showCategoryDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                        <div ref={categoryDropdownRef} className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showCategoryDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
                             <div 
                                 onClick={() => {
                                     setCategory("");
