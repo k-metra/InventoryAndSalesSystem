@@ -15,6 +15,7 @@ import { IoMdAdd } from "react-icons/io";
 import { useToast } from '../../contexts/ToastContext';
 import { useConfirmation } from '../../contexts/ConfirmationContext';
 import CreateElementModal from '../../components/createElementModal';
+import type { AxiosError } from 'axios';
 
 type dataProps = {
     current_page: number;
@@ -117,6 +118,16 @@ export default function ProductsPage() {
             onSuccess: () => {
                 addToast("Product deleted successfully.", "success");
                 queryClient.invalidateQueries({ queryKey: ['products'] })
+            },
+
+            onError: (err: AxiosError) => {
+                if (err.status === 404) {
+                    addToast("That product could not be found.", "error");
+                } else {
+                    addToast("An error occurred while deleting the product. Check the console logs for more information.", "error");
+
+                    console.error(err);
+                }
             }
     })
 
