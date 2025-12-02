@@ -9,10 +9,19 @@ export default function LoginPage() {
 
 
     const [error, setError] = useState<string | null>(null);
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    const [credentials, setCredentials] = useState({ username: '', password: '', remember: false });
 
     const [showPassword, setShowPassword] = useState(false);
-    const [rememberMe, setREmemberMe] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+
+    const handleToggleRememberMe = () => {
+        setRememberMe(prev => {
+            const newValue = !prev;
+
+            setCredentials({ ...credentials, remember: newValue });
+            return newValue;
+        });
+    }
 
     const handleLogIn = async (e: FormEvent) => {
         e.preventDefault();
@@ -58,7 +67,7 @@ export default function LoginPage() {
                     </label>
 
                     <label className="flex items-center gap-2 self-end">
-                        <input type="checkbox" className="cursor-pointer" checked={rememberMe} onChange={() => setREmemberMe(!rememberMe)} />
+                        <input type="checkbox" className="cursor-pointer" checked={rememberMe} onChange={handleToggleRememberMe} />
                         <small className="text-gray-600">Remember Me</small>
                     </label>
 

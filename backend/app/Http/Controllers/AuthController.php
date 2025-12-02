@@ -15,8 +15,9 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('username', 'password');
+        $remember = $request->has('remember') ? $request->boolean('remember') : false;
 
-        if (! Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials, $remember)) {
             return response()->json(['message' => 'Invalid username or password.'], 401);
         }
 
@@ -28,6 +29,8 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request) {
+        Auth::guard('web')->logout();
+
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
