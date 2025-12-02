@@ -262,7 +262,7 @@ export default function ProductsPage() {
         </div>
         
         {editId && <EditElementModal fields={productEditFields} application='products' editId={editId} onClose={() => onEdit() } />}
-        {params.get("create") === "true" && <CreateElementModal fields={productEditFields} application='products' onClose={() => { handleCreate(false) } } />}
+        {showCreate && <CreateElementModal fields={productEditFields} application='products' onClose={() => { handleCreate(false) } } />}
 
         </>
     )
