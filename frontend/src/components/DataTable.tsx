@@ -58,7 +58,7 @@ export default function DataTable({ onEdit, onDelete, data, columns, noActions =
                             let value = getNestedValue(row, key);
 
                             if (col.type === 'number' && 'format' in col) {
-                                value = col.format(value);
+                                value = col.format!(value);
                             }
 
                             return (
