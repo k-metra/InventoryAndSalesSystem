@@ -17,6 +17,7 @@ import { useConfirmation } from '../../contexts/ConfirmationContext';
 import CreateElementModal from '../../components/createElementModal';
 import type { AxiosError } from 'axios';
 import { type Category, type Supplier } from '../../types/objects';
+import { formatCurrency } from '../../utils/formatNumbers';
 
 type dataProps = {
     current_page: number;
@@ -33,6 +34,7 @@ const productFields: Field[] = [
     { label: "ID", key: "id", type: "readonly" },
     { label: "Name", key: "name", type: "text" },
     { label: "SKU", key: "sku", type: "text" },
+    { label: "Price", key: "price", type: "number", format: formatCurrency },
     { label: "Stock", key: "stock", type: "number" },
     { label: "Category", 
         key: "category.name", 

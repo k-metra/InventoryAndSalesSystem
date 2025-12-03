@@ -1,5 +1,5 @@
 import api from "./../axios/api";
-import formatCurrency from "./formatCurrency";
+import { formatCurrency } from "./formatNumbers";
 
 const fetchDashboardResources = async () => {
     console.log("Fetching dashboard resources...");
