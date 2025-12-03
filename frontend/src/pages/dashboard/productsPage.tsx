@@ -87,7 +87,9 @@ const sortList: string[] = [
     "Higher Price",
     "Lower Price",
     "A-Z",
-    "Z-A"
+    "Z-A",
+    "Greater Cost",
+    "Lower Cost",
 ];
 
 
