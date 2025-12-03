@@ -1,16 +1,19 @@
 type BaseField = {
     label: string;
     key: string;
-    type: "text" | "number" | "readonly";
+    type: "text" | "number" | "readonly" | "options";
 }
 
-type OptionField = {
-    label: string;
-    key: string;
+type OptionField = BaseField & {
     type: "options";
     fetchOptions?: () => Promise<{ id: string | number; name: string }[]>;
 }
 
-type Field = BaseField | OptionField;
+type PriceField = BaseField & {
+    type: "number";
+    format: (value: number) => string;
+}
 
-export type { Field, BaseField, OptionField };
+type Field = BaseField | OptionField | PriceField;
+
+export type { Field, BaseField, OptionField, PriceField };
