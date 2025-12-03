@@ -13,14 +13,33 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {   
+        $sortingOptions = [
+            "A-Z" => ['name', 'ASC'],
+            "Z-A" => ['name', 'DESC'],
+            "Higher Price" => ['price', 'DESC'],
+            "Lower Price" => ['price', 'ASC'],
+            "Greater Stock" => ['stock', 'DESC'],
+            "Lower Stock" => ['stock', 'ASC'],
+            "Greater Cost" => ['cost', 'DESC'],
+            "Lower Cost" => ['cost', 'ASC'],
+        ];
+
         $search = $request->query('search');
         $category = $request->query('category');
         $supplier = $request->query('supplier');
 
 
         $query = Product::with(['category', 'supplier'])
-            ->orderByRaw('CASE WHEN stock <= 15 THEN 0 ELSE 1 END, id ASC')
-            ->orderBy('id', 'ASC');
+            ->orderByRaw('CASE WHEN stock <= 15 THEN 0 ELSE 1 END');
+
+        $sortBy = $request->query('sortBy');
+
+        if ($sortBy && array_key_exists($sortBy, $sortingOptions)) {
+            $query->orderBy(...$sortingOptions[$sortBy]);
+        } else {
+            $query
+             ->orderBy('id', 'ASC');
+        }
 
         if ($search) {
             $query->where('name','like', "%{$search}%")
