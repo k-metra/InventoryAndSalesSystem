@@ -10,10 +10,18 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::withCount('products')->get();
-        return response()->json($categories);
+        $categories = Category::withCount('products');
+
+        $search = $request->query('search');
+
+        if ($search) {
+            $categories->where('name', 'like', "%{$search}%")
+            ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        return response()->json($categories->get());
     }
 
     /**
@@ -45,7 +53,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        $validated_data = $request->validate([
+            'name' => 'sometimes|required|string|max:50',
+            'description' => 'sometimes|nullable|string|max:255',
+        ]);
+
+        $category->update($validated_data);
+        return response()->json($category, 200);
     }
 
     /**
