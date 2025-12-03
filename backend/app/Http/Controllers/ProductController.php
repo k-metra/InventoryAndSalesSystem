@@ -18,7 +18,9 @@ class ProductController extends Controller
         $supplier = $request->query('supplier');
 
 
-        $query = Product::with(['category', 'supplier']);
+        $query = Product::with(['category', 'supplier'])
+            ->orderByRaw('CASE WHEN stock <= 15 THEN 0 ELSE 1 END, id ASC')
+            ->orderBy('id', 'ASC');
 
         if ($search) {
             $query->where('name','like', "%{$search}%")
