@@ -1,17 +1,20 @@
-type BaseField = {
+type Commons = {
     label: string;
     key: string;
-    type: "text" | "number" | "readonly" | "options";
 }
 
-type OptionField = BaseField & {
+type BaseField = Commons & {
+    type: "text" | "readonly";
+}
+
+type OptionField = Commons & {
     type: "options";
     fetchOptions?: () => Promise<{ id: string | number; name: string }[]>;
 }
 
-type PriceField = BaseField & {
+type PriceField = Commons & {
     type: "number";
-    format: (value: number) => string;
+    format?: (value: number) => string;
 }
 
 type Field = BaseField | OptionField | PriceField;
