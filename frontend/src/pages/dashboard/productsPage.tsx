@@ -81,6 +81,16 @@ const productEditFields: Field[] = [
     },
 ];
 
+const sortList: string[] = [
+    "Greater Stock",
+    "Lower Stock",
+    "Higher Price",
+    "Lower Price",
+    "A-Z",
+    "Z-A"
+];
+
+
 export default function ProductsPage() {
     const queryClient = useQueryClient();
 
@@ -90,6 +100,7 @@ export default function ProductsPage() {
     const { confirm } = useConfirmation();
 
     const initialPage = parseInt(params.get("page") || "1");
+    const initialSort = params.get("sortBy") || "";
     const initialEditId = params.get("edit") || "";
     const initialSearch = params.get("search") || "";
     const initialCategory = params.get("category") || "";
@@ -98,6 +109,7 @@ export default function ProductsPage() {
     const categoryDropdownRef = useRef<HTMLDivElement>(null);
     const supplierDropdownRef = useRef<HTMLDivElement>(null);
 
+    const [sort, setSort] = useState(initialSort);
     const [category, setCategory] = useState(initialCategory);
     const [supplier, setSupplier] = useState(initialSupplier);
     const [showCreate, setShowCreate] = useState(params.get("create") === "true");
@@ -109,7 +121,7 @@ export default function ProductsPage() {
 
     // @ts-ignore
     const { data, isPending, isError, refetch }: { data: dataProps, isPending: boolean, isError: boolean, refetch: () => void } = useQuery({
-        queryKey: ['products', page, activeSearch, category, supplier],
+        queryKey: ['products', page, activeSearch, category, supplier, sort],
         queryFn: fetchProducts,
         keepPreviousData: true,
     });
@@ -118,6 +130,7 @@ export default function ProductsPage() {
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
     const [showSupplierDropdown, setShowSupplierDropdown] = useState(false);
+    const [showSortDropdown, setShowSortDropdown] = useState(false);
 
     const { data: categoryList, isPending: isCategoryPending } = useQuery({
         queryKey: ['categories', 'getCategories'],
@@ -284,6 +297,43 @@ export default function ProductsPage() {
                 </div>
 
                 <div className="flex gap-2">
+
+                    <label className="relative">
+                        <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            e.stopPropagation();
+                            setShowSortDropdown(!showSortDropdown);
+                        }} className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text pr-10 px-4 py-2 rounded-md transition-colors duration-200">{sort !== '' ? `Sort By: ${sort}` : "Sort"}</button>
+
+                        <FaChevronUp 
+                            size={12}
+                            className={`absolute cursor-pointer text-text right-3 top-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${showSortDropdown ? '' : 'rotate-180'}`}
+                        />
+
+                        <div ref={supplierDropdownRef} className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showSortDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                            <div 
+                                onClick={() => {
+                                    setSort("");
+                                    updateURLParams("sortBy", "");
+                                    setShowSortDropdown(false);
+                                }}
+                                className={`px-4 py-2 hover:bg-black/10 cursor-pointer ${sort === "" ? "border-l-8 font-semibold border-l-primary" : ""}`}
+                            >None</div>
+                            {sortList.map((sortType: string) => (
+                                 <div
+                                    key={sortType}
+                                    onClick={() => {
+                                        setSort(sortType);
+                                        updateURLParams("sortBy", sortType);
+                                        setShowSortDropdown(false);
+                                    }}
+                                    className={`px-4 py-2 hover:bg-black/10 cursor-pointer ${sort === sortType ? "border-l-8 font-semibold border-l-primary" : ""}`}
+                                >
+                                    {sortType}
+                                </div>
+                            ))}
+                            { isSupplierPending && <div className="p-4 text-center text-sm text-black/50">Loading Suppliers...</div> }
+                        </div>
+                    </label>
                     <label className="relative">
                         <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                             e.stopPropagation();
