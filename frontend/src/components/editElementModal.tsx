@@ -44,7 +44,8 @@ export default function EditElementModal({application, fields, editId, onClose }
 
     const optionsQueries = useQueries({
         queries: fields
-        .filter((field): field is OptionField => field.type === 'options' && !!field.fetchOptions)
+        .filter((field): field is OptionField  => 
+            field.type === 'options' && !!field.fetchOptions )
         .map((field) => ({
             queryKey: [`${application}`, field.key, 'options'],
             queryFn: field.fetchOptions!
@@ -52,7 +53,8 @@ export default function EditElementModal({application, fields, editId, onClose }
     });
 
     const optionsMap = fields
-        .filter((field): field is OptionField => field.type === 'options' && !!field.fetchOptions)
+        .filter((field): field is OptionField => 
+            field.type === 'options' && !!field.fetchOptions)
         .reduce((accumulator, field, index) => {
             accumulator[field.key] = optionsQueries[index].data || [];
             return accumulator;
