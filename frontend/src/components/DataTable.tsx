@@ -66,7 +66,7 @@ export default function DataTable({ onEdit, onDelete, data, columns, noActions =
                                 const lowThreshold = col.lowThreshold;
                                 const isLow = value <= lowThreshold;
                                 return (
-                                    <td key={colIndex} className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${isLow ? 'text-red-500 rounded-full font-semibold' : ''}`}>
+                                    <td key={colIndex} className={`px-4 py-4 whitespace-nowrap text-sm text-gray-900 ${isLow ? 'text-red-500 font-semibold' : ''}`}>
                                         {value}
                                         {isLow && <span className="ml-2 text-[10px] bg-red-100 text-red-700 px-2 py-1 rounded-full font-semibold">Low Stock</span>}
                                     </td>
@@ -74,7 +74,7 @@ export default function DataTable({ onEdit, onDelete, data, columns, noActions =
                             }
 
                             return (
-                                <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">  
+                                <td key={colIndex} className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">  
                                     {value}
                                 </td>
                             );
