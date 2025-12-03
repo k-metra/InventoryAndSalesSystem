@@ -56,9 +56,21 @@ export default function DataTable({ onEdit, onDelete, data, columns, noActions =
                         {columns.map((col, colIndex) => {
                             const { key } = col;
                             let value = getNestedValue(row, key);
+                            
 
                             if (col.type === 'number' && 'format' in col) {
                                 value = col.format!(value);
+                            }
+
+                            if (col.type === 'number' && 'lowThreshold' in col && typeof col.lowThreshold === 'number') {
+                                const lowThreshold = col.lowThreshold;
+                                const isLow = value <= lowThreshold;
+                                return (
+                                    <td key={colIndex} className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${isLow ? 'text-red-500 rounded-full font-semibold' : ''}`}>
+                                        {value}
+                                        {isLow && <span className="ml-2 text-[10px] bg-red-100 text-red-700 px-2 py-1 rounded-full font-semibold">Low Stock</span>}
+                                    </td>
+                                );
                             }
 
                             return (
