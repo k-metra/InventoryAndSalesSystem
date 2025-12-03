@@ -13,9 +13,9 @@ A web-based Inventory & Sales System designed to help businesses manage products
 - **Products Tab**:
   - [x] View products with essential details
   - [x] Edit product information
-  - [ ] Create new products
-  - [ ] Delete existing products
-  - [ ] Search and filter functionality
+  - [x] Create new products
+  - [x] Delete existing products
+  - [x] Search and filter functionality
 - [ ] **POS Tab**: TBD Point of Sales
 - [ ] **Customer List**: A list of customers and their past sales history
 - **Authentication:**

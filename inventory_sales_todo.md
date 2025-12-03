@@ -13,7 +13,7 @@
 
 ## 2. **Products Module**
 ### Backend
-- [ ] Product model + migration  
+- [x] Product model + migration  
   - name  
   - description  
   - SKU  
@@ -24,11 +24,11 @@
   - supplier_id  
 - [x] CRUD endpoints  
 - [x] Stock increment/decrement helpers  
-- [ ] Fetch low-stock items (threshold)
+- [x] Fetch low-stock items (threshold)
 
 ### Frontend
 - [x] Product listing page  
-- [ ] Filters (category, supplier, low stock)  
+- [x] Filters (category, supplier, low stock)  
 - [x] Add/Edit product modal  
 - [x] Delete product confirmation dialog  
 
@@ -74,7 +74,7 @@
 ---
 
 ## 6. **Suppliers Module**
-- [ ] Supplier model + migration  
+- [x] Supplier model + migration  
 - [ ] CRUD endpoints  
 - [ ] Supplier listing page  
 - [ ] Add/Edit/Delete supplier  
@@ -82,8 +82,8 @@
 ---
 
 ## 7. **Dashboard & Analytics**
-- [ ] Total Products  
-- [ ] Total Inventory Value  
+- [x] Total Products  
+- [x] Total Inventory Value  
 - [ ] Total Sales (monthly)  
 - [ ] Total Customers  
 - [ ] Charts:
