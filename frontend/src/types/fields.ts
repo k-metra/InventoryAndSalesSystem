@@ -4,7 +4,7 @@ type Commons = {
 }
 
 type BaseField = Commons & {
-    type: "text" | "readonly";
+    type: "text" | "readonly" | "textarea";
 }
 
 type OptionField = Commons & {
