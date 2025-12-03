@@ -1,7 +1,7 @@
 import getNestedValue from '../utils/getNestedValue';
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { useState, useEffect, useCallback } from 'react';
-import type { Field, PriceField } from '../types/fields';
+import type { Field } from '../types/fields';
 
 
 type TableProps = {
