@@ -35,7 +35,7 @@ const productFields: Field[] = [
     { label: "Name", key: "name", type: "text" },
     { label: "SKU", key: "sku", type: "text" },
     { label: "Price", key: "price", type: "number", format: formatCurrency },
-    { label: "Stock", key: "stock", type: "number" },
+    { label: "Stock", key: "stock", type: "number", lowThreshold: 15 },
     { label: "Category", 
         key: "category.name", 
         type: "options",
