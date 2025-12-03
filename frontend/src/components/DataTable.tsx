@@ -1,13 +1,14 @@
 import getNestedValue from '../utils/getNestedValue';
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { useState, useEffect, useCallback } from 'react';
+import type { Field, PriceField } from '../types/fields';
 
 
 type TableProps = {
     onEdit?: (id?: number | string) => void;
     onDelete?: (id?: number | string) => void;
     data: any[];
-    columns: { label: string; key: string }[];
+    columns: Field[];
     noActions?: boolean;
 }
 
@@ -52,8 +53,13 @@ export default function DataTable({ onEdit, onDelete, data, columns, noActions =
             <tbody className="bg-white divide-y divide-black/20">
                 {data.map((row, rowIndex) => (
                     <tr key={rowIndex} className="hover:bg-gray-100 transition-colors duration-200">
-                        {columns.map(({ key }, colIndex) => {
-                            const value = getNestedValue(row, key);
+                        {columns.map((col, colIndex) => {
+                            const { key } = col;
+                            let value = getNestedValue(row, key);
+
+                            if (col.type === 'number' && 'format' in col) {
+                                value = col.format(value);
+                            }
 
                             return (
                                 <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">  
