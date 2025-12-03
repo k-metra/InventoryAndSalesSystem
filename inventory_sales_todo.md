@@ -27,10 +27,10 @@
 - [ ] Fetch low-stock items (threshold)
 
 ### Frontend
-- [ ] Product listing page  
+- [x] Product listing page  
 - [ ] Filters (category, supplier, low stock)  
-- [ ] Add/Edit product modal  
-- [ ] Delete product confirmation dialog  
+- [x] Add/Edit product modal  
+- [x] Delete product confirmation dialog  
 
 ---
 
@@ -101,11 +101,11 @@
 ---
 
 ## 9. **General UI/UX**
-- [ ] Sidebar navigation  
-- [ ] Collapsible sidebar  
+- [x] Sidebar navigation  
+- [x] Collapsible sidebar  
 - [ ] Dark & light theme toggle  
-- [ ] Notifications (success/error)  
-- [ ] Loading states everywhere  
+- [x] Notifications (success/error)  
+- [x] Loading states everywhere  
 
 ---
 
