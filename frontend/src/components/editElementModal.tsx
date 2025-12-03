@@ -110,11 +110,11 @@ export default function EditElementModal({application, fields, editId, onClose }
                 </div>
             ) : (
                 (
-                    <div className="custom-scrollbar relative bg-white rounded-lg max-w-[70vh] max-h-[80vh] overflow-y-auto">
+                    <div className="custom-scrollbar relative bg-white rounded-lg w-full max-w-[70vh] max-h-[80vh] overflow-y-auto">
                         <div className="p-6">
                             <h5 className="font-bold text-text mb-4">Edit Element</h5>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 gap-4">
                                  {fields.map((field) => {
                             if (field.type === 'readonly') {
                                 return (
@@ -159,6 +159,18 @@ export default function EditElementModal({application, fields, editId, onClose }
                                             type="number"
                                             value={formState[field.key] || ''}
                                             onChange={(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => handleChange(field.key, e.target.value)}
+                                        />
+                                    </div>
+                                )
+                            } else if (field.type === 'textarea') {
+                                return (
+                                    <div key={field.key} className="mb-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}</label>
+                                        <textarea
+                                            value={formState[field.key] || ''}
+                                            onChange={(e) => handleChange(field.key, e.target.value)}
+                                            className="w-full border border-black/25 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                            rows={4}
                                         />
                                     </div>
                                 )
