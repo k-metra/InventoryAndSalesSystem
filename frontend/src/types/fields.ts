@@ -17,6 +17,11 @@ type PriceField = Commons & {
     format?: (value: number) => string;
 }
 
-type Field = BaseField | OptionField | PriceField;
+type NumberField = Commons & {
+    type: "number";
+    lowThreshold?: number;
+}
 
-export type { Field, BaseField, OptionField, PriceField };
+type Field = BaseField | OptionField | PriceField | NumberField;
+
+export type { Field, BaseField, OptionField, PriceField, NumberField };
