@@ -21,7 +21,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated_data = $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $category = Category::create($validated_data);
+        return response()->json($category, 201);
     }
 
     /**
@@ -29,7 +35,9 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $category = Category::with('products')->where('id', $id)->firstOrFail();
+
+        return response()->json($category);
     }
 
     /**
@@ -45,6 +53,18 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::withCount('products')->findOrFail($id);
+
+        if ($category && $category->products_count > 0) {
+            return response()->json([
+                'error' => 'Cannot delete category with one or more products.'
+            ], 403);
+        }
+
+        $category->delete();
+
+        return response()->json([
+            'message' => 'Category deleted successfully.'
+        ], 201);
     }
 }
