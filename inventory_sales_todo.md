@@ -87,8 +87,8 @@
 - [ ] Total Sales (monthly)  
 - [ ] Total Customers  
 - [ ] Charts:
-  - Sales over time  
-  - Low stock items  
+  - [x] Sales over time  
+  - [x] Low stock items  
   - Category distribution  
 
 ---
