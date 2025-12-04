@@ -18,6 +18,7 @@ import {
 } from '@tanstack/react-query';
 import { ToastProvider } from './contexts/ToastContext';
 import CategoriesPage from './pages/dashboard/categoriesPage';
+import SuppliersPage from './pages/dashboard/suppliersPage';
 
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
@@ -51,6 +52,11 @@ function AppContent() {
               <Route 
                 path="categories"
                 element={ <CategoriesPage />}
+              />
+
+              <Route
+                path="suppliers"
+                element={ <SuppliersPage /> }
               />
             </Route>
 
