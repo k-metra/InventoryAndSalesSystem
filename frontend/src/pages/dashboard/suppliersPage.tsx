@@ -5,6 +5,9 @@ import { useCallback, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 import type { Supplier } from "../../types/objects";
+import { FaPhone } from "react-icons/fa";
+import { IoMdPerson } from "react-icons/io";
+import { FaHouse } from "react-icons/fa6";
 
 export default function SuppliersPage() {
     const queryClient = useQueryClient();
@@ -18,7 +21,12 @@ export default function SuppliersPage() {
 
     const handleSearch = useCallback(() => {
         setActiveSearch(search);
-        setSearchParams({ 'search': search });
+        if (search.trim() === "") {
+            searchParams.delete("search");
+            setSearchParams(searchParams);
+        } else {
+            setSearchParams({ search: search });
+        }
     }, [])
 
     return (
@@ -37,13 +45,7 @@ export default function SuppliersPage() {
                           {(activeSearch !== search || activeSearch === '') ? (
                             <button
                                 onClick={() => {
-                                    setActiveSearch(search);
-                                    if (search.trim() === "") {
-                                        searchParams.delete("search");
-                                        setSearchParams(searchParams);
-                                    } else {
-                                        setSearchParams({ search: search });
-                                    }
+                                   
                                 }}
                                 className="absolute inline-block right-3 top-1/2 -translate-y-1/2 text-white p-2 cursor-pointer rounded-full hover:bg-black/10 transition-colors duration-200"
                                         >
@@ -80,9 +82,18 @@ export default function SuppliersPage() {
                                 <span className="text-[12px] text-muted">{supplier.products_count} Product{(supplier.products_count! > 1 || supplier.products_count! < 1) && 's'}</span>
                             </div>
 
-                            <span className="text-[14px] text-muted mb-1 line-clamp-1">Phone Number: {supplier.phone}</span>
-                            <span className="text-[14px] text-muted mb-1 line-clamp-1">Contact Person: {supplier.contact_person}</span>
-                            <span className="text-[14px] text-muted mb-1 line-clamp-1">Address: {supplier.address}</span>
+                            <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
+                                <FaPhone className="inline-block mr-2" />
+                                 {supplier.phone}
+                            </span>
+                            <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
+                                <IoMdPerson className="inline-block mr-2" /> 
+                                {supplier.contact_person}
+                            </span>
+                            <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
+                                <FaHouse className="inline-block mr-2" />
+                                {supplier.address}
+                            </span>
                             
                         </div>
                      ))}
