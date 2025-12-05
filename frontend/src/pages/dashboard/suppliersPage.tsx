@@ -3,11 +3,12 @@ import useSuppliers from '../../queries/suppliers/useSuppliers';
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { MdClear } from "react-icons/md";
+import { MdClear, MdEdit } from "react-icons/md";
 import type { Supplier } from "../../types/objects";
 import { FaPhone } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
 import { FaHouse } from "react-icons/fa6";
+import { AiFillDelete } from "react-icons/ai";
 
 export default function SuppliersPage() {
     const queryClient = useQueryClient();
@@ -76,24 +77,44 @@ export default function SuppliersPage() {
                 ) : (
                     <>
                      {data?.map((supplier: Supplier) => (
-                        <div className="w-full m-auto bg-secondary border border-black/25 p-4 rounded-md flex flex-col gap-0" key={supplier.id}>
-                            <div className="flex justify-between items-center mb-2">
-                                <h6 className="text-text font-semibold">{supplier.name}</h6>
-                                <span className="text-[12px] text-muted">{supplier.products_count} Product{(supplier.products_count! > 1 || supplier.products_count! < 1) && 's'}</span>
+                        <div className="w-full m-auto bg-secondary border border-black/25 p-4 rounded-md flex flex-row gap-0" key={supplier.id}>
+                            <div className="w-full">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h6 className="text-text font-semibold">{supplier.name}</h6>
+                                    <span className="text-[12px] text-muted">{supplier.products_count} Product{(supplier.products_count! > 1 || supplier.products_count! < 1) && 's'}</span>
+                                </div>
+
+                                <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
+                                    <FaPhone className="inline-block mr-2" />
+                                    {supplier.phone}
+                                </span>
+                                <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
+                                    <IoMdPerson className="inline-block mr-2" /> 
+                                    {supplier.contact_person}
+                                </span>
+                                <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
+                                    <FaHouse className="inline-block mr-2" />
+                                    {supplier.address}
+                                </span>
                             </div>
 
-                            <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
-                                <FaPhone className="inline-block mr-2" />
-                                 {supplier.phone}
-                            </span>
-                            <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
-                                <IoMdPerson className="inline-block mr-2" /> 
-                                {supplier.contact_person}
-                            </span>
-                            <span className="text-[14px] text-text/90 mb-1 line-clamp-1">
-                                <FaHouse className="inline-block mr-2" />
-                                {supplier.address}
-                            </span>
+                            <div className="flex flex-col max-w-1/4 ml-4 gap-1 items-center">
+                                <button
+                                    className="from-blue-500 to-blue-600 bg-linear-to-r p-2 py-4 rounded-md text-white hover:from-blue-600 hover:to-blue-700 transition-colors duration-300 ease-in cursor-pointer"
+                                >
+                                    <MdEdit size={20} />
+
+                                </button>
+
+                                <button
+                                    disabled={supplier.products_count! > 0}
+                                    title={supplier.products_count! > 0 ? "Cannot delete supplier with 1 or more products" : "Delete Supplier" }
+                                    className="bg-transparent border border-red-500 p-2 py-4 rounded-md text-white hover:bg-red-500 group transition-colors duration-100 ease-in cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <AiFillDelete className="text-red-500 group-hover:text-background" size={20} />
+
+                                </button>
+                            </div>
                             
                         </div>
                      ))}
