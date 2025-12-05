@@ -28,7 +28,9 @@ class SupplierController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $supplier = Supplier::withCount('products')->findOrFail($id);
+
+        return response()->json($supplier);
     }
 
     /**
@@ -36,7 +38,19 @@ class SupplierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $supplier = Supplier::findOrFail($id);
+
+        $validated_data = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255',
+            'contact_person' => 'sometimes|string|max:255',
+            'phone' => 'sometimes|string|max:20',
+            'address' => 'sometimes|string|max:500',
+        ]);
+
+        $supplier->update($validated_data);
+
+        return response()->json($supplier);
     }
 
     /**
