@@ -9,12 +9,44 @@ import { FaPhone } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
 import { FaHouse } from "react-icons/fa6";
 import { AiFillDelete } from "react-icons/ai";
+import EditElementModal from "../../components/editElementModal";
+import type { Field } from "../../types/fields";
+
+const supplierFields: Field[] = [
+    {
+        label: "Name",
+        key: "name",
+        type: "text",
+    },
+    {
+        label: 'E-mail',
+        key: 'email',
+        type: 'text',
+    },
+    {
+        label: 'Contact Person',
+        type: 'text',
+        key: 'contact_person',
+    },
+    {
+        label: 'Phone Number',
+        type: 'text',
+        key: 'phone',
+    },
+    {
+        label: 'Address',
+        type: 'textarea',
+        key: 'address',
+    }
+
+];
 
 export default function SuppliersPage() {
     const queryClient = useQueryClient();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const [editId, setEditId] = useState<number | null>(searchParams.get('edit') ? parseInt(searchParams.get('edit')!) : null);
     const [search, setSearch] = useState(searchParams.get('search') || '');
     const [activeSearch, setActiveSearch] = useState(searchParams.get('search') || '');
 
@@ -29,6 +61,17 @@ export default function SuppliersPage() {
             setSearchParams({ search: search });
         }
     }, [])
+
+    const handleEdit = useCallback((id: number | null) => {
+        searchParams.delete("edit");
+
+        if (id !== null) {
+            searchParams.set("edit", id.toString());
+        }
+
+        setSearchParams(searchParams);
+        setEditId(id);
+    }, []);
 
     return (
         <div className="p-4 w-full h-full">
@@ -95,6 +138,7 @@ export default function SuppliersPage() {
 
                             <div className="flex flex-col max-w-1/4 ml-4 gap-1 items-center">
                                 <button
+                                    onClick={() => handleEdit(supplier.id)}
                                     className="from-blue-500 to-blue-600 bg-linear-to-r p-2 py-4 rounded-md text-white hover:from-blue-600 hover:to-blue-700 transition-colors duration-300 ease-in cursor-pointer"
                                 >
                                     <MdEdit size={20} />
@@ -113,6 +157,10 @@ export default function SuppliersPage() {
                             
                         </div>
                      ))}
+
+                     {editId !== null && (
+                        <EditElementModal editId={String(editId)} fields={supplierFields} application={"suppliers"} onClose={() => handleEdit(null)}/>
+                     )}
                     </>
                 )}
             </div>
