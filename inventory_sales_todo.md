@@ -76,7 +76,7 @@
 ## 6. **Suppliers Module**
 - [x] Supplier model + migration  
 - [ ] CRUD endpoints  
-- [ ] Supplier listing page  
+- [X] Supplier listing page  
 - [ ] Add/Edit/Delete supplier  
 
 ---
