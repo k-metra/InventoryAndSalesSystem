@@ -44,6 +44,18 @@ class SupplierController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $supplier = Supplier::withCount('products')->findOrFail($id);
+
+        if ($supplier->products_count > 0) {
+            return response()->json([
+                'message' => 'Cannot delete supplier with associated products.'
+            ], 400);
+        }
+
+        $supplier->delete();
+
+        return response()->json([
+            'message' => 'Supplier deleted successfully.'
+        ], 200);
     }
 }
