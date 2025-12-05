@@ -54,12 +54,7 @@ export default function SuppliersPage() {
                             </button>
                         ): (
                             <button
-                                onClick={() => {
-                                    setActiveSearch("");
-                                    setSearch("");
-                                    searchParams.delete("search");
-                                    setSearchParams(searchParams);
-                                }}
+                                onClick={handleSearch}
                                 className="absolute inline-block right-3 top-1/2 -translate-y-1/2 text-white p-2 cursor-pointer rounded-full hover:bg-black/10 transition-colors duration-200"
                             >
                                 <MdClear size={18} className="text-text" />
