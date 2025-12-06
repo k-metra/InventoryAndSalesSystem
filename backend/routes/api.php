@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 
 Route::middleware(['web'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -44,4 +45,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/categories/{id}', [CategoryController::class, 'show']);
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
     Route::put('/categories/{id}', [CategoryController::class, 'update']);
+
+    // Customers
+    Route::get('/customers', [CustomerController::class, 'index']);
 });
