@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { useCallback, useMemo, useState } from "react";
 import useDeleteCustomers from "../../queries/customers/useDeleteCustomers";
 import EditElementModal from "../../components/editElementModal";
+import Pagination from "../../components/pagination";
 
 const customerFields: Field[] = [
     { label: 'ID', key: 'id', type: 'readonly' },
@@ -21,6 +22,7 @@ export default function CustomersPage() {
     const { confirm } = useConfirmation();
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const [currentPage, setCurrentPage] = useState<number>(searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1);
 
     const [editId, setEditId] = useState<number | null>(searchParams.get('edit') ? parseInt(searchParams.get('edit') as string) : null);
 
@@ -28,11 +30,11 @@ export default function CustomersPage() {
         data: Customers, 
         isLoading: isCustomersLoading, 
         isError: isCustomersError }
-         = useCustomers();
+         = useCustomers(currentPage);
 
     const deleteCustomer = useDeleteCustomers();
     const customerAmount = useMemo(() => {
-        return Customers ? Customers.length : 0;
+        return Customers?.total || 0;
     }, [Customers]);
 
     const handleEdit = useCallback((customerId?: string | number | undefined) => {
@@ -66,6 +68,13 @@ export default function CustomersPage() {
             );
         }
     }, [confirm, addToast, deleteCustomer]);
+
+    const setPage = useCallback((page: number = 1) => {
+        searchParams.set('page', page.toString());
+        setSearchParams(searchParams);
+
+        setCurrentPage(page);
+    }, [searchParams, currentPage]);
     
     if (isCustomersError) return <div className="w-full h-full p-6 text-lg text-red-500">Ran into an error loading customers.</div>;
 
@@ -82,10 +91,16 @@ export default function CustomersPage() {
                 <h4 className="font-bold mb-4 text-text">All Customers ({customerAmount})</h4>
 
                 <DataTable
-                    data={Customers}
+                    data={Customers?.data}
                     columns={customerFields}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
+                />
+
+                <Pagination 
+                    page={currentPage}
+                    setPage={setPage}
+                    lastPage={Customers?.last_page || 1}
                 />
             </div>
 

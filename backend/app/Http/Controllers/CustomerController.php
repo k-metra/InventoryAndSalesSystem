@@ -28,7 +28,7 @@ class CustomerController extends Controller
 
     public function index()
     {
-        $customers = Customer::all();
+        $customers = Customer::query()->paginate(10)->withQueryString();
 
         return response()->json($customers);
     }
