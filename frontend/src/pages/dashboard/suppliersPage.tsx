@@ -6,7 +6,7 @@ import { CiSearch } from "react-icons/ci";
 import { MdClear, MdEdit } from "react-icons/md";
 import type { Supplier } from "../../types/objects";
 import { FaPhone } from "react-icons/fa";
-import { IoMdPerson } from "react-icons/io";
+import { IoMdAdd, IoMdPerson } from "react-icons/io";
 import { FaHouse } from "react-icons/fa6";
 import { AiFillDelete } from "react-icons/ai";
 import EditElementModal from "../../components/editElementModal";
@@ -15,6 +15,7 @@ import useDeleteSuppliers from '../../queries/suppliers/useDeleteSuppliers';
 import { useToast } from '../../contexts/ToastContext';
 import { useConfirmation } from '../../contexts/ConfirmationContext';
 import { useQueryClient } from '@tanstack/react-query';
+import CreateElementModal from '../../components/createElementModal';
 
 const supplierFields: Field[] = [
     {
@@ -53,11 +54,24 @@ export default function SuppliersPage() {
     const { confirm } = useConfirmation();
 
     const [editId, setEditId] = useState<number | null>(searchParams.get('edit') ? parseInt(searchParams.get('edit')!) : null);
+    const [create, setCreate] = useState<boolean>(searchParams.get('create') === 'true');
     const [search, setSearch] = useState(searchParams.get('search') || '');
     const [activeSearch, setActiveSearch] = useState(searchParams.get('search') || '');
 
     const { data, isLoading, isError } = useSuppliers(activeSearch);
     const deleteSuppliers = useDeleteSuppliers();
+
+    const handleCreate = useCallback((open: boolean) => {
+        searchParams.delete('edit');
+        searchParams.delete('create');
+
+        if (open) {
+            searchParams.set('create', 'true');
+        }
+
+        setSearchParams(searchParams);
+        setCreate(open);
+    }, [searchParams, setSearchParams]);
 
     const handleSearch = useCallback(() => {
         setActiveSearch(search);
@@ -133,6 +147,17 @@ export default function SuppliersPage() {
                             </button>
                         )}  
                 </label>
+
+                 <button
+                    onClick={() => handleCreate(true)}
+                        className="ml-4 relative to-blue-500 group from-blue-400 bg-linear-to-r hover:to-blue-600 hover:from-blue-500 text-white p-2 h-10 w-10 self-center rounded-md transition-colors duration-300 cursor-pointer"
+                    >
+                        <div  className="z-20 text-sm text-black w-28 bg-background border border-black/25 p-1 absolute top-0 -translate-y-9 rounded-md left-1/2 -translate-x-1/2 hidden pointer-events-none group-hover:inline-block">
+                            Add Supplier
+                        </div>
+
+                        <IoMdAdd size={24} className="inline-block" />
+                </button>
             </div>
             <div className="w-full h-full overflow-y-auto custom-scrollbar grid grid-cols-2 gap-4">
                 {isLoading ? (
@@ -190,6 +215,10 @@ export default function SuppliersPage() {
 
                      {editId !== null && (
                         <EditElementModal editId={String(editId)} fields={supplierFields} application={"suppliers"} onClose={() => handleEdit(null)}/>
+                     )}
+
+                     {create && (
+                        <CreateElementModal onClose={() => handleCreate(false)} fields={supplierFields} application="suppliers"/>
                      )}
                     </>
                 )}
