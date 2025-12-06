@@ -48,4 +48,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Customers
     Route::get('/customers', [CustomerController::class, 'index']);
+    Route::get('/customers/{id}', [CustomerController::class, 'show']);
+    Route::put('/customers/{id}', [CustomerController::class, 'update']);
 });
