@@ -44,8 +44,10 @@ class SalesSeeder extends Seeder
                     'price_at_sale' => $price,
                 ]);
 
+                // We compute the total here based on the price and quantity
                 $total += $price * $quantity;
 
+                // Decrease product stock depending on quantity
                 $product->decrement('stock', $quantity);  
             }
 
