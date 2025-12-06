@@ -19,6 +19,7 @@ import {
 import { ToastProvider } from './contexts/ToastContext';
 import CategoriesPage from './pages/dashboard/categoriesPage';
 import SuppliersPage from './pages/dashboard/suppliersPage';
+import CustomersPage from './pages/dashboard/customersPage';
 
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
@@ -57,6 +58,11 @@ function AppContent() {
               <Route
                 path="suppliers"
                 element={ <SuppliersPage /> }
+              />
+
+              <Route 
+                path="customers"
+                element={ <CustomersPage /> }
               />
             </Route>
 
