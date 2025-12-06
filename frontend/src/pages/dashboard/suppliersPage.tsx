@@ -11,6 +11,10 @@ import { FaHouse } from "react-icons/fa6";
 import { AiFillDelete } from "react-icons/ai";
 import EditElementModal from "../../components/editElementModal";
 import type { Field } from "../../types/fields";
+import useDeleteSuppliers from '../../queries/suppliers/useDeleteSuppliers';
+import { useToast } from '../../contexts/ToastContext';
+import { useConfirmation } from '../../contexts/ConfirmationContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 const supplierFields: Field[] = [
     {
@@ -43,13 +47,17 @@ const supplierFields: Field[] = [
 
 export default function SuppliersPage() {
 
+    const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
+    const { addToast } = useToast();
+    const { confirm } = useConfirmation();
 
     const [editId, setEditId] = useState<number | null>(searchParams.get('edit') ? parseInt(searchParams.get('edit')!) : null);
     const [search, setSearch] = useState(searchParams.get('search') || '');
     const [activeSearch, setActiveSearch] = useState(searchParams.get('search') || '');
 
     const { data, isLoading, isError } = useSuppliers(activeSearch);
+    const deleteSuppliers = useDeleteSuppliers();
 
     const handleSearch = useCallback(() => {
         setActiveSearch(search);
@@ -72,6 +80,28 @@ export default function SuppliersPage() {
 
         setSearchParams(searchParams);
         setEditId(id);
+    }, []);
+
+    const handleDelete = useCallback(async (id: number | string) => {
+        if (!id) return;
+
+        const confirmation = await confirm("Are you sure you want to delete this supplier? This CANNOT be undone.");
+
+        if (!confirmation) {
+            return;
+        }
+
+        deleteSuppliers.mutate(id, {
+            onSuccess: () => {
+                addToast("Supplier deleted successfully", "success");
+                queryClient.invalidateQueries({ queryKey: ['suppliers'] });
+            },
+
+            onError: (err) => {
+                addToast("Ran into an error deleting that supplier.", "error");
+                console.error(err);
+            }
+        });
     }, []);
 
     return (
@@ -145,6 +175,7 @@ export default function SuppliersPage() {
                                 </button>
 
                                 <button
+                                    onClick={() => handleDelete(supplier.id)}
                                     disabled={supplier.products_count! > 0}
                                     title={supplier.products_count! > 0 ? "Cannot delete supplier with 1 or more products" : "Delete Supplier" }
                                     className="bg-transparent border border-red-500 p-2 py-4 rounded-md text-white hover:bg-red-500 group transition-colors duration-100 ease-in cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
