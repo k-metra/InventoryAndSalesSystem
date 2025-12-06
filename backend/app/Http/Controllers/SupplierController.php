@@ -10,9 +10,21 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Supplier::withCount('products')->get());
+        $query = Supplier::withCount('products');
+        $search = $request->query('search');
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('contact_person', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%")
+                ->orWhere('address', 'like', "%{$search}%");
+        }
+        
+
+        return response()->json($query->get());
     }
 
     /**

@@ -53,13 +53,15 @@ export default function SuppliersPage() {
 
     const handleSearch = useCallback(() => {
         setActiveSearch(search);
-        if (search.trim() === "") {
-            searchParams.delete("search");
-            setSearchParams(searchParams);
-        } else {
-            setSearchParams({ search: search });
+
+        searchParams.delete("search");
+
+        if (search.trim() !== '') {
+            searchParams.set("search", search);
         }
-    }, [])
+
+        setSearchParams(searchParams);
+    }, [search, searchParams])
 
     const handleEdit = useCallback((id: number | null) => {
         searchParams.delete("edit");
@@ -81,22 +83,20 @@ export default function SuppliersPage() {
                         type="text"
                         placeholder="Search suppliers..."
                         className="bg-secondary border p-2 rounded-md transition-colors duration-300 ease-in border-black/25 outline-none focus:outline-blue-500 focus:border-blue-500 focus:shadow-[0_0_10px_-2px_var(--color-blue-500)] w-full max-w-sm"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
 
                           {(activeSearch !== search || activeSearch === '') ? (
                             <button
-                                onClick={() => {
-                                   
-                                }}
+                                onClick={() => handleSearch()}
                                 className="absolute inline-block right-3 top-1/2 -translate-y-1/2 text-white p-2 cursor-pointer rounded-full hover:bg-black/10 transition-colors duration-200"
                                         >
                                 <CiSearch size={18} className="text-text" />
                             </button>
                         ): (
                             <button
-                                onClick={handleSearch}
+                                onClick={() => { setSearch(''); setActiveSearch(''); searchParams.delete('search'); setSearchParams(searchParams);  }}
                                 className="absolute inline-block right-3 top-1/2 -translate-y-1/2 text-white p-2 cursor-pointer rounded-full hover:bg-black/10 transition-colors duration-200"
                             >
                                 <MdClear size={18} className="text-text" />
