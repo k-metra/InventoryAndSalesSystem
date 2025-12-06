@@ -1,4 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
+
 import useSuppliers from '../../queries/suppliers/useSuppliers';
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useState } from "react";
@@ -42,7 +42,6 @@ const supplierFields: Field[] = [
 ];
 
 export default function SuppliersPage() {
-    const queryClient = useQueryClient();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
