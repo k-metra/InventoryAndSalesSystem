@@ -8,11 +8,10 @@ type PaginationProps = {
     page: number;
     setPage: (page: number) => void;
     lastPage: number;
+    MAX_VISIBLE_PAGES?: number;
 }
 
-export default function Pagination({ page, setPage, lastPage }: PaginationProps) {
-
-    const MAX_VISIBLE_PAGES = 5;
+export default function Pagination({ page, setPage, lastPage, MAX_VISIBLE_PAGES = 5 }: PaginationProps) {
 
     const getVisiblePages = useCallback(() => {
         const pages = [];
