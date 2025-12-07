@@ -39,7 +39,7 @@ class CustomerController extends Controller
                     ->orWhere('phone', 'like', "%{$searchQuery}%");
         }
         
-        $query = $query->orderBy('id','desc')->paginate(10)->withQueryString();
+        $query = $query->orderBy('name','asc')->paginate(10)->withQueryString();
 
         return response()->json($query);
     }
