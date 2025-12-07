@@ -18,7 +18,7 @@ class CustomerController extends Controller
         'update' => [
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:customers,email',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20', 
         ],
     ];
 
@@ -49,7 +49,11 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->validations['create']);
+
+        $customer = Customer::create($request->only(['name', 'email', 'phone']));
+
+        return response()->json($customer, 201);
     }
 
     /**
