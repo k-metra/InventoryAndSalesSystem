@@ -26,11 +26,22 @@ class CustomerController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::query()->paginate(10)->withQueryString();
 
-        return response()->json($customers);
+        $searchQuery = $request->query('search');
+
+        $query = Customer::query();
+
+        if ($searchQuery && trim($searchQuery) !== '') {
+            $query = $query->where('name', 'like', "%{$searchQuery}%")
+                    ->orWhere('email', 'like', "%{$searchQuery}%")
+                    ->orWhere('phone', 'like', "%{$searchQuery}%");
+        }
+        
+        $query = $query->orderBy('id','desc')->paginate(10)->withQueryString();
+
+        return response()->json($query);
     }
 
     /**

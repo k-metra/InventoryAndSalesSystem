@@ -9,6 +9,9 @@ import { useCallback, useMemo, useState } from "react";
 import useDeleteCustomers from "../../queries/customers/useDeleteCustomers";
 import EditElementModal from "../../components/editElementModal";
 import Pagination from "../../components/pagination";
+import SearchBar from "../../components/searchBar";
+import { IoMdAdd } from "react-icons/io";
+import CreateElementModal from "../../components/createElementModal";
 
 const customerFields: Field[] = [
     { label: 'ID', key: 'id', type: 'readonly' },
@@ -23,6 +26,9 @@ export default function CustomersPage() {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [currentPage, setCurrentPage] = useState<number>(searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1);
+    const [create, setCreate] = useState<boolean>(searchParams.get('create') === 'true');
+    const [search, setSearch] = useState<string>(searchParams.get('search') || '');
+    const [activeSearch, setActiveSearch] = useState<string>(searchParams.get('search') || '');
 
     const [editId, setEditId] = useState<number | null>(searchParams.get('edit') ? parseInt(searchParams.get('edit') as string) : null);
 
@@ -30,7 +36,7 @@ export default function CustomersPage() {
         data: Customers, 
         isLoading: isCustomersLoading, 
         isError: isCustomersError }
-         = useCustomers(currentPage);
+         = useCustomers(currentPage, activeSearch);
 
     const deleteCustomer = useDeleteCustomers();
     const customerAmount = useMemo(() => {
@@ -69,6 +75,21 @@ export default function CustomersPage() {
         }
     }, [confirm, addToast, deleteCustomer]);
 
+    const handleCreate = useCallback((open: boolean) => {
+        if (open) {
+            setEditId(null);
+            searchParams.delete('edit');
+
+            setCreate(true);
+            searchParams.set('create', 'true');
+        } else {
+            setCreate(false);
+            searchParams.delete('create');
+        }
+
+        setSearchParams(searchParams);
+    }, [create, searchParams]);
+
     const setPage = useCallback((page: number = 1) => {
         searchParams.set('page', page.toString());
         setSearchParams(searchParams);
@@ -90,6 +111,46 @@ export default function CustomersPage() {
             <div className="w-full h-full p-4">
                 <h4 className="font-bold mb-4 text-text">All Customers ({customerAmount})</h4>
 
+                <div className="max-w-md mb-4 flex flex-row items-center gap-1">
+                    <SearchBar
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setSearch(e.target.value);
+                    }}
+                    value={search}
+                    handleSearch={() => {
+                        searchParams.delete('search');
+                        setActiveSearch(search);
+
+                        if (search.trim().length > 0) {
+                            searchParams.set('search', search);
+                        }
+
+                        setSearchParams(searchParams);
+                        setPage(1);
+                    }}
+                    handleClear={() => {
+                        setActiveSearch('');
+                        setSearch('');
+                        searchParams.delete('search');
+                        setSearchParams(searchParams);
+                        setPage(1);
+                    }}
+                    searchParams={searchParams}
+                    placeholder="Search for a customer..."
+                />
+
+                    <button
+                        onClick={() => handleCreate(true)}
+                        className="ml-2 relative to-blue-500 group from-blue-400 bg-linear-to-r hover:to-blue-600 hover:from-blue-500 text-white p-2 h-10 w-10 self-center rounded-md transition-colors duration-300 cursor-pointer"
+                        >
+                            <div  className="z-20 text-sm text-black w-28 bg-background border border-black/25 p-1 absolute top-0 -translate-y-9 rounded-md left-1/2 -translate-x-1/2 hidden pointer-events-none group-hover:inline-block">
+                                Add Customer
+                            </div>
+                    
+                            <IoMdAdd size={24} className="inline-block" />
+                    </button>
+                </div>
+
                 <DataTable
                     data={Customers?.data}
                     columns={customerFields}
@@ -110,6 +171,14 @@ export default function CustomersPage() {
                     application="customers"
                     fields={customerFields}
                     onClose={() => handleEdit()}
+                />
+            )}
+
+            {create && (
+                <CreateElementModal
+                    application="customers"
+                    fields={customerFields}
+                    onClose={() => handleCreate(false)}
                 />
             )}
         </>
