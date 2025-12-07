@@ -12,6 +12,7 @@ import Pagination from "../../components/pagination";
 import SearchBar from "../../components/searchBar";
 import { IoMdAdd } from "react-icons/io";
 import CreateElementModal from "../../components/createElementModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const customerFields: Field[] = [
     { label: 'ID', key: 'id', type: 'readonly' },
@@ -21,6 +22,7 @@ const customerFields: Field[] = [
 ];
 
 export default function CustomersPage() {
+    const queryClient = useQueryClient();
     const { addToast } = useToast();
     const { confirm } = useConfirmation();
 
@@ -64,6 +66,8 @@ export default function CustomersPage() {
                 {
                     onSuccess: () => {
                         addToast('Customer deleted successfully.', 'success');
+                        queryClient.invalidateQueries({ queryKey: ['customers'] });
+
                     },
 
                     onError: (err) => {
