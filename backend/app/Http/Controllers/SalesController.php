@@ -104,7 +104,8 @@ class SalesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // No UPDATE method implemented. Sales are and should be immutable after creation
+        // This is how it is in most inventory and sales system with POS.
     }
 
     /**
