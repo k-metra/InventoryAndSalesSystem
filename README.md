@@ -17,17 +17,17 @@ A web-based Inventory & Sales System designed to help businesses manage products
   - [x] Delete existing products
   - [x] Search and filter functionality
 - [ ] **POS Tab**: TBD Point of Sales
-- [ ] **Customer List**: A list of customers and their past sales history
+- [x] **Customer List**: A list of customers and their past sales history
 - **Authentication:**
   - [x] User login and logout
   - [x] Basic session management
-  - [ ] 'Remember Me' feature
+  - [x] 'Remember Me' feature
 - **Sales Tab:**
   - [ ] Record new sales transactions
   - [ ] Track sales history and generate reports
 - **Inventory Management:**
-  - [ ] Automatic stock adjustments based on sales and purchases
-  - [ ] Low-stock alerts
+  - [x] Automatic stock adjustments based on sales and purchases
+  - [x] Low-stock alerts
 - **User Management:**
   - [x] Role-based access control
   - [ ] Manage multiple users
