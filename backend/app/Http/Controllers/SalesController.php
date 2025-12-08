@@ -52,7 +52,7 @@ class SalesController extends Controller
             'items.*.discount'  => 'nullable|numeric|min:0'
         ]);
 
-        DB::transaction(function () use ($validated_data) {
+        return DB::transaction(function () use ($validated_data) {
             $sale = Sale::create([
                 'customer_id'   => $validated_data['customer_id'] ?? null,
                 'payment_method'=> $validated_data['payment_method'],
