@@ -2,56 +2,31 @@ import ChartCard from "../../components/chartCard";
 import InventoryTrends from "../../components/charts/inventoryTrends";
 import SalesOverTime from "../../components/charts/salesOverTime";
 import KpiCard from "../../components/kpiCard";
+import useDashboard from "../../queries/dashboard/useDashboard";
 import fetchDashboardResources from "../../utils/fetchDashboardResources";
 import LoadingScreen from "../loadingScreen";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { AiOutlineReload } from "react-icons/ai";
-
-
-type DashboardData = {
-    productCount: number | string;
-    totalInventoryValue: number | string;
-    totalSales: number | string;
-    totalCustomers: number | string;
-}
 
 export default function DashboardHome() {
     // const queryClient = useQueryClient();
     const [shouldRefetch, setShouldRefetch] = useState(true);
 
-    const { data, isFetching, isError, refetch } = useQuery({
-        queryKey: ['dashboardResources'],
-        queryFn: async () => {
-            const resources = await fetchDashboardResources();
-            return resources;
-        }
-    });
+    const { data, isPending, isError, refetch } = useDashboard();
 
-    const {
-        productCount,
-        totalInventoryValue,
-        totalSales,
-        totalCustomers
-    } = data as DashboardData || {
-        productCount: 0,
-        totalInventoryValue: 0,
-        totalSales: 0,
-        totalCustomers: 0
-    };
+    const totalProducts = useMemo(() => data?.total_products?? 0, [data]);
+    const totalSalesToday = useMemo(() => data?.total_sales_today ?? 0, [data]);
+    const totalCustomers = useMemo(() => data?.total_customers ?? 0, [data]);
+    const totalSalesThisMonth = useMemo(() => data?.total_sales_this_month ?? 0, [data]);
+    const lowStockCount = useMemo(() => data?.low_stock_count ?? 0, [data]);
+    const recentSales = useMemo(() => data?.recent_sales ?? [], [data]);
+    const salesChartData = useMemo(() => data?.total_chart_data ?? [], [data]);
 
-    useEffect(() => {
 
-        if (shouldRefetch && !isFetching) refetch();
-
-        setShouldRefetch(false);
-
-        return () => setShouldRefetch(true);
-    }, [])
-
-    if (isFetching) return <LoadingScreen />;
+    if (isPending) return <LoadingScreen />;
     if (isError) return <div className="p-4 w-full h-full text-red-500 flex items-center justify-center">
         <p>Ran into an error loading the dashboard data.</p>
     </div>
@@ -72,22 +47,17 @@ export default function DashboardHome() {
                 </label>
             </div>
             <div className="grid grid-cols-4 gap-4 w-full">
-                <KpiCard title="Total Products" value={productCount} subtitle={"Total amount in inventory"} />
-                <KpiCard title="Total Inventory Value" value={totalInventoryValue} subtitle={"Current value of all products"} />
-                <KpiCard title="Total Sales" value={totalSales} subtitle={"This month"} />
+                <KpiCard title="Total Products" value={totalProducts} subtitle={"Total amount in inventory"} />
+                <KpiCard title="Total Sales" value={totalSalesToday} subtitle={"This day"} />
+                <KpiCard title="Total Sales" value={totalSalesThisMonth} subtitle={"This month"} />
                 <KpiCard title="Total Customers" value={totalCustomers} subtitle="Active Customers"/>
             </div>
             <div className="w-full grid grid-cols-4 gap-4">
-                <ChartCard title="Sales Over Time">
-                    <SalesOverTime data={[
-                    { date: 'Jan', sales: 30 },
-                    { date: 'Feb', sales: 45 },
-                    { date: 'Mar', sales: 60 },
-                    { date: 'Apr', sales: 120 },
-                    { date: 'May', sales: 80 },
-                    { date: 'Jun', sales: 150 },
-                    { date: 'Jul', sales: 200 },
-                ]} />
+                <ChartCard title="Sales in the Last 30 Days">
+                    <div className="w-full h-80">
+                        <SalesOverTime data={salesChartData} />
+                    </div>
+                    
                 </ChartCard>
                 <ChartCard title="Inventory Trends">
                     <InventoryTrends data={[
