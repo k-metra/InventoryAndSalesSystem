@@ -62,8 +62,8 @@ export default function DashboardHome() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
                 <KpiCard title="Total Products" value={totalProducts} subtitle={"Total amount in inventory"} />
-                <KpiCard title="Total Sales" value={totalSalesToday} subtitle={"This day"} />
-                <KpiCard title="Total Sales" value={totalSalesThisMonth} subtitle={"This month"} />
+                <KpiCard title="Sales Today" value={totalSalesToday} subtitle={"Total sales for today"} />
+                <KpiCard title="Sales This Month" value={totalSalesThisMonth} subtitle={"Total sales for this month"} />
                 <KpiCard title="Total Customers" value={totalCustomers} subtitle="Active Customers"/>
             </div>
             <div className="w-full grid grid-cols-4 gap-4">
