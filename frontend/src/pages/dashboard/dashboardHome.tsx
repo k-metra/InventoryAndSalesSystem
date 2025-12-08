@@ -4,11 +4,9 @@ import InventoryTrends from "../../components/charts/inventoryTrends";
 import SalesOverTime from "../../components/charts/salesOverTime";
 import KpiCard from "../../components/kpiCard";
 import useDashboard from "../../queries/dashboard/useDashboard";
-import fetchDashboardResources from "../../utils/fetchDashboardResources";
 import LoadingScreen from "../loadingScreen";
 
-import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { AiOutlineReload } from "react-icons/ai";
 
