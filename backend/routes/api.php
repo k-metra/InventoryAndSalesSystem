@@ -10,6 +10,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\DashboardController;
 
 Route::middleware(['web'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -24,6 +25,9 @@ Route::middleware(['auth:sanctum'])->get('/me', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    //Dashboard
+    Route::get("/dashboard", [DashboardController::class, 'index']);
 
     // Products
     Route::get('/products', [ProductController::class, 'index']);
@@ -54,9 +58,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/customers/{id}', [CustomerController::class, 'update']);
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
 
-    // Controllers
+    // Sales
     Route::post('/sales', [SalesController::class, 'store']);
     Route::get('/sales', [SalesController::class, 'index']);
     Route::get('/sales/{id}', [SalesController::class, 'show']);
-    Route::delete('/sales/{id}', [SalesController::class, 'destroy']);
+    Route::delete('/sales/{id}', [SalesController::class, 'destroy']);                                                                                                                                                                                                                                          
 });
