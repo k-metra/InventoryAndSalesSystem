@@ -112,6 +112,22 @@ class SalesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return DB::transaction(function () use ($id) {
+            $sale = Sale::with('items.product')->findOrFail($id);
+
+            foreach($sale->items as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->stock += $item->quantity;
+                    $product->save();
+                }
+            }
+
+            $sale->items()->delete();
+            $sale->delete();
+
+            return response()
+                ->json(['message' => 'Sale deleted successfully.'], 200);
+        });
     }
 }
