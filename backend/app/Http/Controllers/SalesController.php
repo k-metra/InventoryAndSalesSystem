@@ -56,7 +56,7 @@ class SalesController extends Controller
             $sale = Sale::create([
                 'customer_id'   => $validated_data['customer_id'] ?? null,
                 'payment_method'=> $validated_data['payment_method'],
-                'total_amount'  => 0,
+                'total'  => 0,
             ]);
 
             $totalAmount = 0;
@@ -84,7 +84,7 @@ class SalesController extends Controller
                 ]);
             }
 
-            $sale->update(['total_amount' => $totalAmount]);
+            $sale->update(['total' => $totalAmount]);
 
             return $sale->load(['items.product', 'customer']);
         });
