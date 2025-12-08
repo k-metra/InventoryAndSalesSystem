@@ -44,7 +44,7 @@ export default function DashboardHome() {
                                     navigate('/dashboard/products?sortBy=Lower+Stock');
                                 }
                             }
-                            className="cursor-pointer  text-red-500 border border-red-500 bg-red-500/10 font-semibold text-[12px] px-2 py-1 rounded-full shadow-[0px_0px_20px_5px_rgba(255,0,0,0.1)] hover:shadow-[0px_0px_20px_8px_rgba(255,0,0,0.25)] hover:bg-red-500/20 hover:font-bold transition-shadow-colors duration-500 ease-out">
+                            className="cursor-pointer  text-red-500 border border-red-500 bg-red-500/5 font-semibold text-[12px] px-2 py-1 rounded-full shadow-[0px_0px_10px_2px_rgba(255,0,0,0.1)] hover:shadow-[0px_0px_10px_4px_rgba(255,0,0,0.2)] hover:bg-red-500/10 hover:font-bold transition-shadow-colors duration-500 ease-out">
                             {lowStockCount} items are low on stock!
                         </span>
                     )}
