@@ -16,7 +16,7 @@ class DashboardController extends Controller
     {
         $total_sales_today = Sale::whereDate(
             'created_at', now()->toDateString())
-            ->sum('total');
+            ->count();
         
         $total_customers = Customer::count();
 
@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $total_sales_this_month = Sale::whereMonth(
             'created_at', now()->month)
             ->whereYear('created_at', now()->year)
-            ->sum('total');
+            ->count();
         
         $low_stock_count = Product::where('stock', '<', 16)->count();
 
