@@ -20,6 +20,7 @@ import { ToastProvider } from './contexts/ToastContext';
 import CategoriesPage from './pages/dashboard/categoriesPage';
 import SuppliersPage from './pages/dashboard/suppliersPage';
 import CustomersPage from './pages/dashboard/customersPage';
+import SalesPage from './pages/salesPage';
 
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
@@ -63,6 +64,11 @@ function AppContent() {
               <Route 
                 path="customers"
                 element={ <CustomersPage /> }
+              />
+
+              <Route
+                path="sales-reports"
+                element={ <SalesPage /> }
               />
             </Route>
 
