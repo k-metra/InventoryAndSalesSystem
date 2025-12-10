@@ -110,6 +110,7 @@ export default function ProductsPage() {
 
     const categoryDropdownRef = useRef<HTMLDivElement>(null);
     const supplierDropdownRef = useRef<HTMLDivElement>(null);
+    const sortDropdownRef = useRef<HTMLDivElement>(null);
 
     const [sort, setSort] = useState(initialSort);
     const [category, setCategory] = useState(initialCategory);
@@ -241,6 +242,10 @@ export default function ProductsPage() {
             if (supplierDropdownRef.current && !supplierDropdownRef.current.contains(event.target as Node)) {
                 setShowSupplierDropdown(false);
             }
+
+            if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
+                setShowSortDropdown(false);
+            }
         }
 
         document.addEventListener("mousedown", handleClickOutside);
@@ -301,10 +306,12 @@ export default function ProductsPage() {
                 <div className="flex gap-2">
 
                     <label className="relative">
-                        <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                            e.stopPropagation();
-                            setShowSortDropdown(!showSortDropdown);
-                        }} className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text pr-10 px-4 py-2 rounded-md transition-colors duration-200">{sort !== '' ? `Sort By: ${sort}` : "Sort"}</button>
+                        <button
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                e.stopPropagation();
+                                setShowSortDropdown(!showSortDropdown);
+                            }} 
+                            className="bg-secondary border border-black/25 text-sm hover:bg-secondary/90 cursor-pointer text-text pr-10 px-4 py-2 rounded-md transition-colors duration-200">{sort !== '' ? `Sort By: ${sort}` : "Sort"}</button>
 
                         <FaChevronUp 
                             size={12}
@@ -313,6 +320,7 @@ export default function ProductsPage() {
 
                         <div ref={supplierDropdownRef} className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showSortDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
                             <div 
+                                ref={sortDropdownRef}
                                 onClick={() => {
                                     setSort("");
                                     updateURLParams("sortBy", "");
