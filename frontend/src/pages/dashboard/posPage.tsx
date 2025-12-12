@@ -39,6 +39,17 @@ export default function POSPage() {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                     value={search}
                 />
+                <hr className="border-t border-black/25 my-4" />
+
+                {isProductsLoading ? (
+                    <p className="text-text text-center">Loading products...</p>
+                ) : isProductError ? (
+                    <p className="text-red-500">Ran into an error loading products.</p>
+                ) : (
+                    <div className="flex flex-row flex-wrap gap-4">
+                        
+                    </div>
+                )}
             </div>
             <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
                 <h4 className="text-lg font-semibold mb-2 text-text">
