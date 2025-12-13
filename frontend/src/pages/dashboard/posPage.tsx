@@ -19,25 +19,6 @@ export default function POSPage() {
     const [sortOpen, setSortOpen] = useState(false);
     const sortRef = useRef<HTMLDivElement | null>(null);
 
-    const setNewParams = useCallback((param: string, value: string | null) => {
-        const currentParams = {
-            searchParam: setActiveSearch,
-            sortParam: setSort,
-            supplierParam: setSupplier,
-            categoryParam: setCategory
-        };
-
-        value = value || "";
-        
-
-        if (`${param}Param` in currentParams) {
-            currentParams[(`${param}Param` as keyof typeof currentParams)](value);
-        } else {
-            console.warn(`Parameter ${param} is not defined.`);
-        }
-        
-    }, [setSort, setActiveSearch, setSupplier, setCategory, searchParams, setSearchParams]);
-
     const {
         data: products,
         isPending: isProductsLoading,
@@ -64,6 +45,24 @@ export default function POSPage() {
         }
         
     }, [sortRef]);
+
+    const updateParam = useCallback((param: string, value: string | null) => {
+        const newParams = new URLSearchParams(searchParams);
+
+        if (value) newParams.set(param, value);
+        else newParams.delete(param);
+
+        setSearchParams(newParams);
+    }, [searchParams, setSearchParams]);
+
+    const handleSearch = useCallback((searchQuery: string | null) => {
+        if (searchQuery && searchQuery.trim()) {
+            setActiveSearch(searchQuery.trim());
+        } else {
+            setActiveSearch(null);
+            updateParam("search", null);
+        }
+    }, [setActiveSearch, updateParam]);
 
     useEffect(() => {
         window.addEventListener('click', handleClickOutside);
@@ -100,10 +99,7 @@ export default function POSPage() {
                 <hr className="border-t border-black/25 my-4" />
                 <SearchBar 
                     placeholder="Product name or SKU..."
-                    handleSearch={() => {
-                        setActiveSearch(search.trim() || null);
-                        setNewParams("search", search.trim() || null);
-                    }}
+                    handleSearch={() => handleSearch(search)}
                     handleClear={() => {}}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                     value={search}
