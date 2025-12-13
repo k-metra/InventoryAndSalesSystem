@@ -3,9 +3,7 @@ import { TiShoppingCart } from "react-icons/ti";
 import SearchBar from "../../components/searchBar";
 import useProducts from "../../queries/products/useProducts";
 import { useSearchParams } from "react-router-dom";
-import { useMemo, useState } from "react";
-import { IoIosArrowDropdown } from "react-icons/io";
-import { MdOutlineArrowDropDown } from "react-icons/md";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RiArrowDropDownFill } from "react-icons/ri";
 
 export default function POSPage() {
@@ -19,6 +17,29 @@ export default function POSPage() {
     const [category, setCategory] = useState<string | null>(searchParams.get("category"));
 
     const [sortOpen, setSortOpen] = useState(false);
+    const sortRef = useRef<HTMLDivElement | null>(null);
+
+    const setNewParams = useCallback((param: string, value: string | null) => {
+        const currentParams = {
+            searchParam: setSearch,
+            sortParam: setSort,
+            supplierParam: setSupplier,
+            categoryParam: setCategory
+        };
+
+        value = value || "";
+
+        if (`${param}Param` in currentParams) {
+            currentParams[(`${param}Param` as keyof typeof currentParams)]((prev: string | null) => {
+                if (prev === value) return prev;
+
+                searchParams.set(param, value);
+                return value;
+            })
+        }
+
+        setSearchParams(searchParams);
+    }, [setSort, setSearch, setSupplier, setCategory]);
 
     const {
         data: products,
@@ -40,6 +61,21 @@ export default function POSPage() {
         ];
     }, []);
 
+    const handleClickOutside = useCallback((e: MouseEvent) => {
+        if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+            setSortOpen(false);
+        }
+        
+    }, [sortRef]);
+
+    useEffect(() => {
+        window.addEventListener('click', handleClickOutside);
+
+        return () => {
+            window.removeEventListener('click', handleClickOutside);
+        }
+    }, [handleClickOutside]);
+
     return (
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
@@ -58,7 +94,7 @@ export default function POSPage() {
                     value={search}
                 />
                 <div className="flex gap-1 my-2">
-                    <div className="relative inline-block">
+                    <div ref={sortRef} className="relative inline-block">
                         <button
                             onClick={() => setSortOpen(prev => !prev)}
                             className="cursor-pointer hover:bg-black/10 transition-colors duration-300 px-2 p-1 rounded-full text-[12px] bg-secondary border border-black/30 text-text flex items-center justify-center"
