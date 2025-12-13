@@ -30,7 +30,7 @@ export default function POSPage() {
         return [
             'A-Z',
             'Z-A',
-            'Greater Price',
+            'Higher Price',
             'Lower Price',
             'Greater Stock',
             'Lower Stock',
@@ -107,19 +107,19 @@ export default function POSPage() {
                     searchParams={searchParams}
                 />
                 <div className="flex gap-1 my-2">
-                    <div ref={sortRef} className="relative inline-block">
+                    <div ref={sortRef} className="relative max-w-30 inline-block">
                         <button
                             onClick={() => setSortOpen(prev => !prev)}
-                            className="cursor-pointer hover:bg-black/10 transition-colors duration-300 px-2 p-1 rounded-full text-[12px] bg-secondary border border-black/30 text-text flex items-center justify-center"
+                            className="cursor-pointer hover:bg-black/10 transition-colors duration-300 pl-3 p-1 rounded-full text-[12px] bg-secondary border border-black/30 text-text flex items-center justify-center"
                         >
                             Sort by
-                            <RiArrowDropDownFill size={20} className="inline-block" />
+                            <RiArrowDropDownFill size={24} className="inline-block" />
                         </button>
-                        <div className={`p-1 origin-top flex flex-col gap-2 overflow-y-auto absolute top-full left-0 mt-1 w-max bg-background border border-black/25 transition-transform-opacity-colors duration-300 ease-in-out rounded-md shadow-lg z-10 ${sortOpen ? 'opacity-100 scale-y-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-y-0 -translate-y-(0.5rem) pointer-events-none'}`}>
+                        <div className={`custom-scrollbar p-1 origin-top flex flex-col gap-2 overflow-y-auto max-h-60 absolute top-full left-1/2 -translate-x-1/2 mt-1 w-max bg-background border border-black/25 transition-transform-opacity-colors duration-300 ease-in-out rounded-md shadow-lg z-10 ${sortOpen ? 'opacity-100 scale-y-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-y-0 -translate-y-(0.5rem) pointer-events-none'}`}>
                             {sortingOptions.map((option, idx) => (
                                 <button 
                                     key={idx}
-                                    className={`block p-1 hover:bg-black/20 transition-colors duration-300 text-center text-sm ${option === sort && 'font-semibold border-l-4 border-primary'}`}
+                                    className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${option === sort && 'font-semibold border-l-4 border-primary'}`}
                                 >
                                     {option}
                                 </button>
