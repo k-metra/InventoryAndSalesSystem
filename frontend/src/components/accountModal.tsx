@@ -22,7 +22,6 @@ export default function AccountModal({ showModal, onClose }: { showModal: boolea
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            console.log("Clicked");
             if (!modalRef.current) return;
 
             if (!modalRef.current.contains(event.target as Node)) {
