@@ -47,43 +47,6 @@ small {
   font-size: 0.833rem;
 }
 
-@layer dropdown {
-  @keyframes dropdown-open {
-    from {
-      opacity: 0;
-      transform: scaleY(0);
-      transform: translateY(-0.5rem) scaleY(0);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0) scaleY(1);
-    }
-  }
-
-  .animate-dropdown-open {
-    transform-origin: top;
-    animation: dropdown-open 0.3s ease-in-out forwards;
-  }
-
-  @keyframes dropdown-close {
-    from {
-      opacity: 1;
-      transform: translateY(0) scaleY(1);
-    }
-
-    to {
-      opacity: 0;
-      transform: translateY(-0.5rem) scaleY(0);
-    }
-  }
-
-  .animate-dropdown-close {
-    transform-origin: top;
-    animation: dropdown-close 0.3s ease-in-out forwards;
-  }
-}
-
 @layer utilities {
 
   @keyframes toastFadeLeft {
