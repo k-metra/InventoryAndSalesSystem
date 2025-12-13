@@ -21,25 +21,22 @@ export default function POSPage() {
 
     const setNewParams = useCallback((param: string, value: string | null) => {
         const currentParams = {
-            searchParam: setSearch,
+            searchParam: setActiveSearch,
             sortParam: setSort,
             supplierParam: setSupplier,
             categoryParam: setCategory
         };
 
         value = value || "";
+        
 
         if (`${param}Param` in currentParams) {
-            currentParams[(`${param}Param` as keyof typeof currentParams)]((prev: string | null) => {
-                if (prev === value) return prev;
-
-                searchParams.set(param, value);
-                return value;
-            })
+            currentParams[(`${param}Param` as keyof typeof currentParams)](value);
+        } else {
+            console.warn(`Parameter ${param} is not defined.`);
         }
-
-        setSearchParams(searchParams);
-    }, [setSort, setSearch, setSupplier, setCategory]);
+        
+    }, [setSort, setActiveSearch, setSupplier, setCategory, searchParams, setSearchParams]);
 
     const {
         data: products,
@@ -76,6 +73,21 @@ export default function POSPage() {
         }
     }, [handleClickOutside]);
 
+    useEffect(() => {
+        const params = new URLSearchParams(searchParams);
+
+        if (params.get("search") !== activeSearch) {
+            if (activeSearch) {
+                params.set("search", activeSearch);
+                
+            } else {
+                params.delete("search");
+            }
+
+            setSearchParams(params);
+        }
+    }, [searchParams, activeSearch])
+
     return (
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
@@ -88,10 +100,15 @@ export default function POSPage() {
                 <hr className="border-t border-black/25 my-4" />
                 <SearchBar 
                     placeholder="Product name or SKU..."
-                    handleSearch={() => {}}
+                    handleSearch={() => {
+                        setActiveSearch(search.trim() || null);
+                        setNewParams("search", search.trim() || null);
+                    }}
                     handleClear={() => {}}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                     value={search}
+
+                    searchParams={searchParams}
                 />
                 <div className="flex gap-1 my-2">
                     <div ref={sortRef} className="relative inline-block">
@@ -102,7 +119,7 @@ export default function POSPage() {
                             Sort by
                             <RiArrowDropDownFill size={20} className="inline-block" />
                         </button>
-                        <div className={`p-1 flex flex-col gap-2 overflow-y-auto absolute top-full left-0 mt-1 w-max bg-background border border-black/25 rounded-md shadow-lg z-10 ${sortOpen ? 'animate-dropdown-open' : 'animate-dropdown-close'}`}>
+                        <div className={`p-1 origin-top flex flex-col gap-2 overflow-y-auto absolute top-full left-0 mt-1 w-max bg-background border border-black/25 transition-transform-opacity-colors duration-300 ease-in-out rounded-md shadow-lg z-10 ${sortOpen ? 'opacity-100 scale-y-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-y-0 -translate-y-(0.5rem) pointer-events-none'}`}>
                             {sortingOptions.map((option, idx) => (
                                 <button 
                                     key={idx}
