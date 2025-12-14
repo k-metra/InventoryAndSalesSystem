@@ -318,9 +318,8 @@ export default function ProductsPage() {
                             className={`absolute cursor-pointer text-text right-3 top-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${showSortDropdown ? '' : 'rotate-180'}`}
                         />
 
-                        <div ref={supplierDropdownRef} className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showSortDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                        <div ref={sortDropdownRef} className={`custom-scrollbar absolute z-20 top-12 inline-block left-1/2 -translate-x-1/2 bg-background border border-black/25 rounded-md shadow-lg w-48 max-h-60 overflow-y-auto transition-opacity duration-300 ${showSortDropdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
                             <div 
-                                ref={sortDropdownRef}
                                 onClick={() => {
                                     setSort("");
                                     updateURLParams("sortBy", "");
