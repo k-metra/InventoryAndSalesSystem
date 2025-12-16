@@ -23,7 +23,7 @@ export default function Dropdown({ ref, onOptionClick, onClick, options, label, 
             className="cursor-pointer hover:bg-black/10 transition-colors duration-300 pl-3 p-1 rounded-full text-[12px] bg-secondary border border-black/30 text-text flex items-center justify-between gap-1"
         >
             <span className="truncate max-w-40">
-                {label}{value && `: ${value}`}
+                {label}{value && `: ${options.find(option => option.value == value)?.label || 'None'}`}
             </span>
             <RiArrowDropDownFill size={24} className="inline-block shrink-0" />
         </button>
