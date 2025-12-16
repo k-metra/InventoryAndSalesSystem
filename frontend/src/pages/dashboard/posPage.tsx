@@ -133,34 +133,39 @@ export default function POSPage() {
 
                     searchParams={searchParams}
                 />
-                <div className="flex gap-2 my-2">
-                    <Dropdown 
-                        onOptionClick={(option?: string | null) => {
-                            updateParam("sort", option || "");
-                            setSort(option || "");
-                            setSortOpen(false);
-                        }}
-                        ref={sortRef}
-                        onClick={onSortClick}
-                        options={sortingOptions}
-                        label="Sort by"
-                        value={sort || undefined}
-                        isOpen={sortOpen}
-                    />
+                <div className="flex gap-2 my-2 items-start">
 
-                    <Dropdown
-                        onOptionClick={(option?: string | null) => {
-                            updateParam("supplier", option || "");
-                            setSupplier(option || "");
-                            setSupplierOpen(false);
-                        }}
-                        ref={supplierRef}
-                        onClick={onSupplierClick}
-                        options={(supplierList && supplierList.map((supplier: Supplier) => supplier.name)) || []}
-                        label="Supplier"
-                        value={supplier || undefined}
-                        isOpen={supplierOpen}
-                    />
+                        <Dropdown 
+                            onOptionClick={(option?: string | null) => {
+                                updateParam("sort", option || "");
+                                setSort(option || "");
+                                setSortOpen(false);
+                            }}
+                            ref={sortRef}
+                            onClick={onSortClick}
+                            options={sortingOptions}
+                            label="Sort by"
+                            value={sort || undefined}
+                            isOpen={sortOpen}
+                        />
+
+
+
+                        <Dropdown
+                            onOptionClick={(option?: string | null) => {
+                                updateParam("supplier", option || "");
+                                setSupplier(option || "");
+                                setSupplierOpen(false);
+                            }}
+                            ref={supplierRef}
+                            onClick={onSupplierClick}
+                            options={(supplierList && supplierList.map((supplier: Supplier) => supplier.name)) || []}
+                            label="Supplier"
+                            value={supplier || undefined}
+                            isOpen={supplierOpen}
+                        />
+      
+                   
 
                 </div>
 
