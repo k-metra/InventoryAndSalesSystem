@@ -19,6 +19,8 @@ export default function POSPage() {
 
     const [sortOpen, setSortOpen] = useState(false);
     const sortRef = useRef<HTMLDivElement | null>(null);
+    const supplierRef = useRef<HTMLDivElement | null>(null);
+    const categoryRef = useRef<HTMLDivElement | null>(null);
 
     const onSortClick = useCallback(() => setSortOpen(prev => !prev), []);
 
@@ -123,6 +125,7 @@ export default function POSPage() {
                         value={sort || undefined}
                         isOpen={sortOpen}
                     />
+
                 </div>
 
                 
