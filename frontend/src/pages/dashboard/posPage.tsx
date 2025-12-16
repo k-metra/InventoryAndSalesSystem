@@ -10,6 +10,7 @@ import useSuppliers from "../../queries/suppliers/useSuppliers";
 import type { Category, Supplier } from "../../types/objects";
 import useCategories from "../../queries/categories/useCategories";
 import type { Product } from "../../utils/fetchProducts";
+import Pagination from "../../components/pagination";
 
 export default function POSPage() {
     
@@ -57,6 +58,11 @@ export default function POSPage() {
             { label: "Cost: Low to High", value: "Lower Cost" },
             { label: "Cost: High to Low", value: "Greater Cost" },
         ];
+    }, []);
+
+    const setPage = useCallback((page: number) => {
+        setCurrentPage(page);
+        updateParam("page", page.toString());
     }, []);
 
 
@@ -128,6 +134,7 @@ export default function POSPage() {
 
                     searchParams={searchParams}
                 />
+                
                 <div className="flex gap-2 my-2 items-start">
 
                     <Dropdown 
@@ -174,9 +181,16 @@ export default function POSPage() {
                         isOpen={categoryOpen}
                         value={category || undefined} 
                     />
-      
-                   
 
+                </div>
+
+                <div className="flex justify-end mt-1 mb-2">
+                    <Pagination
+                        key={"paginationTop"}
+                        page={currentPage}
+                        lastPage={products?.last_page || 1}
+                        setPage={setPage}
+                    />
                 </div>
 
                 
@@ -188,15 +202,26 @@ export default function POSPage() {
                     <p className="text-red-500">Ran into an error loading products.</p>
                 ) : (
                     <div className="flex flex-col flex-wrap gap-4 w-full">
-                        {(products && products?.data?.length > 0) ? products?.data?.map((product: Product) => (
+                        {(products && products?.data?.length > 0) ? (products?.data?.map((product: Product) => (
                             <div key={product.id} className="w-full border border-black/25 rounded-md p-3 hover:shadow-lg transition-shadow duration-300 ease-out cursor-pointer">
                                 <h6 className="font-semibold text-text text-left">{product.name}</h6>
                             </div>
-                        )) : (
+                        )) 
+
+                    ) : (
                             <p className="text-text text-center w-full">No products found.</p>
                         )}
-                    </div>
+                    </div>  
                 )}
+                
+                <div className="flex justify-end my-2">
+                    <Pagination
+                        key={"paginationBottom"}
+                        page={currentPage}
+                        lastPage={products?.last_page || 1}
+                        setPage={setPage}
+                    />
+                </div>
             </div>
             <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
                 <h4 className="text-lg font-semibold mb-2 text-text">
