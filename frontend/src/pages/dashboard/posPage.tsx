@@ -6,6 +6,8 @@ import { useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import Dropdown from "../../components/dropdown";
+import useSuppliers from "../../queries/suppliers/useSuppliers";
+import type { Supplier } from "../../types/objects";
 
 export default function POSPage() {
     
@@ -35,6 +37,13 @@ export default function POSPage() {
         isError: isProductError,
         refetch: refetchProducts
     } = useProducts(activeSearch || "");
+
+    const {
+        data: supplierList,
+        isPending: isSuppliersPending,
+        isError: isSuppliersError,
+    } = useSuppliers();
+    
 
     const sortingOptions = useMemo(() => {
         return [
@@ -124,7 +133,7 @@ export default function POSPage() {
 
                     searchParams={searchParams}
                 />
-                <div className="flex gap-1 my-2">
+                <div className="flex gap-2 my-2">
                     <Dropdown 
                         onOptionClick={(option?: string | null) => {
                             updateParam("sort", option || "");
@@ -147,7 +156,7 @@ export default function POSPage() {
                         }}
                         ref={supplierRef}
                         onClick={onSupplierClick}
-                        options={['Supplier A', 'Supplier B', 'Supplier C']}
+                        options={(supplierList && supplierList.map((supplier: Supplier) => supplier.name)) || []}
                         label="Supplier"
                         value={supplier || undefined}
                         isOpen={supplierOpen}
