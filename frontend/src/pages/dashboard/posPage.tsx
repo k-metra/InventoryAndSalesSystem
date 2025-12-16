@@ -9,6 +9,7 @@ import Dropdown from "../../components/dropdown";
 import useSuppliers from "../../queries/suppliers/useSuppliers";
 import type { Category, Supplier } from "../../types/objects";
 import useCategories from "../../queries/categories/useCategories";
+import type { Product } from "../../utils/fetchProducts";
 
 export default function POSPage() {
     
@@ -47,16 +48,17 @@ export default function POSPage() {
 
     const sortingOptions = useMemo(() => {
         return [
-            'A-Z',
-            'Z-A',
-            'Higher Price',
-            'Lower Price',
-            'Greater Stock',
-            'Lower Stock',
-            'Greater Cost',
-            'Lower Cost',
+            { label: "Name: A to Z", value: "A-Z" },
+            { label: "Name: Z to A", value: "Z-A" },
+            { label: "Price: Low to High", value: "Lower Price" },
+            { label: "Price: High to Low", value: "Higher Price" },
+            { label: "Stock: Low to High", value: "Lower Stock" },
+            { label: "Stock: High to Low", value: "Greater Stock" },
+            { label: "Cost: Low to High", value: "Lower Cost" },
+            { label: "Cost: High to Low", value: "Greater Cost" },
         ];
     }, []);
+
 
     const handleClickOutside = useCallback((e: MouseEvent) => {
         if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
@@ -85,6 +87,7 @@ export default function POSPage() {
     const handleSearch = useCallback((searchQuery: string | null) => {
         if (searchQuery && searchQuery.trim()) {
             setActiveSearch(searchQuery.trim());
+            updateParam("search", searchQuery.trim())
         } else {
             setActiveSearch("");
             updateParam("search", null);
@@ -96,7 +99,7 @@ export default function POSPage() {
         isPending: isProductsLoading,
         isError: isProductError,
         refetch: refetchProducts
-    } = useProducts(activeSearch, sort, supplier, category, currentPage);
+    } = useProducts(activeSearch, sort, supplier, category, currentPage, false);
 
     useEffect(() => {
         window.addEventListener('click', handleClickOutside);
@@ -105,21 +108,6 @@ export default function POSPage() {
             window.removeEventListener('click', handleClickOutside);
         }
     }, [handleClickOutside]);
-
-    useEffect(() => {
-        const params = new URLSearchParams(searchParams);
-
-        if (params.get("search") !== activeSearch) {
-            if (activeSearch) {
-                params.set("search", activeSearch);
-                
-            } else {
-                params.delete("search");
-            }
-
-            setSearchParams(params);
-        }
-    }, [searchParams, activeSearch])
 
     return (
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -166,7 +154,7 @@ export default function POSPage() {
                         }}
                         ref={supplierRef}
                         onClick={onSupplierClick}
-                        options={(supplierList && supplierList.map((supplier: Supplier) => supplier.name)) || []}
+                        options={(supplierList && supplierList.map((supplier: Supplier) => ({ label: supplier.name, value: supplier.id }))) || []}
                         label="Supplier"
                         value={supplier || undefined}
                         isOpen={supplierOpen}
@@ -174,7 +162,7 @@ export default function POSPage() {
 
 
                     <Dropdown
-                        options={(categoryList && categoryList.map((category: Category) => category.name)) || []}
+                        options={(categoryList && categoryList.map((category: Category) => ({ label: category.name, value: category.id }))) || []}
                         onOptionClick={(option?: string | null) => {
                             updateParam("category", option || "");
                             setCategory(option || "");
@@ -199,8 +187,14 @@ export default function POSPage() {
                 ) : isProductError ? (
                     <p className="text-red-500">Ran into an error loading products.</p>
                 ) : (
-                    <div className="flex flex-row flex-wrap gap-4">
-                        
+                    <div className="flex flex-col flex-wrap gap-4 w-full">
+                        {(products && products?.data?.length > 0) ? products?.data?.map((product: Product) => (
+                            <div key={product.id} className="w-full border border-black/25 rounded-md p-3 hover:shadow-lg transition-shadow duration-300 ease-out cursor-pointer">
+                                <h6 className="font-semibold text-text text-left">{product.name}</h6>
+                            </div>
+                        )) : (
+                            <p className="text-text text-center w-full">No products found.</p>
+                        )}
                     </div>
                 )}
             </div>

@@ -1,10 +1,15 @@
 import { RiArrowDropDownFill } from "react-icons/ri";
 
+type Option = {
+    label: string;
+    value: string;
+}
+
 type DropdownProps = {
     ref?: React.Ref<HTMLDivElement>;
     onClick: () => void;
     onOptionClick: (option?: string | null) => void;
-    options: string[];
+    options: Option[];
     label: string;
     value?: string;
     isOpen: boolean;
@@ -30,13 +35,13 @@ export default function Dropdown({ ref, onOptionClick, onClick, options, label, 
             >
                     None
             </button>
-            {options.map((option, idx) => (
+            {options.map((option: Option, idx) => (
                 <button
                     key={idx}
-                    onClick={() => onOptionClick(option)}
-                    className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${option === value && 'font-semibold border-l-4 border-primary'}`}
+                    onClick={() => onOptionClick(option.value)}
+                    className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${option.value === value && 'font-semibold border-l-4 border-primary'}`}
                 >
-                    {option}
+                    {option.label}
                 </button>
             ))}
         </div>

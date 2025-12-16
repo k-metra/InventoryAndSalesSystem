@@ -28,9 +28,14 @@ class ProductController extends Controller
         $category = $request->query('category');
         $supplier = $request->query('supplier');
 
+        // True by default
+        $prioritizeLowStock = $request->query('prioritizeLowStock') !== 'false';
 
-        $query = Product::with(['category', 'supplier'])
-            ->orderByRaw('CASE WHEN stock <= 15 THEN 0 ELSE 1 END');
+        $query = Product::with(['category', 'supplier']);
+
+        if ($prioritizeLowStock) {
+            $query->orderByRaw('CASE WHEN stock <= 15 THEN 0 ELSE 1 END');
+        }
 
         $sortBy = $request->query('sortBy');
 
