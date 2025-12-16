@@ -7,7 +7,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import Dropdown from "../../components/dropdown";
 import useSuppliers from "../../queries/suppliers/useSuppliers";
-import type { Supplier } from "../../types/objects";
+import type { Category, Supplier } from "../../types/objects";
+import useCategories from "../../queries/categories/useCategories";
 
 export default function POSPage() {
     
@@ -43,6 +44,12 @@ export default function POSPage() {
         isPending: isSuppliersPending,
         isError: isSuppliersError,
     } = useSuppliers();
+
+    const {
+        data: categoryList,
+        isPending: isCategoriesPending,
+        isError: isCategoriesError,
+    } = useCategories();
     
 
     const sortingOptions = useMemo(() => {
@@ -163,6 +170,21 @@ export default function POSPage() {
                         label="Supplier"
                         value={supplier || undefined}
                         isOpen={supplierOpen}
+                    />
+
+
+                    <Dropdown
+                        options={(categoryList && categoryList.map((category: Category) => category.name)) || []}
+                        onOptionClick={(option?: string | null) => {
+                            updateParam("category", option || "");
+                            setCategory(option || "");
+                            setCategoryOpen(false);
+                        }}
+                        ref={categoryRef}
+                        onClick={onCategoryClick}
+                        label="Category"
+                        isOpen={categoryOpen}
+                        value={category || undefined} 
                     />
       
                    
