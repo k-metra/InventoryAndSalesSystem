@@ -3,7 +3,7 @@ import api from '../../axios/api';
 
 
 
-export default function useProducts(searchQuery: string, sort: string, supplier: string, category: string) {
+export default function useProducts(searchQuery: string, sort: string, supplier: string, category: string, currentPage: number = 1) {
     return useQuery({
         queryKey: ['products', searchQuery, sort, supplier, category],
         queryFn: async ({ queryKey }) => {
@@ -15,6 +15,8 @@ export default function useProducts(searchQuery: string, sort: string, supplier:
             if (sortQuery) params.set("sort", sortQuery as string);
             if (supplierQuery) params.set("supplier", supplierQuery as string);
             if (categoryQuery) params.set("category", categoryQuery as string);
+
+            params.set("page", currentPage.toString());
 
             return await api.get(`/products?${params.toString()}`).then(res => res.data);
         }

@@ -17,6 +17,7 @@ export default function POSPage() {
     const [activeSearch, setActiveSearch] = useState<string>(searchParams.get("search") || "");
     const [search, setSearch] = useState(activeSearch || "");
     const [sort, setSort] = useState<string>(searchParams.get("sort") || "");
+    const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get("page")) || 1);
     const [supplier, setSupplier] = useState<string>(searchParams.get("supplier") || "");
     const [category, setCategory] = useState<string>(searchParams.get("category") || "");
     const [sortOpen, setSortOpen] = useState(false);
@@ -95,7 +96,7 @@ export default function POSPage() {
         isPending: isProductsLoading,
         isError: isProductError,
         refetch: refetchProducts
-    } = useProducts(activeSearch, sort, supplier, category);
+    } = useProducts(activeSearch, sort, supplier, category, currentPage);
 
     useEffect(() => {
         window.addEventListener('click', handleClickOutside);
