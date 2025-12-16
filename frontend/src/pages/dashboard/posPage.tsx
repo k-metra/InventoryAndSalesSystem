@@ -14,12 +14,11 @@ export default function POSPage() {
     
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [activeSearch, setActiveSearch] = useState<string | null>(searchParams.get("search"));
+    const [activeSearch, setActiveSearch] = useState<string>(searchParams.get("search") || "");
     const [search, setSearch] = useState(activeSearch || "");
-    const [sort, setSort] = useState<string | null>(searchParams.get("sort"));
-    const [supplier, setSupplier] = useState<string | null>(searchParams.get("supplier"));
-    const [category, setCategory] = useState<string | null>(searchParams.get("category"));
-
+    const [sort, setSort] = useState<string>(searchParams.get("sort") || "");
+    const [supplier, setSupplier] = useState<string>(searchParams.get("supplier") || "");
+    const [category, setCategory] = useState<string>(searchParams.get("category") || "");
     const [sortOpen, setSortOpen] = useState(false);
     const [supplierOpen, setSupplierOpen] = useState(false);
     const [categoryOpen, setCategoryOpen] = useState(false);
@@ -31,13 +30,6 @@ export default function POSPage() {
     const onSortClick = useCallback(() => setSortOpen(prev => !prev), [setSortOpen]);
     const onSupplierClick = useCallback(() => setSupplierOpen(prev => !prev), [setSupplierOpen]);
     const onCategoryClick = useCallback(() => setCategoryOpen(prev => !prev), [setCategoryOpen]);
-
-    const {
-        data: products,
-        isPending: isProductsLoading,
-        isError: isProductError,
-        refetch: refetchProducts
-    } = useProducts(activeSearch || "");
 
     const {
         data: supplierList,
@@ -93,10 +85,17 @@ export default function POSPage() {
         if (searchQuery && searchQuery.trim()) {
             setActiveSearch(searchQuery.trim());
         } else {
-            setActiveSearch(null);
+            setActiveSearch("");
             updateParam("search", null);
         }
     }, [setActiveSearch, updateParam]);
+
+    const {
+        data: products,
+        isPending: isProductsLoading,
+        isError: isProductError,
+        refetch: refetchProducts
+    } = useProducts(activeSearch, sort, supplier, category);
 
     useEffect(() => {
         window.addEventListener('click', handleClickOutside);
