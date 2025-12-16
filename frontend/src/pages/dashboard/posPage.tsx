@@ -53,8 +53,16 @@ export default function POSPage() {
         if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
             setSortOpen(false);
         }
+
+        if (supplierRef.current && !supplierRef.current.contains(e.target as Node)) {
+            setSupplierOpen(false);
+        }
+
+        if (categoryRef.current && !categoryRef.current.contains(e.target as Node)) {
+            setCategoryOpen(false);
+        }
         
-    }, [sortRef]);
+    }, [sortRef, supplierRef, categoryRef]);
 
     const updateParam = useCallback((param: string, value: string | null) => {
         const newParams = new URLSearchParams(searchParams);
@@ -129,6 +137,20 @@ export default function POSPage() {
                         label="Sort by"
                         value={sort || undefined}
                         isOpen={sortOpen}
+                    />
+
+                    <Dropdown
+                        onOptionClick={(option?: string | null) => {
+                            updateParam("supplier", option || "");
+                            setSupplier(option || "");
+                            setSupplierOpen(false);
+                        }}
+                        ref={supplierRef}
+                        onClick={onSupplierClick}
+                        options={['Supplier A', 'Supplier B', 'Supplier C']}
+                        label="Supplier"
+                        value={supplier || undefined}
+                        isOpen={supplierOpen}
                     />
 
                 </div>
