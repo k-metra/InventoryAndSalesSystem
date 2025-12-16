@@ -39,7 +39,7 @@ export default function Dropdown({ ref, onOptionClick, onClick, options, label, 
                 <button
                     key={idx}
                     onClick={() => onOptionClick(option.value)}
-                    className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${option.value === value && 'font-semibold border-l-4 border-primary'}`}
+                    className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${option.value === value && 'font-semibold border-l-4 border-primary shadow-sm'}`}
                 >
                     {option.label}
                 </button>
