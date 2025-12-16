@@ -24,7 +24,7 @@ export default function Dropdown({ ref, onOptionClick, onClick, options, label, 
         <div className={`custom-scrollbar p-1 origin-top flex flex-col gap-2 overflow-y-auto max-h-60 absolute top-full left-1/2 -translate-x-1/2 mt-1 w-max bg-background border border-black/25 transition-transform-opacity-colors duration-300 ease-in-out rounded-md shadow-lg z-10 ${isOpen ? 'opacity-100 scale-y-100 translate-y-0' : 'opacity-0 scale-y-0 pointer-events-none -translate-y-2'}`}>
             <button
                 onClick={() => onOptionClick()}
-                className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${value === null && 'font-semibold border-l-4 border-primary'}`}
+                className={`block w-full cursor-pointer p-1 hover:bg-black/20 transition-colors duration-300 text-center text-[0.85rem] ${value == null && 'font-semibold border-l-4 border-primary'}`}
             >
                     None
             </button>
