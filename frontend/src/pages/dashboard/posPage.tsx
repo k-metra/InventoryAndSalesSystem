@@ -18,11 +18,16 @@ export default function POSPage() {
     const [category, setCategory] = useState<string | null>(searchParams.get("category"));
 
     const [sortOpen, setSortOpen] = useState(false);
+    const [supplierOpen, setSupplierOpen] = useState(false);
+    const [categoryOpen, setCategoryOpen] = useState(false);
+
     const sortRef = useRef<HTMLDivElement | null>(null);
     const supplierRef = useRef<HTMLDivElement | null>(null);
     const categoryRef = useRef<HTMLDivElement | null>(null);
 
-    const onSortClick = useCallback(() => setSortOpen(prev => !prev), []);
+    const onSortClick = useCallback(() => setSortOpen(prev => !prev), [setSortOpen]);
+    const onSupplierClick = useCallback(() => setSupplierOpen(prev => !prev), [setSupplierOpen]);
+    const onCategoryClick = useCallback(() => setCategoryOpen(prev => !prev), [setCategoryOpen]);
 
     const {
         data: products,
