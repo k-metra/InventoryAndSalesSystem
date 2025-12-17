@@ -58,7 +58,7 @@ export default function DashboardHome() {
                     />
                 </label>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
                 <KpiCard title="Total Products" value={totalProducts} subtitle={"Total amount in inventory"} />
                 <KpiCard title="Sales Today" value={totalSalesToday} subtitle={"Total sales for today"} />
                 <KpiCard title="Sales This Month" value={totalSalesThisMonth} subtitle={"Total sales for this month"} />
