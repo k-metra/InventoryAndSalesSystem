@@ -218,8 +218,9 @@ export default function POSPage() {
                                     </div>
 
                                     <button
-                                        title="Add to Cart"
-                                        className="from-blue-500 to-blue-600 bg-linear-to-r hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-300 flex justify-center items-center gap-2 cursor-pointer"
+                                        title={product.stock <= 0 ? "Out of stock" : "Add to cart"}
+                                        disabled={product.stock <= 0}
+                                        className="from-blue-500 to-blue-600 bg-linear-to-r hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-300 flex justify-center items-center gap-2 cursor-pointer disabled:to-blue-500/50 disabled:from-blue-600/50 disabled:cursor-not-allowed"
                                     >
                                         <MdAddShoppingCart size={24} />
                                     </button>
