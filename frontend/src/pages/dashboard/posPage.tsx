@@ -11,6 +11,8 @@ import type { Category, Supplier } from "../../types/objects";
 import useCategories from "../../queries/categories/useCategories";
 import type { Product } from "../../utils/fetchProducts";
 import Pagination from "../../components/pagination";
+import { formatCurrency } from "../../utils/formatNumbers";
+import { MdAddShoppingCart } from "react-icons/md";
 
 export default function POSPage() {
     
@@ -203,8 +205,25 @@ export default function POSPage() {
                 ) : (
                     <div className="flex flex-col flex-wrap gap-4 w-full">
                         {(products && products?.data?.length > 0) ? (products?.data?.map((product: Product) => (
-                            <div key={product.id} className="w-full border border-black/25 rounded-md p-3 hover:shadow-lg transition-shadow duration-300 ease-out cursor-pointer">
-                                <h6 className="font-semibold text-text text-left">{product.name}</h6>
+                            <div key={product.id} className="w-full border border-black/25 rounded-md p-3 hover:shadow-lg transition-shadow duration-300 ease-out cursor-pointer flex flex-col justify-evenly gap-0">
+                                <div className="w-full flex justify-between">
+                                    <span className="font-semibold text-text text-left text-[16px]">{product.name}</span>
+                                    <span className="text-text font-bold text-[16px]">{formatCurrency(product.price)}</span>
+                                </div>
+                                <span className={`text-[16px] mb-3 ${product?.stock === 0 ? "text-red-500" : "text-text/70"}`}>{product?.stock} in stock</span>
+                                <div className="flex justify-between">
+                                    <div className="flex flex-col gap-0">
+                                        <span className="text-muted text-[14px]">{product.supplier?.name || "No supplier"}</span>
+                                        <span className="text-muted text-[14px]">{product.category?.name || "No category"}</span>
+                                    </div>
+
+                                    <button
+                                        title="Add to Cart"
+                                        className="from-blue-500 to-blue-600 bg-linear-to-r hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-300 flex justify-center items-center gap-2 cursor-pointer"
+                                    >
+                                        <MdAddShoppingCart size={24} />
+                                    </button>
+                                </div>
                             </div>
                         )) 
 
