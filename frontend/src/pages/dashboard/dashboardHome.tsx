@@ -21,7 +21,7 @@ export default function DashboardHome() {
     const totalCustomers = useMemo(() => data?.total_customers ?? 0, [data]);
     const totalSalesThisMonth = useMemo(() => data?.total_sales_this_month ?? 0, [data]);
     const lowStockCount = useMemo(() => data?.low_stock_count ?? 0, [data]);
-    const recentSales = useMemo(() => data?.recent_sales ?? [], [data]);
+    // const recentSales = useMemo(() => data?.recent_sales ?? [], [data]);
     const salesChartData = useMemo(() => data?.total_chart_data ?? [], [data]);
 
 
