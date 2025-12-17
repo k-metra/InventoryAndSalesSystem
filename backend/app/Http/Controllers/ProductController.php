@@ -29,7 +29,7 @@ class ProductController extends Controller
         $supplier = $request->query('supplier');
 
         // True by default
-        $prioritizeLowStock = $request->query('prioritizeLowStock') !== 'false';
+        $prioritizeLowStock = $request->query('prioritizeLowStock') === 'true' || $request->query('prioritizeLowStock') === null;
 
         $query = Product::with(['category', 'supplier']);
 
