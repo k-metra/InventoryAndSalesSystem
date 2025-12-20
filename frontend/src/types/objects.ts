@@ -1,3 +1,10 @@
+type Item = {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+}
+
 type Category = {
     id: number;
     name: string;
@@ -15,4 +22,4 @@ type Supplier = {
     products_count?: number;
 }
 
-export { type Category, type Supplier };
+export { type Category, type Supplier, type Item };
