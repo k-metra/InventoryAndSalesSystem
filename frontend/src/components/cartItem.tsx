@@ -1,5 +1,7 @@
 import { formatCurrency } from "@utils/formatNumbers";
 import { type Item } from "@typings/objects"; 
+import { IoIosAdd } from "react-icons/io";
+import { FiMinus } from "react-icons/fi";
 
 type CartItemProps = {
     item: Item;
@@ -9,27 +11,31 @@ type CartItemProps = {
 
 export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps ) {
     return (
-        <div className="flex justify-between items-center border-b pb-2">
+        <div className="flex justify-between items-center border-b border-b-black/25 pb-4 py-2">
             <div className="flex flex-col gap-1">
-                <span className="font-medium">{item.name}</span>
+                <span className="font-medium text-text">{item.name}</span>
                 <span className="text-sm text-muted">{formatCurrency(item.price)}</span>
             </div>
 
             <div className="flex items-center gap-2">
                 <button
                     onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                    className="px-2 border rounded"
+                    className="p-1 rounded-full flex items-center justify-center bg-green-200 text-green-500 hover:bg-green-300 transition-colors duration-200 ease-in-out cursor-pointer"
                 >   
-                    +
+                    <IoIosAdd size={20}/>
                 </button>
 
-                <span>{item.quantity}</span>
+                <input
+                    className="no-spinner border border-black/20 text-center rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.1)_inset] w-12 py-0.5 outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in"
+                    type="number" value={item.quantity}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdateQuantity(item.id, Number(e.target.value)) }
+                />
 
                 <button
                     onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                    className="px-2 border rounded"
+                    className="p-1 rounded-full flex items-center justify-center bg-red-200 text-red-500 hover:bg-red-300 transition-colors duration-200 ease-in-out cursor-pointer"
                 >
-                    -
+                    <FiMinus size={20} />
                 </button>
             </div>
         </div>

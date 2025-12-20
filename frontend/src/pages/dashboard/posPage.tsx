@@ -1,18 +1,19 @@
 import { AiOutlineProduct } from "react-icons/ai";
 import { TiShoppingCart } from "react-icons/ti";
-import SearchBar from "../../components/searchBar";
+import SearchBar from "@components/searchBar";
 import useProducts from "../../queries/products/useProducts";
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RiArrowDropDownFill } from "react-icons/ri";
-import Dropdown from "../../components/dropdown";
+import Dropdown from "@components/dropdown";
 import useSuppliers from "../../queries/suppliers/useSuppliers";
 import type { Category, Supplier } from "../../types/objects";
 import useCategories from "../../queries/categories/useCategories";
 import type { Product } from "../../utils/fetchProducts";
-import Pagination from "../../components/pagination";
+import Pagination from "@components/pagination";
 import { formatCurrency } from "../../utils/formatNumbers";
 import { MdAddShoppingCart } from "react-icons/md";
+import CartItem from "@components/cartItem";
 
 export default function POSPage() {
     
@@ -244,10 +245,22 @@ export default function POSPage() {
                 </div>
             </div>
             <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
-                <h4 className="text-lg font-semibold mb-2 text-text">
+                <h4 className="text-lg font-semibold mb-2 text-text sticky">
                     Cart
                     <TiShoppingCart className="inline-block ml-2" size={35} />
                 </h4>
+
+                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 max-h-[500px] min-h-[120px] overflow-y-auto">
+                    <CartItem
+                        item={{ id: 1, name: "Sample Item", price: 19.99, quantity: 2 }}
+                        onUpdateQuantity={(itemId, newQuantity) => {
+                            console.log(`Update item ${itemId} to quantity ${newQuantity}`);
+                        }}
+                        onRemoveItem={(itemId) => {
+                            console.log(`Remove item ${itemId}`);
+                        }}
+                    />
+                </div>
             </div>
         </div>
     )
