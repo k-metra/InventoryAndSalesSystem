@@ -47,6 +47,19 @@ small {
   font-size: 0.833rem;
 }
 
+@layer components { 
+  .no-spinner {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .no-spinner::-webkit-outer-spin-button,
+  .no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 @layer utilities {
 
   @keyframes toastFadeLeft {
