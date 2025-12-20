@@ -203,7 +203,7 @@ export default function POSPage() {
                 ) : isProductError ? (
                     <p className="text-red-500">Ran into an error loading products.</p>
                 ) : (
-                    <div className="flex flex-col flex-wrap gap-4 w-full">
+                    <div className="custom-scrollbar pr-4 flex flex-col gap-4 w-full overflow-y-auto max-h-[500px] max-w-full">
                         {(products && products?.data?.length > 0) ? (products?.data?.map((product: Product) => (
                             <div key={product.id} className="w-full border border-black/25 rounded-md p-3 hover:shadow-lg transition-shadow duration-300 ease-out cursor-pointer flex flex-col justify-evenly gap-0">
                                 <div className="w-full flex justify-between">
