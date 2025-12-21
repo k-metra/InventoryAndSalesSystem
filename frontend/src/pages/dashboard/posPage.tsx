@@ -307,7 +307,7 @@ export default function POSPage() {
                 
                 <div className="flex justify-between items-center pt-4 border-t border-t-black/25 mt-4">
                     <span className="font-semibold text-text text-lg">Subtotal:</span>
-                    <span className="text-md text-text">{formatCurrency(subtotal)}</span>
+                    <span className={`text-md ${subtotal > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>{formatCurrency(subtotal)}</span>
                 </div>
             </div>
         </div>
