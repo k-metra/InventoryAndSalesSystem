@@ -42,7 +42,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
             <button
                 onClick={() => { onRemoveItem(item.id) }}
                 title="Remove Item from Cart"
-                className="absolute right-0 top-3.5 -translate-y-full translate-x-3 cursor-pointer text-red-500/60 bg-red-200/40 rounded-full hover:bg-red-300 transition-colors duration-30 ease-in-out"
+                className="absolute right-0 top-4 -translate-y-full translate-x-3 cursor-pointer text-red-500/60 rounded-full hover:bg-red-300 transition-colors duration-30 ease-in-out"
             >
                 <IoIosClose size={25} />
             </button>
