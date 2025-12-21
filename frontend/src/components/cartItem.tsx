@@ -1,6 +1,6 @@
 import { formatCurrency } from "@utils/formatNumbers";
 import { type Item } from "@typings/objects"; 
-import { IoIosAdd } from "react-icons/io";
+import { IoIosAdd, IoIosClose } from "react-icons/io";
 import { FiMinus } from "react-icons/fi";
 
 type CartItemProps = {
@@ -11,7 +11,7 @@ type CartItemProps = {
 
 export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps ) {
     return (
-        <div className="flex justify-between items-center border-b border-b-black/25 pb-4 py-2">
+        <div className="relative group flex justify-between items-center border-b border-b-black/25 pb-4 py-2">
             <div className="flex flex-col gap-1">
                 <span className="font-medium text-text">{item.name}</span>
                 <span className="text-sm text-muted">{formatCurrency(item.price)}</span>
@@ -38,6 +38,14 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
                     <FiMinus size={20} />
                 </button>
             </div>
+
+            <button
+                onClick={() => { onRemoveItem(item.id) }}
+                title="Remove Item from Cart"
+                className="absolute right-0 top-3.5 -translate-y-full translate-x-3 cursor-pointer text-red-500/60 bg-red-200/40 rounded-full hover:bg-red-300 transition-colors duration-30 ease-in-out"
+            >
+                <IoIosClose size={25} />
+            </button>
         </div>
     )
 }
