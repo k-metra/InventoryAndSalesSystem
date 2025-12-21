@@ -27,12 +27,12 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
                 <input
                     className="no-spinner border border-black/20 text-center rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.1)_inset] w-12 py-0.5 outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in"
-                    type="number" value={item.quantity}
+                    type="number" value={item.quantity} min="0"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdateQuantity(item.id, Number(e.target.value)) }
                 />
 
                 <button
-                    onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                    onClick={() => onUpdateQuantity(item.id, Math.max(0, item.quantity - 1))}
                     className="p-1 rounded-full flex items-center justify-center bg-red-200 text-red-500 hover:bg-red-300 transition-colors duration-200 ease-in-out cursor-pointer"
                 >
                     <FiMinus size={20} />
