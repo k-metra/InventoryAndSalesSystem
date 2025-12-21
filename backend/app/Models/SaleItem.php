@@ -15,7 +15,7 @@ class SaleItem extends Model
         'sale_id',
         'product_id',
         'quantity',
-        'price',
+        'price_at_sale',
     ];
     
     public function sale() {
