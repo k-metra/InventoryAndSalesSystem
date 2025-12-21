@@ -14,7 +14,7 @@ import Pagination from "@components/pagination";
 import { formatCurrency } from "../../utils/formatNumbers";
 import { MdAddShoppingCart } from "react-icons/md";
 import CartItem from "@components/cartItem";
-import { type Item } from "@typings/objects";
+import { type Item, type Discount } from "@typings/objects";
 
 export default function POSPage() {
     
@@ -35,6 +35,11 @@ export default function POSPage() {
         return saved ? JSON.parse(saved) : [];
     });
 
+    const [discounts, setDiscounts] = useState<Discount[]>(() => {
+        const savedDiscounts = localStorage.getItem("pos-discounts");
+        return savedDiscounts ? JSON.parse(savedDiscounts) : [];
+    });
+
     const updateItemQuantity = useCallback((itemId: number, newQuantity: number) => {
         setCart(prevCart => {
             return prevCart.map(item => {
@@ -53,7 +58,8 @@ export default function POSPage() {
 
     useEffect(() => {
         localStorage.setItem("pos-cart", JSON.stringify(cart));
-    }, [cart]);
+        localStorage.setItem("pos-discounts", JSON.stringify(discounts));
+    }, [cart, discounts]);
 
     const subtotal = useMemo(() => {
         return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -308,6 +314,24 @@ export default function POSPage() {
                 <div className="flex justify-between items-center pt-4 border-t border-t-black/25 mt-4">
                     <span className="font-semibold text-text text-lg">Subtotal:</span>
                     <span className={`text-md ${subtotal > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>{formatCurrency(subtotal)}</span>
+                </div>
+
+                {discounts.length > 0 && (
+                    <span className="text-lg font-semibold text-text mt-2 block">Discounts</span>
+                )}
+                
+                <div className="flex justify-end gap-2 mt-2">
+                    <button
+                        className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex justify-center items-center gap-2"
+
+                    >
+                        Apply Discount
+                    </button>
+                    <button
+                        className="p-2 px-4 rounded-md bg-green-600 border cursor-pointer text-white hover:bg-green-700 transition-colors duration-300 flex justify-center items-center gap-2"
+                    >
+                        Checkout
+                    </button>
                 </div>
             </div>
         </div>
