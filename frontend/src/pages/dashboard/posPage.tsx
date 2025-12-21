@@ -304,7 +304,11 @@ export default function POSPage() {
                         <p className="text-muted text-center w-full">Cart is empty.</p>
                     )}
                 </div>
-
+                
+                <div className="flex justify-between items-center pt-4 border-t border-t-black/25 mt-4">
+                    <span className="font-semibold text-text text-lg">Subtotal:</span>
+                    <span className="text-md text-text">{formatCurrency(subtotal)}</span>
+                </div>
             </div>
         </div>
     )
