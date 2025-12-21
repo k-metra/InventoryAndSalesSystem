@@ -76,6 +76,8 @@ export default function DiscountModal({ showModal, setShowModal, onApply }: Disc
                             e.preventDefault();
                             onApply(discount);
 
+                            setDiscount({ name: '', type: 'percentage', value: 0 }); // reset discount values
+
                             setShowModal(false);
                         }}
                     >
