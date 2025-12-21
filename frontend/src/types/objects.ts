@@ -5,6 +5,12 @@ type Item = {
     quantity: number;
 }
 
+type Discount = {
+    name: string;
+    type: 'percentage' | 'fixed';
+    value: number;
+}
+
 type Category = {
     id: number;
     name: string;
@@ -22,4 +28,4 @@ type Supplier = {
     products_count?: number;
 }
 
-export { type Category, type Supplier, type Item };
+export { type Category, type Supplier, type Item, type Discount };
