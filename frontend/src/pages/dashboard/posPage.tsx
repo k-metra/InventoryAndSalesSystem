@@ -14,6 +14,7 @@ import Pagination from "@components/pagination";
 import { formatCurrency } from "../../utils/formatNumbers";
 import { MdAddShoppingCart } from "react-icons/md";
 import CartItem from "@components/cartItem";
+import { type Item } from "@typings/objects";
 
 export default function POSPage() {
     
@@ -28,6 +29,35 @@ export default function POSPage() {
     const [sortOpen, setSortOpen] = useState(false);
     const [supplierOpen, setSupplierOpen] = useState(false);
     const [categoryOpen, setCategoryOpen] = useState(false);
+
+    const [cart, setCart] = useState<Item[]>(() => {
+        const saved = localStorage.getItem("pos-cart");
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    const updateItemQuantity = useCallback((itemId: number, newQuantity: number) => {
+        setCart(prevCart => {
+            return prevCart.map(item => {
+                if (item.id === itemId) {
+                    return { ... item, quantity: newQuantity }
+                }
+
+                return item;
+            });
+        });
+    }, [setCart]);
+
+    const onItemRemove = useCallback((itemId: number) => {
+        setCart(prevCart => { return prevCart.filter(item => item.id !== itemId); })
+    }, [setCart])
+
+    useEffect(() => {
+        localStorage.setItem("pos-cart", JSON.stringify(cart));
+    }, [cart]);
+
+    const subtotal = useMemo(() => {
+        return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }, [cart]);
 
     const sortRef = useRef<HTMLDivElement | null>(null);
     const supplierRef = useRef<HTMLDivElement | null>(null);
@@ -221,6 +251,18 @@ export default function POSPage() {
                                     <button
                                         title={product.stock <= 0 ? "Out of stock" : "Add to cart"}
                                         disabled={product.stock <= 0}
+                                        onClick={() => {
+                                            const existingItem = cart.find(item => item.id === product.id);
+
+                                            if (existingItem) {
+                                                updateItemQuantity(product.id, existingItem.quantity + 1);
+                                            } else {
+                                                const { id, name, price } = product;
+                                                const newItem: Item = { id, name, price, quantity: 1 };
+
+                                                setCart(prevCart => [...prevCart, newItem]);
+                                            }
+                                        }}
                                         className="from-blue-500 to-blue-600 bg-linear-to-r hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-300 flex justify-center items-center gap-2 cursor-pointer disabled:to-blue-500/50 disabled:from-blue-600/50 disabled:cursor-not-allowed"
                                     >
                                         <MdAddShoppingCart size={24} />
@@ -250,17 +292,19 @@ export default function POSPage() {
                     <TiShoppingCart className="inline-block ml-2" size={35} />
                 </h4>
 
-                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 max-h-[500px] min-h-[120px] overflow-y-auto">
-                    <CartItem
-                        item={{ id: 1, name: "Sample Item", price: 19.99, quantity: 2 }}
-                        onUpdateQuantity={(itemId, newQuantity) => {
-                            console.log(`Update item ${itemId} to quantity ${newQuantity}`);
-                        }}
-                        onRemoveItem={(itemId) => {
-                            console.log(`Remove item ${itemId}`);
-                        }}
-                    />
+                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 max-h-4/5 min-h-4/5 overflow-y-auto">
+                    {(cart.length > 0 ) ? cart.map((item: Item, idx: number, _arr: Item[]) => (
+                        <CartItem
+                            key={item.id + "-" + idx + "-" + crypto.randomUUID()}
+                            item={item}
+                            onUpdateQuantity={updateItemQuantity}
+                            onRemoveItem={onItemRemove}
+                        />
+                    )) : (
+                        <p className="text-muted text-center w-full">Cart is empty.</p>
+                    )}
                 </div>
+
             </div>
         </div>
     )
