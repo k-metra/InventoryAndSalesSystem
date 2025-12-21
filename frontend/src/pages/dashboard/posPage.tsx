@@ -309,7 +309,7 @@ export default function POSPage() {
                     />
                 </div>
             </div>
-            <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4 flex flex-col h-full">
+            <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4 flex flex-col h-full overflow-y-auto custom-scrollbar">
                 <h4 className="text-lg font-semibold mb-2 text-text sticky">
                     Cart
                     <TiShoppingCart className="inline-block ml-2" size={35} />
@@ -333,9 +333,10 @@ export default function POSPage() {
                     <span className={`text-md ${subtotal > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>{formatCurrency(subtotal)}</span>
                 </div>
 
+                <span className="text-lg font-semibold text-text mt-2 block">Discount(s)</span>
                 {discounts.length > 0 ? (
                     <>
-                        <span className="text-lg font-semibold text-text mt-2 block">Discount(s)</span>
+                        
                         {discounts.map((discount: Discount, idx: number) => (
                             <div onClick={() => {setDiscounts(prevDiscounts => prevDiscounts.filter(curDiscount => curDiscount.name !== discount.name))}} key={idx} className="flex justify-between items-center mt-1 hover:bg-red-400/50 rounded-md p-1 cursor-pointer">
                                 <span className="text-text text-sm">{discount.name} ({discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value)})</span>
@@ -347,12 +348,12 @@ export default function POSPage() {
                     </>
                 ) : (<span className="text-muted text-sm">No discounts applied.</span>)}
                  
-                <div className="my-4 pt-4 justify-between items-center flex">
+                <div className="my-4 pt-4 justify-between items-center flex sticky bottom-1 border-t border-t-black/25">
                     <span className="font-semibold text-text text-xl">Total</span>
                     <span className="text-xl font-bold text-green-800">{formatCurrency(total)}</span>
                 </div>
                 
-                <div className="flex justify-end gap-2 mt-4">
+                <div className="flex justify-end gap-2 mt-4 sticky bottom-0 border-t border-t-black/25 bg-background pt-4">
                     <button
                         className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex justify-center items-center gap-2"
                         onClick={() => setShowDiscountModal(true)}
