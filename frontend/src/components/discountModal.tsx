@@ -1,7 +1,16 @@
-import { useEffect, useRef } from "react"
+import type { Discount } from "@typings/objects";
+import { useEffect, useRef, useState, type ChangeEvent } from "react"
 
-export default function DiscountModal({ showModal, setShowModal }: { showModal: boolean, setShowModal: ( show: boolean ) => void; }) {
+type DiscountModalProps = {
+    showModal: boolean;
+    setShowModal: ( show: boolean ) => void;
+    onApply: ( {name, type, value}: Discount ) => void;
+}
+
+export default function DiscountModal({ showModal, setShowModal, onApply }: DiscountModalProps) {
     const modalRef = useRef<HTMLDivElement | null>(null);
+
+    const [discount, setDiscount] = useState<Discount>({ name: '', type: 'percentage', value: 0 });
 
     useEffect(() => {
 
@@ -26,14 +35,31 @@ export default function DiscountModal({ showModal, setShowModal }: { showModal: 
             <div ref={modalRef} className={`bg-white p-6 rounded-lg w-96 ${showModal ? "transform-y-0 opacity-100" : "-translate-y-8 opacity-0"} transition-all duration-300 ease-in-out`}>
                 <h6 className="text-center text-text font-semibold mb-4">Apply Discount</h6>
                 <div className="flex gap-2 w-full">
-                    <input type="text" placeholder="Discount Name" className="shadow-[0px_0px_5px_rgba(0,0,0,0.1)_inset] p-2 rounded-md border-black/20 border w-full" />
-                    <select className="shadow-[0px_0px_5px_rgba(0,0,0,0.1)_inset] p-2 rounded-md border-black/20 border w-full">
+                    
+                    <input
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setDiscount((prev: Discount) => ({ ...prev, name: e.target.value }));  
+                        }}
+                        value={discount.name}
+                        type="text" 
+                        placeholder="Discount Name" 
+                        className="shadow-[0px_0px_5px_rgba(0,0,0,0.1)_inset] p-2 rounded-md border-black/20 border w-full" />
+                    
+                    <select value={discount.type} onChange={(e: ChangeEvent<HTMLSelectElement>) => { setDiscount((prev: Discount) => ({ ...prev, type: e.target.value as Discount["type"] }))}} className="shadow-[0px_0px_5px_rgba(0,0,0,0.1)_inset] p-2 rounded-md border-black/20 border w-full">
                         <option value="percentage">Percentage (%)</option>
                         <option value="fixed">Fixed Amount</option>
                     </select>
                 </div>
 
-                <input type="number" placeholder="Discount Value" className="no-spinner shadow-[0px_0px_5px_rgba(0,0,0,0.1)_inset] p-2 rounded-md border-black/20 border w-full mt-4" />
+                <input 
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        const val = parseFloat(e.target.value);
+                        setDiscount((prev: Discount) => ({ ...prev, value: isNaN(val) ? 0 : val }));
+                    }} 
+                    value={discount.value}
+                    type="number" 
+                    placeholder="Discount Value" 
+                    className="no-spinner shadow-[0px_0px_5px_rgba(0,0,0,0.1)_inset] p-2 rounded-md border-black/20 border w-full mt-4" />
 
                 <div className="flex justify-end gap-2 mt-4">
                     <button
@@ -43,9 +69,13 @@ export default function DiscountModal({ showModal, setShowModal }: { showModal: 
                         Cancel
                     </button>
                     <button
-                        className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
-                        onClick={() => {
+                        className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-800 transition-colors duration-300"
+                        onClick={(e) => {
                             // Handle applying discount logic here
+                            e.stopPropagation();
+                            e.preventDefault();
+                            onApply(discount);
+
                             setShowModal(false);
                         }}
                     >

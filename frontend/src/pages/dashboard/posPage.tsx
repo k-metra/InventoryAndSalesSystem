@@ -68,6 +68,20 @@ export default function POSPage() {
         return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     }, [cart]);
 
+    const total = useMemo(() => {
+        let totalAmount = subtotal;
+
+        const totalDiscount = discounts.reduce((prev, discount) => {
+            if (discount.type === 'fixed') {
+                return prev + discount.value;
+            } else {
+                return prev + (subtotal * discount.value) / 100;
+            }
+        }, 0);
+
+        return (Math.max(0, totalAmount - totalDiscount));
+    }, [subtotal, discounts]);
+
     const sortRef = useRef<HTMLDivElement | null>(null);
     const supplierRef = useRef<HTMLDivElement | null>(null);
     const categoryRef = useRef<HTMLDivElement | null>(null);
@@ -159,7 +173,7 @@ export default function POSPage() {
 
     return (
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-            <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
+            <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4 h-full">
                 <h4 className="text-text text-lg  font-semibold mb-2">
                     Product List
                     <AiOutlineProduct className="inline-block ml-2" size={35} />
@@ -295,13 +309,13 @@ export default function POSPage() {
                     />
                 </div>
             </div>
-            <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4">
+            <div className="shadow-md bg-background border border-black/25 rounded-md p-4 mb-4 flex flex-col h-full">
                 <h4 className="text-lg font-semibold mb-2 text-text sticky">
                     Cart
                     <TiShoppingCart className="inline-block ml-2" size={35} />
                 </h4>
 
-                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 max-h-4/5 min-h-4/5 overflow-y-auto">
+                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 flex-1 max-h-3/5 min-h-3/5 overflow-y-auto">
                     {(cart.length > 0 ) ? cart.map((item: Item, idx: number, _arr: Item[]) => (
                         <CartItem
                             key={item.id + "-" + idx + "-" + crypto.randomUUID()}
@@ -314,16 +328,31 @@ export default function POSPage() {
                     )}
                 </div>
                 
-                <div className="flex justify-between items-center pt-4 border-t border-t-black/25 mt-4">
-                    <span className="font-semibold text-text text-lg">Subtotal:</span>
+                <div className="flex justify-between items-center pt-4 border-t border-t-black/25 mt-auto">
+                    <span className="font-semibold text-text text-lg">Subtotal</span>
                     <span className={`text-md ${subtotal > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>{formatCurrency(subtotal)}</span>
                 </div>
 
-                {discounts.length > 0 && (
-                    <span className="text-lg font-semibold text-text mt-2 block">Discounts</span>
-                )}
+                {discounts.length > 0 ? (
+                    <>
+                        <span className="text-lg font-semibold text-text mt-2 block">Discount(s)</span>
+                        {discounts.map((discount: Discount, idx: number) => (
+                            <div onClick={() => {setDiscounts(prevDiscounts => prevDiscounts.filter(curDiscount => curDiscount.name !== discount.name))}} key={idx} className="flex justify-between items-center mt-1 hover:bg-red-400/50 rounded-md p-1 cursor-pointer">
+                                <span className="text-text text-sm">{discount.name} ({discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value)})</span>
+                                <span className="text-muted text-sm">
+                                    -{discount.type === 'fixed' ? formatCurrency(discount.value) : formatCurrency((subtotal * discount.value) / 100)} 
+                                </span>
+                            </div>
+                        ))}
+                    </>
+                ) : (<span className="text-muted text-sm">No discounts applied.</span>)}
+                 
+                <div className="my-4 pt-4 justify-between items-center flex">
+                    <span className="font-semibold text-text text-xl">Total</span>
+                    <span className="text-xl font-bold text-green-800">{formatCurrency(total)}</span>
+                </div>
                 
-                <div className="flex justify-end gap-2 mt-2">
+                <div className="flex justify-end gap-2 mt-4">
                     <button
                         className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex justify-center items-center gap-2"
                         onClick={() => setShowDiscountModal(true)}
@@ -341,6 +370,9 @@ export default function POSPage() {
             <DiscountModal
                 showModal={showDiscountModal}
                 setShowModal={setShowDiscountModal}
+                onApply={(discount: Discount) => {
+                    setDiscounts((prevDiscounts) => [...prevDiscounts, discount]);
+                }}
             />
         </div>
     )
