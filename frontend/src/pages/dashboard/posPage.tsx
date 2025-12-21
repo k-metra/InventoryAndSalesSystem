@@ -15,6 +15,7 @@ import { formatCurrency } from "../../utils/formatNumbers";
 import { MdAddShoppingCart } from "react-icons/md";
 import CartItem from "@components/cartItem";
 import { type Item, type Discount } from "@typings/objects";
+import DiscountModal from "@/components/discountModal";
 
 export default function POSPage() {
     
@@ -29,6 +30,8 @@ export default function POSPage() {
     const [sortOpen, setSortOpen] = useState(false);
     const [supplierOpen, setSupplierOpen] = useState(false);
     const [categoryOpen, setCategoryOpen] = useState(false);
+
+    const [showDiscountModal, setShowDiscountModal] = useState(false); 
 
     const [cart, setCart] = useState<Item[]>(() => {
         const saved = localStorage.getItem("pos-cart");
@@ -323,7 +326,7 @@ export default function POSPage() {
                 <div className="flex justify-end gap-2 mt-2">
                     <button
                         className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex justify-center items-center gap-2"
-
+                        onClick={() => setShowDiscountModal(true)}
                     >
                         Apply Discount
                     </button>
@@ -334,6 +337,11 @@ export default function POSPage() {
                     </button>
                 </div>
             </div>
+
+            <DiscountModal
+                showModal={showDiscountModal}
+                setShowModal={setShowDiscountModal}
+            />
         </div>
     )
 
