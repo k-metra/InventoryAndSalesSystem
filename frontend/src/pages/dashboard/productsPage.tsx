@@ -18,6 +18,7 @@ import CreateElementModal from '../../components/createElementModal';
 import type { AxiosError } from 'axios';
 import { type Category, type Supplier } from '../../types/objects';
 import { formatCurrency } from '../../utils/formatNumbers';
+import sortList from '@utils/productsSortingOptions';
 
 type dataProps = {
     current_page: number;
@@ -81,20 +82,6 @@ const productEditFields: Field[] = [
         }
     },
 ];
-
-const sortList: string[] = [
-    "Greater Stock",
-    "Lower Stock",
-    "Higher Price",
-    "Lower Price",
-    "A-Z",
-    "Z-A",
-    "Greater Cost",
-    "Lower Cost",
-    "Vat Exempt",
-    "Non-Vat Exempt",
-];
-
 
 export default function ProductsPage() {
     const queryClient = useQueryClient();
