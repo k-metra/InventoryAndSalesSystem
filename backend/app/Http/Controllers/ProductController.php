@@ -22,8 +22,6 @@ class ProductController extends Controller
             "Lower Stock"       => ['stock', 'ASC'],
             "Greater Cost"      => ['cost', 'DESC'],
             "Lower Cost"        => ['cost', 'ASC'],
-            "Vat Exempt"    => ['vat_exempt', 'DESC'],
-            "Non-Vat Exempt"    => ['vat_exempt', 'ASC'],
         ];
 
         $search = $request->query('search');
