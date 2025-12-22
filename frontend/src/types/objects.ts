@@ -2,6 +2,7 @@ type Item = {
     id: number;
     name: string;
     price: number;
+    vat_exempt: boolean;
     quantity: number;
 }
 
@@ -9,6 +10,17 @@ type Discount = {
     name: string;
     type: 'percentage' | 'fixed';
     value: number;
+}
+
+type Product = {
+    id: number;
+    name: string;
+    sku: string;
+    category?: { id: number; name: string; };
+    supplier?: { id: number; name: string; };
+    price: number;
+    vat_exempt: boolean;
+    stock: number;
 }
 
 type Category = {
@@ -28,4 +40,4 @@ type Supplier = {
     products_count?: number;
 }
 
-export { type Category, type Supplier, type Item, type Discount };
+export { type Category, type Supplier, type Item, type Discount, type Product };
