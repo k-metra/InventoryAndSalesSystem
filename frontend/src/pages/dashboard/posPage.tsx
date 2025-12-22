@@ -358,7 +358,7 @@ export default function POSPage() {
                         <span className="text-text mt-2 block">Discount(s)</span>
                         {discounts.map((discount: Discount, idx: number) => (
                             <div onClick={() => {setDiscounts(prevDiscounts => prevDiscounts.filter(curDiscount => curDiscount.name !== discount.name))}} key={idx} className="flex justify-between items-center mt-1 hover:bg-red-400/50 rounded-md p-1 cursor-pointer">
-                                <span className="text-text font-medium text-sm">{discount.name} ({discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value)})</span>
+                                <span className="text-text font-medium text-sm tracking-tight">{discount.name} ({discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value)})</span>
                                 <span className="text-green-700 font-semibold text-sm">
                                     - {discount.type === 'fixed' ? formatCurrency(discount.value) : formatCurrency((subtotal * discount.value) / 100)} 
                                 </span>
