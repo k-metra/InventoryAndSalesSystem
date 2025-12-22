@@ -144,6 +144,18 @@ export default function CreateElementModal({application, fields, onClose }: Crea
                                         />
                                     </div>
                                 )
+                            } else if (field.type === 'boolean') {
+                                return (
+                                    <div key={field.key} className="mb-4 flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={!!formState[field.key]}
+                                            onChange={(e) => handleChange(field.key, e.target.checked)}
+                                            className="h-4 w-4 text-primary border-black/25 rounded focus:ring-primary"
+                                        />
+                                        <label className="text-sm font-medium text-gray-700">{field.label}</label>
+                                    </div>
+                                )
                             }
                         })}
                             </div>
