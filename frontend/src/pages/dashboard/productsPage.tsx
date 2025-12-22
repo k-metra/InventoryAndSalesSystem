@@ -60,6 +60,7 @@ const productEditFields: Field[] = [
     { label: "Name", key: "name", type: "text" },
     { label: "SKU", key: "sku", type: "text" },
     { label: "Price", key: "price", type: "number" },
+    { label: "VAT Exempt", key: "vat_exempt", type: "boolean" },
     { label: "Cost", key: "cost", type: "number" },
     { label: "Stock", key: "stock", type: "number" },
     { label: "Category", 
