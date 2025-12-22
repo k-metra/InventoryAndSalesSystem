@@ -388,8 +388,8 @@ export default function POSPage() {
                     <span className={`text-md ${vat > 0 ? 'text-textfont-medium' : 'text-muted'}`}>+ {formatCurrency(vat)}</span>
                 </div>
                  
-                <div className="my-4 pt-4 justify-between items-center flex sticky bottom-1 border-t border-t-black/25">
-                    <span className="font-semibold text-text text-xl tracking-normal">Total Amount Due</span>
+                <div className="my-4 pt-4 justify-between items-center flex sticky bottom-1 ">
+                    <span className="font-semibold text-text text-xl tracking-tight">Total Amount Due</span>
                     <span className="text-xl font-bold text-green-700 tracking-wide">{formatCurrency(total)}</span>
                 </div>
                 
