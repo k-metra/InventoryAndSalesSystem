@@ -91,6 +91,8 @@ const sortList: string[] = [
     "Z-A",
     "Greater Cost",
     "Lower Cost",
+    "Vat Exempt",
+    "Non-Vat Exempt",
 ];
 
 
