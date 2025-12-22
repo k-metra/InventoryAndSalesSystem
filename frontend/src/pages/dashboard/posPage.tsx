@@ -121,6 +121,8 @@ export default function POSPage() {
             { label: "Stock: High to Low", value: "Greater Stock" },
             { label: "Cost: Low to High", value: "Lower Cost" },
             { label: "Cost: High to Low", value: "Greater Cost" },
+            { label: "VAT Exempt", value: "Vat Exempt" },
+            { label: "Non-VAT Exempt", value: "Non-Vat Exempt" },
         ];
     }, []);
 
