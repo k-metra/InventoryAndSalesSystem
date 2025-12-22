@@ -68,6 +68,10 @@ export default function POSPage() {
         return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     }, [cart]);
 
+    const vat = useMemo(() => {
+        return subtotal * 0.12;
+    }, [subtotal]);
+
     const total = useMemo(() => {
         let totalAmount = subtotal;
 
@@ -79,8 +83,12 @@ export default function POSPage() {
             }
         }, 0);
 
-        return (Math.max(0, totalAmount - totalDiscount));
-    }, [subtotal, discounts]);
+        totalAmount = Math.max(0, totalAmount - totalDiscount);
+        
+        return totalAmount + vat;
+    }, [subtotal, discounts, vat]);
+
+
 
     const sortRef = useRef<HTMLDivElement | null>(null);
     const supplierRef = useRef<HTMLDivElement | null>(null);
@@ -347,6 +355,11 @@ export default function POSPage() {
                         ))}
                     </>
                 ) : (<span className="text-muted text-sm">No discounts applied.</span>)}
+                
+                <div className="flex justify-between items-center mt-2">
+                    <span className="font-semibold text-text text-lg">VAT (12%)</span>
+                    <span className={`text-md ${vat > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>+ {formatCurrency(vat)}</span>
+                </div>
                  
                 <div className="my-4 pt-4 justify-between items-center flex sticky bottom-1 border-t border-t-black/25">
                     <span className="font-semibold text-text text-xl">Total</span>
