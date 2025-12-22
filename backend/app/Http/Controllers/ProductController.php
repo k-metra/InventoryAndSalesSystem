@@ -43,6 +43,10 @@ class ProductController extends Controller
 
         if ($sortBy && array_key_exists($sortBy, $sortingOptions)) {
             $query->orderBy(...$sortingOptions[$sortBy]);
+        } elseif ($sortBy && $sortBy === 'Vat Exempt') {
+            $query->where('vat_exempt', true);
+        } elseif ($sortBy && $sortBy === 'Non-Vat Exempt') {
+            $query->where('vat_exempt', false);
         } else {
             $query
              ->orderBy('id', 'ASC');
