@@ -9,7 +9,7 @@ import Dropdown from "@components/dropdown";
 import useSuppliers from "../../queries/suppliers/useSuppliers";
 import type { Category, Supplier } from "../../types/objects";
 import useCategories from "../../queries/categories/useCategories";
-import type { Product } from "../../utils/fetchProducts";
+import type { Product } from "@typings/objects";
 import Pagination from "@components/pagination";
 import { formatCurrency } from "../../utils/formatNumbers";
 import { MdAddShoppingCart } from "react-icons/md";
@@ -64,17 +64,27 @@ export default function POSPage() {
         localStorage.setItem("pos-discounts", JSON.stringify(discounts));
     }, [cart, discounts]);
 
-    const subtotal = useMemo(() => {
-        return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totals = useMemo(() => {
+        return cart.reduce((acc, item) => {
+            const itemTotal = item.price * item.quantity;
+
+            if (item.vat_exempt) {
+                acc.exempt += itemTotal
+            } else {
+                acc.vatable += itemTotal;
+            }
+
+            return acc;
+        }, { vatable: 0, exempt: 0 })
     }, [cart]);
 
     const vat = useMemo(() => {
-        return subtotal * 0.12;
-    }, [subtotal]);
+        return totals.vatable * 0.12;
+    }, [totals.vatable]);
+
+    const subtotal = useMemo(() => totals.vatable + totals.exempt, [totals]);
 
     const total = useMemo(() => {
-        let totalAmount = subtotal;
-
         const totalDiscount = discounts.reduce((prev, discount) => {
             if (discount.type === 'fixed') {
                 return prev + discount.value;
@@ -83,10 +93,9 @@ export default function POSPage() {
             }
         }, 0);
 
-        totalAmount = Math.max(0, totalAmount - totalDiscount);
         
-        return totalAmount + vat;
-    }, [subtotal, discounts, vat]);
+        return Math.max((subtotal + vat) - totalDiscount, 0);
+    }, [totals, discounts, vat]);
 
 
 
@@ -290,8 +299,8 @@ export default function POSPage() {
                                             if (existingItem) {
                                                 updateItemQuantity(product.id, existingItem.quantity + 1);
                                             } else {
-                                                const { id, name, price } = product;
-                                                const newItem: Item = { id, name, price, quantity: 1 };
+                                                const { id, name, vat_exempt, price } = product;
+                                                const newItem: Item = { id, name, vat_exempt, price, quantity: 1 };
 
                                                 setCart(prevCart => [...prevCart, newItem]);
                                             }
@@ -339,33 +348,49 @@ export default function POSPage() {
                 </div>
                 
                 <div className="flex justify-between items-center pt-4 border-t border-t-black/25 mt-auto">
-                    <span className="font-semibold text-text text-lg">Subtotal</span>
-                    <span className={`text-md ${subtotal > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>{formatCurrency(subtotal)}</span>
+                    <span className="text-text">Subtotal</span>
+                    <span className={`text-md ${subtotal > 0 ? 'text-text font-medium' : 'text-muted'}`}>{formatCurrency(subtotal)}</span>
                 </div>
 
-                <span className="text-lg font-semibold text-text mt-2 block">Discount(s)</span>
-                {discounts.length > 0 ? (
+                {discounts.length > 0 && (
                     <>
                         
+                        <span className="text-text mt-2 block">Discount(s)</span>
                         {discounts.map((discount: Discount, idx: number) => (
                             <div onClick={() => {setDiscounts(prevDiscounts => prevDiscounts.filter(curDiscount => curDiscount.name !== discount.name))}} key={idx} className="flex justify-between items-center mt-1 hover:bg-red-400/50 rounded-md p-1 cursor-pointer">
-                                <span className="text-text text-sm">{discount.name} ({discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value)})</span>
-                                <span className="text-muted text-sm">
-                                    -{discount.type === 'fixed' ? formatCurrency(discount.value) : formatCurrency((subtotal * discount.value) / 100)} 
+                                <span className="text-text font-medium text-sm">{discount.name} ({discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value)})</span>
+                                <span className="text-green-700 font-semibold text-sm">
+                                    - {discount.type === 'fixed' ? formatCurrency(discount.value) : formatCurrency((subtotal * discount.value) / 100)} 
                                 </span>
                             </div>
                         ))}
                     </>
-                ) : (<span className="text-muted text-sm">No discounts applied.</span>)}
-                
+                )}
+
                 <div className="flex justify-between items-center mt-2">
-                    <span className="font-semibold text-text text-lg">VAT (12%)</span>
-                    <span className={`text-md ${vat > 0 ? 'text-green-700 font-semibold' : 'text-muted'}`}>+ {formatCurrency(vat)}</span>
+                    <span className="text-text">Total VATable Sales</span>
+                    <span className={`text-md ${vat > 0 ? 'text-text font-medium' : 'text-muted'}`}>{formatCurrency(totals.vatable)}</span>
+                </div>
+                
+
+                <div className="flex justify-between items-center mt-2">
+                    <span className="text-text">VAT-Exempt Sales</span>
+                    <span className={`text-md ${totals.exempt > 0 ? 'text-text font-medium' : 'text-muted'}`}>{formatCurrency(totals.exempt)}</span>
+                </div>
+
+                <div className="flex justify-between items-center mt-2">
+                    <span className=" text-text">Zero-Rated Sales</span>
+                    <span className={`text-md text-text font-medium`}>{formatCurrency(0)}</span>
+                </div>
+
+                <div className="flex justify-between items-center mt-2">
+                    <span className="text-text">VAT Amount (12%)</span>
+                    <span className={`text-md ${vat > 0 ? 'text-textfont-medium' : 'text-muted'}`}>+ {formatCurrency(vat)}</span>
                 </div>
                  
                 <div className="my-4 pt-4 justify-between items-center flex sticky bottom-1 border-t border-t-black/25">
-                    <span className="font-semibold text-text text-xl">Total</span>
-                    <span className="text-xl font-bold text-green-800">{formatCurrency(total)}</span>
+                    <span className="font-semibold text-text text-xl tracking-normal">Total Amount Due</span>
+                    <span className="text-xl font-bold text-green-700 tracking-wide">{formatCurrency(total)}</span>
                 </div>
                 
                 <div className="flex justify-end gap-2 mt-4 sticky bottom-0 border-t border-t-black/25 bg-background pt-4">
