@@ -18,6 +18,7 @@ class Product extends Model
         'description',
         'sku',
         'price',
+        'vat_exempt',
         'cost',
         'stock',
         'category_id',
