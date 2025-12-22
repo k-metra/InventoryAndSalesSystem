@@ -14,14 +14,16 @@ class ProductController extends Controller
     public function index(Request $request)
     {   
         $sortingOptions = [
-            "A-Z" => ['name', 'ASC'],
-            "Z-A" => ['name', 'DESC'],
-            "Higher Price" => ['price', 'DESC'],
-            "Lower Price" => ['price', 'ASC'],
-            "Greater Stock" => ['stock', 'DESC'],
-            "Lower Stock" => ['stock', 'ASC'],
-            "Greater Cost" => ['cost', 'DESC'],
-            "Lower Cost" => ['cost', 'ASC'],
+            "A-Z"               => ['name', 'ASC'],
+            "Z-A"               => ['name', 'DESC'],
+            "Higher Price"      => ['price', 'DESC'],
+            "Lower Price"       => ['price', 'ASC'],
+            "Greater Stock"     => ['stock', 'DESC'],
+            "Lower Stock"       => ['stock', 'ASC'],
+            "Greater Cost"      => ['cost', 'DESC'],
+            "Lower Cost"        => ['cost', 'ASC'],
+            "Vat Exempt"    => ['vat_exempt', 'DESC'],
+            "Non-Vat Exempt"    => ['vat_exempt', 'ASC'],
         ];
 
         $search = $request->query('search');
