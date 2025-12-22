@@ -60,9 +60,10 @@ export default function EditElementModal({application, fields, editId, onClose }
             return accumulator;
         }, {} as Record<string, any[]>);
 
-    console.log(data);
 
     const [formState, setFormState] = useState<Record<string, any>>({});
+    console.log(formState);
+
 
     useEffect(() => {
         if (data) setFormState(data);
