@@ -385,7 +385,7 @@ export default function POSPage() {
 
                 <div className="flex justify-between items-center mt-2">
                     <span className="text-text">VAT Amount (12%)</span>
-                    <span className={`text-md ${vat > 0 ? 'text-textfont-medium' : 'text-muted'}`}>+ {formatCurrency(vat)}</span>
+                    <span className={`text-md ${vat > 0 ? 'text-textfont-medium' : 'text-muted'}`}>{formatCurrency(vat)}</span>
                 </div>
                  
                 <div className="my-4 pt-4 justify-between items-center flex sticky bottom-1 ">
