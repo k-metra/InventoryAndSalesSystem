@@ -44,15 +44,22 @@ export default function POSPage() {
     });
 
     const updateItemQuantity = useCallback((itemId: number, newQuantity: number) => {
-        setCart(prevCart => {
-            return prevCart.map(item => {
-                if (item.id === itemId) {
-                    return { ... item, quantity: newQuantity }
-                }
+        if (newQuantity <= 0) {
+            setCart(prevCart => prevCart.filter(item => item.id !== itemId));
+        } else {
+            setCart(prevCart => {
+                return prevCart.map(item => {
+                    if (item.id === itemId) {
 
-                return item;
+
+                        return { ...item, quantity: newQuantity }
+                    }
+
+                    return item;
+                });
             });
-        });
+        }
+        
     }, [setCart]);
 
     const onItemRemove = useCallback((itemId: number) => {
