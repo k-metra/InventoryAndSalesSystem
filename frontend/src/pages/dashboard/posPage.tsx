@@ -400,13 +400,15 @@ export default function POSPage() {
                 
                 <div className="flex justify-end gap-2 mt-4 sticky bottom-0 border-t border-t-black/25 bg-background pt-4">
                     <button
-                        className="p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex justify-center items-center gap-2"
+                        disabled={cart.length <= 0}
+                        className="disabled:bg-blue-600/50 disabled:hover:bg-blue-700/50 disabled:cursor-not-allowed p-2 px-4 rounded-md text-white border cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors duration-300 flex justify-center items-center gap-2"
                         onClick={() => setShowDiscountModal(true)}
                     >
                         Apply Discount
                     </button>
                     <button
-                        className="p-2 px-4 rounded-md bg-green-600 border cursor-pointer text-white hover:bg-green-700 transition-colors duration-300 flex justify-center items-center gap-2"
+                        disabled={cart.length <= 0}
+                        className="disabled:bg-green-600/50 disabled:hover:bg-green-700/50 disabled:cursor-not-allowed p-2 px-4 rounded-md bg-green-600 border cursor-pointer text-white hover:bg-green-700 transition-colors duration-300 flex justify-center items-center gap-2"
                     >
                         Checkout
                     </button>
