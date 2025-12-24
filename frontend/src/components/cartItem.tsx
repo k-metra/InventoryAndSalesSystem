@@ -2,6 +2,7 @@ import { formatCurrency } from "@utils/formatNumbers";
 import { type Item } from "@typings/objects"; 
 import { IoIosAdd, IoIosClose } from "react-icons/io";
 import { FiMinus } from "react-icons/fi";
+import { useCallback, useState } from "react";
 
 type CartItemProps = {
     item: Item;
@@ -10,6 +11,16 @@ type CartItemProps = {
 }
 
 export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps ) {
+    const [currentQuantity, setCurrentQuantity] = useState<number>(item.quantity);
+
+    const onFocusLost = useCallback(() => {
+        let newQuantity = Math.max(Number(currentQuantity), 0);
+
+        newQuantity = Math.min(newQuantity, item.maxQuantity ?? 0);
+        
+        onUpdateQuantity(item.id, newQuantity);
+    }, [currentQuantity, item.id, item.maxQuantity, onUpdateQuantity]);
+
     return (
         <div className="relative group flex justify-between items-center border-b border-b-black/25 pb-4 py-2">
             <div className="flex flex-col gap-1">
@@ -27,8 +38,10 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
                 <input
                     className="no-spinner border border-black/20 text-center rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.1)_inset] w-12 py-0.5 outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in"
-                    type="number" value={item.quantity} min="0" max={item.maxQuantity ?? 0}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdateQuantity(item.id, Number(e.target.value)) }
+                    type="number" value={currentQuantity} max={item.maxQuantity ?? 0}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentQuantity(Number(e.target.value))}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') onFocusLost(); }}
+                    onBlur={onFocusLost}
                 />
 
                 <button
