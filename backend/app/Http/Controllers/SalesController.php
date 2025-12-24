@@ -43,13 +43,15 @@ class SalesController extends Controller
     public function store(Request $request)
     {
         $validated_data = $request->validate([
-            'customer_id'       => 'nullable|exists:customers,id',
-            'payment_method'    => 'required|string|max:50',
-            'items'             => 'required|array|min:1',
-            'items.*.product_id'=> 'required|exists:products,id',
-            'items.*.quantity'  => 'required|integer|min:1',
-            'items.*.price'     => 'required|numeric|min:0',
-            'items.*.discount'  => 'nullable|numeric|min:0'
+            'customer_id'               => 'nullable|exists:customers,id',
+            'payment_method'            => 'required|string|max:50',
+            'items'                     => 'required|array|min:1',
+            'items.*.product_id'        => 'required|exists:products,id',
+            'items.*.quantity'          => 'required|integer|min:1',
+            'items.*.price'             => 'required|numeric|min:0',
+            'discount_amount'           => 'nullable|numeric|min:0',
+            'vat_rate'                  => 'nullable|numeric|min:0',
+            'vat_amount'                => 'nullable|numeric|min:0',     
         ]);
 
         return DB::transaction(function () use ($validated_data) {
@@ -71,20 +73,31 @@ class SalesController extends Controller
                 $product->stock -= $item['quantity'];
                 $product->save();
 
-                $subtotal = ($item['price'] * $item['quantity']) - ($item['discount'] ?? 0);
-                $totalAmount += $subtotal;
+                $line_total = ($item['price'] * $item['quantity']);
+                $totalAmount += $line_total;
 
                 SaleItem::create([
-                    'sale_id'   => $sale->id,
-                    'product_id'=> $item['product_id'],
-                    'quantity'  => $item['quantity'],
-                    'price'     => $item['price'],
-                    'discount'  => $item['discount'] ?? 0,
-                    'subtotal'  => $subtotal,
+                    'sale_id'       => $sale->id,
+                    'product_id'    => $item['product_id'],
+                    'quantity'      => $item['quantity'],
+                    'unit_price'    => $item['price'],
+                    'line_total'    => $line_total,
                 ]);
             }
 
-            $sale->update(['total' => $totalAmount]);
+            // subtotal prior to VAT and discounts
+            $subtotal = $totalAmount;
+
+            $totalAmount += $validated_data['vat_amount'] ?? 0;
+            $totalAmount -= $validated_data['discount_amount'] ?? 0;
+
+            $sale->update([
+                'total' => $totalAmount,
+                'vat_rate' => $validated_data['vat_rate'] ?? 0,
+                'vat_amount' => $validated_data['vat_amount'] ?? 0,
+                'discount_amount' => $validated_data['discount_amount'] ?? 0,
+                'subtotal' => $subtotal,
+            ]);
 
             return $sale->load(['items.product', 'customer']);
         });
