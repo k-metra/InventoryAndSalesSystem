@@ -4,6 +4,7 @@ type Item = {
     price: number;
     vat_exempt: boolean;
     quantity: number;
+    maxQuantity: number;
 }
 
 type Discount = {
