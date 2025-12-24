@@ -19,7 +19,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
             <div className="flex items-center gap-2">
                 <button
-                    onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                    onClick={() => onUpdateQuantity(item.id,item.quantity + 1)}
                     className="p-1 rounded-full flex items-center justify-center bg-green-200 text-green-500 hover:bg-green-300 transition-colors duration-200 ease-in-out cursor-pointer"
                 >   
                     <IoIosAdd size={20}/>
@@ -27,7 +27,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
                 <input
                     className="no-spinner border border-black/20 text-center rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.1)_inset] w-12 py-0.5 outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in"
-                    type="number" value={item.quantity} min="0"
+                    type="number" value={item.quantity} min="0" max={item.maxQuantity ?? 0}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdateQuantity(item.id, Number(e.target.value)) }
                 />
 

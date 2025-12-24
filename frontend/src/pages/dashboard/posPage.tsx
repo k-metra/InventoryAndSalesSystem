@@ -50,9 +50,7 @@ export default function POSPage() {
             setCart(prevCart => {
                 return prevCart.map(item => {
                     if (item.id === itemId) {
-
-
-                        return { ...item, quantity: newQuantity }
+                        return { ...item, quantity: Math.min(newQuantity, item.maxQuantity ?? 0) }
                     }
 
                     return item;
@@ -307,7 +305,7 @@ export default function POSPage() {
                                                 updateItemQuantity(product.id, existingItem.quantity + 1);
                                             } else {
                                                 const { id, name, vat_exempt, price } = product;
-                                                const newItem: Item = { id, name, vat_exempt, price, quantity: 1 };
+                                                const newItem: Item = { id, name, vat_exempt, price, quantity: 1, maxQuantity: product.stock };
 
                                                 setCart(prevCart => [...prevCart, newItem]);
                                             }
