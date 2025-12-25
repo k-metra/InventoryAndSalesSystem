@@ -16,6 +16,7 @@ import { MdAddShoppingCart } from "react-icons/md";
 import CartItem from "@components/cartItem";
 import { type Item, type Discount } from "@typings/objects";
 import DiscountModal from "@/components/discountModal";
+import CheckoutModal from "@/components/checkoutModal";
 
 export default function POSPage() {
     
@@ -32,6 +33,7 @@ export default function POSPage() {
     const [categoryOpen, setCategoryOpen] = useState(false);
 
     const [showDiscountModal, setShowDiscountModal] = useState(false); 
+    const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
     const [cart, setCart] = useState<Item[]>(() => {
         const saved = localStorage.getItem("pos-cart");
@@ -407,6 +409,7 @@ export default function POSPage() {
                         Apply Discount
                     </button>
                     <button
+                        onClick={() => setShowCheckoutModal(true)}
                         disabled={cart.length <= 0}
                         className="disabled:bg-green-600/50 disabled:hover:bg-green-700/50 disabled:cursor-not-allowed p-2 px-4 rounded-md bg-green-600 border cursor-pointer text-white hover:bg-green-700 transition-colors duration-300 flex justify-center items-center gap-2"
                     >
@@ -422,6 +425,18 @@ export default function POSPage() {
                     setDiscounts((prevDiscounts) => [...prevDiscounts, discount]);
                 }}
             />
+
+            { showCheckoutModal && (
+                <CheckoutModal
+                    subtotal={formatCurrency(subtotal)}
+                    vat_amount={formatCurrency(vat)}
+                    vat_rate={"12%"}
+                    total={formatCurrency(total)}
+                    discounts={discounts}
+                    items={cart}
+                    close={() => setShowCheckoutModal(false)}
+                />
+            )}
         </div>
     )
 
