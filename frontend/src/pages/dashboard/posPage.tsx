@@ -428,10 +428,12 @@ export default function POSPage() {
 
             { showCheckoutModal && (
                 <CheckoutModal
-                    subtotal={formatCurrency(subtotal)}
-                    vat_amount={formatCurrency(vat)}
+                    subtotal={subtotal}
+                    vat_amount={vat}
+                    vatables={totals.vatable}
+                    exempted={totals.exempt}
                     vat_rate={"12%"}
-                    total={formatCurrency(total)}
+                    total={total}
                     discounts={discounts}
                     items={cart}
                     close={() => setShowCheckoutModal(false)}
