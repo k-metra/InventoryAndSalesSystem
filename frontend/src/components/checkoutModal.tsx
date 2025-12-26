@@ -1,6 +1,8 @@
 import { formatCurrency } from '@utils/formatNumbers';
-import { type Item, type Discount } from '@typings/objects';
+import { type Item, type Discount, type Customer } from '@typings/objects';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Select from 'react-select';
+import useCustomers from '@/queries/customers/useCustomers';
 
 type CheckoutModalProps = {
     subtotal: number;
@@ -43,6 +45,9 @@ export default function CheckoutModal( {
             : 0;
     }, [discounts, subtotal]);
 
+    const { data: customers }: { data: Customer[] | undefined } = useCustomers(false);
+
+
     const [order, setOrder] = useState<SaleBody>({
         customer_id: null,
         payment_method: '',
@@ -72,7 +77,44 @@ export default function CheckoutModal( {
     return (
         <div className="z-9999 fixed w-screen h-screen top-0 left-0 bg-black/50 flex items-center justify-center custom-scrollbar">
             <div ref={modalRef} className="animate-modal-fade-in bg-white p-6 rounded-lg min-h-1/2 max-h-11/12 overflow-y-auto w-5/12">
-                <h5 className="text-text font-medium">Order Summary</h5>
+                <h5 className="text-text font-medium">Order Checkout</h5>
+
+                <div className="mt-2 p-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                    <div className="flex flex-col gap-1">
+                        <label htmlFor="payment_method" className="text-muted text-sm">Payment Method</label>
+
+                        <Select name="payment_method" onChange={
+                            (newValue) =>
+                                setOrder(currentOrder => (
+                                    {
+                                        ...currentOrder,
+                                        payment_method: newValue?.value as "cash" | "card" | "mobile" | ""
+                                    }))}
+
+                            className="border-red-500"
+                            placeholder="Select Payment Method"
+                            options={[
+                                { value: 'cash', label: 'Cash' },
+                                { value: 'card', label: 'Card' },
+                                { value: 'mobile', label: 'Mobile Payment' }
+                            ]}
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                        <label htmlFor="customer_id" className="text-muted text-sm">Customer</label>
+                         
+                        <Select
+                            isSearchable
+                            placeholder="Select Customer"
+                            name="customer_id"
+                            options={customers?.map((customer) => ({ value: customer.id, label: customer.name }))}
+                            onChange={(newValue) => setOrder(prev => ({ ... prev, customer_id: newValue?.value || null }))}
+                        />
+
+                    </div>
+                </div>
+
                 <div className="flex flex-col gap-1 mt-4 overflow-y-auto max-h-[70%] min-h-[50%] w-full p-3 custom-scrollbar">
                     {items.map((item, index) => (
                         <div key={index + crypto.randomUUID()} className="flex justify-between border-b border-black/25 py-4">
@@ -110,22 +152,6 @@ export default function CheckoutModal( {
                         <div className="flex justify-between font-semibold text-lg mt-2">
                             <span className="text-text">Total</span>
                             <span className="text-text">{formatCurrency(total)}</span>
-                        </div>
-
-                        <div className="mt-2 p-1 flex flex-wrap">
-                            <select onChange={
-                                (e: React.ChangeEvent<HTMLSelectElement>) => 
-                                    setOrder(currentOrder => (
-                                        { ...currentOrder, 
-                                            payment_method: e.target.value as "cash" | "card" | "mobile" | "" 
-                                        }))} 
-                                
-                                className="border border-black/25 rounded-md p-2 mr-2">
-                                <option value="" disabled selected>Select Payment Method</option>
-                                <option value="cash">Cash</option>
-                                <option value="card">Card</option>
-                                <option value="mobile">Mobile Payment</option>
-                            </select>
                         </div>
                     </div>
                 </div>
