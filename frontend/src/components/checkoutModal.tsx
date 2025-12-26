@@ -123,37 +123,62 @@ export default function CheckoutModal( {
                 </div>
 
                 <div className="flex flex-col gap-1 mt-4 overflow-y-auto max-h-[70%] min-h-[50%] w-full p-3 custom-scrollbar">
-                    {items.map((item, index) => (
-                        <div key={index + crypto.randomUUID()} className="flex justify-between border-b border-black/25 py-4">
-                            <span className="text-text font-semibold text-lg">{item.name} (x{item.quantity})</span>
-                            <span className="text-text font-semibold text-lg">{formatCurrency(item.price)}</span>
-                        </div>
-                    ))}
+                    <div className="max-h-[300px] overflow-y-auto custom-scrollbar border border-black/25 rounded-sm">
+                        <table className="w-full h-full border-collapse border-gray-300">
+                            <thead>
+                                <tr className="*:uppercase sticky top-0 bg-gray-50 border-b border-gray-300 drop-shadow-sm">
+                                    <th className="font-medium border-b border-gray-300 px-4 py-4 text-sm text-muted  text-left">Item</th>
+                                    <th className="font-medium border-b border-gray-300 px-4 py-4 text-sm text-muted text-left">Quantity</th>
+                                    <th className="font-medium border-b border-gray-300 px-4 py-4 text-sm text-muted text-left">Line Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {items.map((item, index) => (
+                                    <tr>
+                                        <td key={index + crypto.randomUUID()} className="px-4 py-2 border-b border-gray-300">
+                                            <span className="text-text font-semibold">{item.name}</span>
+                                            
+                                        </td>
+                                        <td key={index + crypto.randomUUID()} className="px-4 py-2 border-b border-gray-300">
+                                            <span className="text-text font-semibold">{item.quantity}</span>
+                                            
+                                        </td>
+                                        <td key={index + crypto.randomUUID()} className="px-4 py-4 border-b border-gray-300">
+                                            <span className="text-text font-semibold">{formatCurrency(item.price * item.quantity)}</span>
+                                            
+                                        </td>
+                                    </tr>
+                                
+                                ))}
+                            </tbody>
+                        </table>    
+                    </div>
 
                     <div className="mt-6 flex flex-col gap-1">
                         <div className="flex justify-between">
-                            <span className="text-text">Subtotal</span>
-                            <span className="text-text">{formatCurrency(subtotal)}</span>
+                            <span className="text-text text-sm">Subtotal</span>
+                            <span className="text-text text-sm">{formatCurrency(subtotal)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-text">Total VATable Sales</span>
-                            <span className="text-text">{formatCurrency(vatables)}</span>
+                            <span className="text-text text-sm">Total VATable Sales</span>
+                            <span className="text-text text-sm">{formatCurrency(vatables)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-text">VAT-Exempt Sales</span>
-                            <span className="text-text">{formatCurrency(exempted)}</span>
+                            <span className="text-text text-sm">VAT-Exempt Sales</span>
+                            <span className="text-text text-sm">{formatCurrency(exempted)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-text">Zero-Rated Sales</span>
-                            <span className="text-text">{formatCurrency(0)}</span>
+                            <span className="text-text text-sm">Zero-Rated Sales</span>
+                            <span className="text-text text-sm">{formatCurrency(0)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-text">VAT Amount ({vat_rate})</span>
-                            <span className="text-text">{formatCurrency(vat_amount)}</span>
+                            <span className="text-text text-sm">VAT Amount ({vat_rate})</span>
+                            <span className="text-text text-sm">{formatCurrency(vat_amount)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-text">Discounts</span>
-                            <span className="text-text">- {
+                            <span className="text-text text-sm">Discounts</span>
+                            <span className="text-text text-sm">- {
                             discounts.length > 0 ? formatCurrency(discountAmount) : formatCurrency(0)}</span>
                         </div>
                         <div className="flex justify-between font-semibold text-lg mt-2">
