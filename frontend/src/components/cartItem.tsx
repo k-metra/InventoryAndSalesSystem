@@ -28,37 +28,42 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
                 <span className="text-sm text-muted">{formatCurrency(item.price)}</span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex gap-4">
                 <button
-                    onClick={() => onUpdateQuantity(item.id,item.quantity + 1)}
-                    className="p-1 rounded-full flex items-center justify-center bg-green-200 text-green-500 hover:bg-green-300 transition-colors duration-200 ease-in-out cursor-pointer"
-                >   
-                    <IoIosAdd size={20}/>
-                </button>
-
-                <input
-                    className="no-spinner border border-black/20 text-center rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.1)_inset] w-12 py-0.5 outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in"
-                    type="number" value={currentQuantity} max={item.maxQuantity ?? 0}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentQuantity(Number(e.target.value))}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') onFocusLost(); }}
-                    onBlur={onFocusLost}
-                />
-
-                <button
-                    onClick={() => onUpdateQuantity(item.id, Math.max(0, item.quantity - 1))}
-                    className="p-1 rounded-full flex items-center justify-center bg-red-200 text-red-500 hover:bg-red-300 transition-colors duration-200 ease-in-out cursor-pointer"
+                    onClick={() => { onRemoveItem(item.id) }}
+                    title="Remove Item from Cart"
+                    className="cursor-pointer text-red-400 text-sm rounded-md border border-red-400 py-2 px-3 hover:bg-red-400 hover:text-white transition-colors duration-30 ease-in-out"
                 >
-                    <FiMinus size={20} />
+                    Remove
                 </button>
+
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => onUpdateQuantity(item.id,item.quantity + 1)}
+                        className="p-1 rounded-full flex items-center justify-center bg-green-200 text-green-500 hover:bg-green-300 transition-colors duration-200 ease-in-out cursor-pointer"
+                    >   
+                        <IoIosAdd size={20}/>
+                    </button>
+
+                    <input
+                        className="no-spinner border border-black/20 text-center rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.1)_inset] w-12 py-0.5 outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in"
+                        type="number" value={currentQuantity} max={item.maxQuantity ?? 0}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentQuantity(Number(e.target.value))}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') onFocusLost(); }}
+                        onBlur={onFocusLost}
+                    />
+
+                    <button
+                        onClick={() => onUpdateQuantity(item.id, Math.max(0, item.quantity - 1))}
+                        className="p-1 rounded-full flex items-center justify-center bg-red-200 text-red-500 hover:bg-red-300 transition-colors duration-200 ease-in-out cursor-pointer"
+                    >
+                        <FiMinus size={20} />
+                    </button>
+                </div>
+
             </div>
 
-            <button
-                onClick={() => { onRemoveItem(item.id) }}
-                title="Remove Item from Cart"
-                className="absolute right-0 top-4 -translate-y-full translate-x-3 cursor-pointer text-red-500/60 rounded-full hover:bg-red-300 transition-colors duration-30 ease-in-out"
-            >
-                <IoIosClose size={25} />
-            </button>
+
         </div>
     )
 }
