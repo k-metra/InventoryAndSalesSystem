@@ -3,6 +3,7 @@ import { type Item, type Discount, type Customer } from '@typings/objects';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Select from 'react-select';
 import useCustomers from '@/queries/customers/useCustomers';
+import { Link } from 'react-router-dom';
 
 type CheckoutModalProps = {
     subtotal: number;
@@ -91,7 +92,7 @@ export default function CheckoutModal( {
                                         payment_method: newValue?.value as "cash" | "card" | "mobile" | ""
                                     }))}
 
-                            className="border-red-500"
+                            className=""
                             placeholder="Select Payment Method"
                             options={[
                                 { value: 'cash', label: 'Cash' },
@@ -111,7 +112,13 @@ export default function CheckoutModal( {
                             options={customers?.map((customer) => ({ value: customer.id, label: customer.name }))}
                             onChange={(newValue) => setOrder(prev => ({ ... prev, customer_id: newValue?.value || null }))}
                         />
-
+                        <span className="text-muted text-right text-[12px]">
+                            Don't see them?
+                            <Link to="/dashboard/customers?create=true" className="text-primary underline ml-1" onClick={close}>
+                                Add new customer
+                            </Link>
+                            .
+                        </span>
                     </div>
                 </div>
 
