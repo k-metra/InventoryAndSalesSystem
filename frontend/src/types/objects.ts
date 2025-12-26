@@ -24,6 +24,13 @@ type Product = {
     stock: number;
 }
 
+type Customer = {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+}
+
 type Category = {
     id: number;
     name: string;
@@ -41,4 +48,4 @@ type Supplier = {
     products_count?: number;
 }
 
-export { type Category, type Supplier, type Item, type Discount, type Product };
+export { type Category, type Supplier, type Item, type Discount, type Product, type Customer };
