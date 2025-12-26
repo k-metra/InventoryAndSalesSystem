@@ -341,7 +341,7 @@ export default function POSPage() {
                     <TiShoppingCart className="inline-block ml-2" size={35} />
                 </h4>
 
-                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 flex-1 max-h-3/5 min-h-3/5 overflow-y-auto">
+                <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 flex-1 max-h-[300px] custom-scrollbar min-h-3/5 overflow-y-auto">
                     {(cart.length > 0 ) ? cart.map((item: Item, idx: number, _arr: Item[]) => (
                         <CartItem
                             key={item.id + "-" + idx + "-" + crypto.randomUUID()}
