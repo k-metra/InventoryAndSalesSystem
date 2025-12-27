@@ -15,6 +15,7 @@ class Sale extends Model
         'customer_id',
         'payment_method',
         'subtotal',
+        'amount_received',
         'discount_amount',
         'vat_rate',
         'vat_amount',
