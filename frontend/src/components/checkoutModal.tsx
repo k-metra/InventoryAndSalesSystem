@@ -21,6 +21,7 @@ type SaleBody = {
     customer_id: number | null;
     payment_method: "cash" | "card" | "mobile" | "",
     subtotal: number;
+    amount_received: number;
     discount_amount: number;
     vat_rate: number;
     vat_amount: number;
@@ -54,6 +55,7 @@ export default function CheckoutModal( {
         payment_method: '',
         subtotal: subtotal,
         discount_amount: discountAmount,
+        amount_received: 0.0,
         vat_rate: 12.0,
         vat_amount: vat_amount,
         total: total,
@@ -96,7 +98,6 @@ export default function CheckoutModal( {
                             placeholder="Select Payment Method"
                             options={[
                                 { value: 'cash', label: 'Cash' },
-                                { value: 'card', label: 'Card' },
                                 { value: 'mobile', label: 'Mobile Payment' }
                             ]}
                         />
@@ -120,7 +121,39 @@ export default function CheckoutModal( {
                             .
                         </span>
                     </div>
-                </div>
+
+                    {
+                        order.payment_method === 'cash' && (
+                        <>
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="amount_received" className="text-muted text-sm">Amount Received</label>
+                                <input
+                                    value={order.amount_received}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setOrder(prevOrder => ({ ... prevOrder, amount_received: parseFloat(e.target.value) }))
+                                    } }
+                                    
+                                    placeholder="Amount received in pesos..."
+                                    type="number"
+                                    name="amount_received"
+                                    className="no-spinner border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="change" className="text-muted text-sm">Change</label>
+                                <input
+                                    readOnly
+                                    value={order.amount_received ? formatCurrency(Math.max(order.amount_received - order.total, 0)) : formatCurrency(0)}
+                                    type="text"
+                                    name="change"
+                                    className="no-spinner border border-gray-300 rounded-sm px-3 py-2 outline-none cursor-default"
+                                />
+                            </div>
+                        </>
+                        )
+                    }
+
+                </div> 
 
                 <div className="flex flex-col gap-1 mt-4 overflow-y-auto max-h-[70%] min-h-[50%] w-full p-3 custom-scrollbar">
                     <div className="max-h-[300px] overflow-y-auto custom-scrollbar border border-black/25 rounded-sm">
