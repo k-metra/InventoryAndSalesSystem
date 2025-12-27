@@ -1,9 +1,10 @@
 import { formatCurrency } from '@utils/formatNumbers';
 import { type Item, type Discount, type Customer } from '@typings/objects';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Select from 'react-select';
 import useCustomers from '@/queries/customers/useCustomers';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/contexts/ToastContext';
 
 type CheckoutModalProps = {
     subtotal: number;
@@ -40,6 +41,8 @@ export default function CheckoutModal( {
     exempted,
     close
 }: CheckoutModalProps) {
+    const { addToast } = useToast();
+
     const modalRef = useRef<HTMLDivElement | null>(null);
     const discountAmount = useMemo(() => {
         return discounts.length > 0 ? discounts.reduce((acc, discount) => 
@@ -71,7 +74,26 @@ export default function CheckoutModal( {
         setTimeout(() => {
             close();
         }, 300);
-    }
+    };
+
+    const handleCheckout = useCallback(() => {
+        const { amount_received, total, payment_method, customer_id } = order;
+
+        if (payment_method === '' || payment_method === undefined) {
+            addToast("Please select a payment method.", 'error');
+            return;
+        }
+
+        if (amount_received == undefined || amount_received < total) {
+            addToast("Amount received is less than the total amount.", "error");
+            return;
+        }  
+
+        if (customer_id === null) {
+            addToast("Please select a customer.", "error");
+            return;
+        }
+    }, [order]);
     
     useEffect(() => {
         
@@ -230,10 +252,16 @@ export default function CheckoutModal( {
 
                     <div className="w-full flex justify-end mt-3 gap-3">
                         <button
-                            className="border border-text rounded-sm px-4 py-2 hover:bg-black/25 transition-colors duration-300 ease-in-out cursor-pointer"
+                            className="border border-text text-sm rounded-sm px-4 py-2 hover:bg-black/25 transition-colors duration-300 ease-in-out cursor-pointer"
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); handleCloseModal(); }}
                         >
                             Cancel
+                        </button>
+                        <button
+                            onClick={handleCheckout}
+                            className="bg-linear-to-r text-white text-sm from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-sm px-4 py-2 hover:bg-black/25 transition-colors duration-300 ease-in-out cursor-pointer"
+                        >
+                            Checkout
                         </button>
                     </div>
                 </div>
