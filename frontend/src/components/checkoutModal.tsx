@@ -62,14 +62,22 @@ export default function CheckoutModal( {
         items: items,
     });
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                modalRef.current.classList.remove('animate-modal-fade-in');
-                modalRef.current.classList.add('animate-modal-fade-out');
+    const handleCloseModal = () => {
+        if (modalRef.current) {
+            modalRef.current.classList.add('animate-modal-fade-out');
+            modalRef.current.classList.remove('animate-modal-fade-in');
+        }
 
-                setTimeout(() => close(), 300);
-            }
+        setTimeout(() => {
+            close();
+        }, 300);
+    }
+    
+    useEffect(() => {
+        
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) handleCloseModal();
+            
         }
 
         window.addEventListener('mousedown', handleClickOutside);
@@ -218,6 +226,15 @@ export default function CheckoutModal( {
                             <span className="text-text">Total</span>
                             <span className="text-text">{formatCurrency(total)}</span>
                         </div>
+                    </div>
+
+                    <div className="w-full flex justify-end mt-3 gap-3">
+                        <button
+                            className="border border-text rounded-sm px-4 py-2 hover:bg-black/25 transition-colors duration-300 ease-in-out cursor-pointer"
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); handleCloseModal(); }}
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </div>
