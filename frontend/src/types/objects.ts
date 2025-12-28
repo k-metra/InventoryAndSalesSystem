@@ -1,5 +1,5 @@
 type Item = {
-    id: number;
+    product_id: number;
     name: string;
     price: number;
     vat_exempt: boolean;
