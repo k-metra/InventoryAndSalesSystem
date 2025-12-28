@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('=sales', function (Blueprint $table) {
+        Schema::table('sales', function (Blueprint $table) {
             $table->decimal('amount_received', 10, 2)->after('subtotal')->default(0);
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('=sales', function (Blueprint $table) {
+        Schema::table('sales', function (Blueprint $table) {
             $table->dropColumn('amount_received');
         });
     }
