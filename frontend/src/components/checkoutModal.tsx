@@ -5,6 +5,11 @@ import Select from 'react-select';
 import useCustomers from '@/queries/customers/useCustomers';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
+import { FaSpinner } from 'react-icons/fa';
+import { type SalesBody } from "@typings/requests";
+import useSalesMutation from '@/queries/pos/useSalesMutation';
+import type { AxiosResponse } from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 
 type CheckoutModalProps = {
     subtotal: number;
@@ -41,7 +46,10 @@ export default function CheckoutModal( {
     exempted,
     close
 }: CheckoutModalProps) {
+    const queryClient = useQueryClient();
     const { addToast } = useToast();
+
+    const salesMutation = useSalesMutation();
 
     const modalRef = useRef<HTMLDivElement | null>(null);
     const discountAmount = useMemo(() => {
@@ -50,10 +58,12 @@ export default function CheckoutModal( {
             : 0;
     }, [discounts, subtotal]);
 
+    const [checkingOut, setCheckingOut] = useState(false);
+
     const { data: customers }: { data: Customer[] | undefined } = useCustomers(false);
 
 
-    const [order, setOrder] = useState<SaleBody>({
+    const [order, setOrder] = useState<SalesBody>({
         customer_id: null,
         payment_method: '',
         subtotal: subtotal,
@@ -93,6 +103,28 @@ export default function CheckoutModal( {
             addToast("Please select a customer.", "error");
             return;
         }
+
+        setCheckingOut(true);
+
+        salesMutation.mutate(order, 
+            {
+                onSuccess: (_resp: AxiosResponse) => {
+                    handleCloseModal();
+                    addToast("Sale added successfully.");
+
+                    queryClient.invalidateQueries({ queryKey: ['sales'] });
+                    queryClient.invalidateQueries({ queryKey: ['products'] });
+                },
+
+                onError: (reason: any) => {
+                    console.error("Error during checkout:", reason);
+                    addToast("An error occurred during checkout. Please try again.", "error");
+                },
+
+                onSettled: () => setCheckingOut(false)
+            }
+        );
+
     }, [order]);
     
     useEffect(() => {
@@ -259,9 +291,17 @@ export default function CheckoutModal( {
                         </button>
                         <button
                             onClick={handleCheckout}
-                            className="bg-linear-to-r text-white text-sm from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-sm px-4 py-2 hover:bg-black/25 transition-colors duration-300 ease-in-out cursor-pointer"
+                            className="bg-linear-to-r text-white text-sm from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-sm px-4 py-2 hover:bg-black/25 transition-colors duration-300 ease-in-out cursor-pointer flex items-center justify-center gap-2"
+                            style={{
+                                cursor: checkingOut ? 'not-allowed' : 'pointer',
+                                opacity: checkingOut ? 0.7 : 1
+                            }}
                         >
                             Checkout
+
+                            {checkingOut &&
+                                <FaSpinner className="animate-spin" />
+                            }
                         </button>
                     </div>
                 </div>
