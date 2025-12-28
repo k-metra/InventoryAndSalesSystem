@@ -23,7 +23,7 @@ A web-based Inventory & Sales System designed to help businesses manage products
   - [x] Basic session management
   - [x] 'Remember Me' feature
 - **Sales Tab:**
-  - [ ] Record new sales transactions
+  - [x] Record new sales transactions
   - [ ] Track sales history and generate reports
 - **Inventory Management:**
   - [x] Automatic stock adjustments based on sales and purchases

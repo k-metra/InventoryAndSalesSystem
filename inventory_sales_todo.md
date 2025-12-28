@@ -35,7 +35,7 @@
 ---
 
 ## 3. **Inventory Management**
-- [ ] Real-time stock updates  
+- [x] Real-time stock updates  
 - [ ] Inventory history logs  
   - stock in  
   - stock out  
@@ -47,29 +47,29 @@
 
 ## 4. **Sales Module**
 ### Backend
-- [ ] Sales model + migration  
+- [x] Sales model + migration  
   - product_id  
   - quantity  
   - total_price  
   - customer_id  
   - payment method  
   - created_at  
-- [ ] Endpoint to create a sale (auto reduce stock)
-- [ ] Endpoint to list sales
+- [x] Endpoint to create a sale (auto reduce stock)
+- [x] Endpoint to list sales
 
 ### Frontend
-- [ ] Sales POS-like UI  
-- [ ] Add multiple items to cart  
-- [ ] Checkout modal  
+- [x] Sales POS-like UI  
+- [x] Add multiple items to cart  
+- [x] Checkout modal  
 - [ ] Sales history page  
 
 ---
 
 ## 5. **Customers Module**
-- [ ] Customer model + migration  
-- [ ] CRUD endpoints  
-- [ ] Customer listing page  
-- [ ] Add/Edit/Delete customer  
+- [x] Customer model + migration  
+- [x] CRUD endpoints  
+- [x] Customer listing page  
+- [x] Add/Edit/Delete customer  
 
 ---
 
@@ -84,12 +84,12 @@
 ## 7. **Dashboard & Analytics**
 - [x] Total Products  
 - [x] Total Inventory Value  
-- [ ] Total Sales (monthly)  
-- [ ] Total Customers  
+- [x] Total Sales (monthly)  
+- [x] Total Customers  
 - [ ] Charts:
   - [x] Sales over time  
   - [x] Low stock items  
-  - Category distribution  
+  - [ ] Category distribution  
 
 ---
 
