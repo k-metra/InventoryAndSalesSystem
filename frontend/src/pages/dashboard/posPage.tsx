@@ -47,11 +47,11 @@ export default function POSPage() {
 
     const updateItemQuantity = useCallback((itemId: number, newQuantity: number) => {
         if (newQuantity <= 0) {
-            setCart(prevCart => prevCart.filter(item => item.id !== itemId));
+            setCart(prevCart => prevCart.filter(item => item.product_id !== itemId));
         } else {
             setCart(prevCart => {
                 return prevCart.map(item => {
-                    if (item.id === itemId) {
+                    if (item.product_id === itemId) {
                         return { ...item, quantity: Math.min(newQuantity, item.maxQuantity ?? 0) }
                     }
 
@@ -63,7 +63,7 @@ export default function POSPage() {
     }, [setCart]);
 
     const onItemRemove = useCallback((itemId: number) => {
-        setCart(prevCart => { return prevCart.filter(item => item.id !== itemId); })
+        setCart(prevCart => { return prevCart.filter(item => item.product_id !== itemId); })
     }, [setCart])
 
     useEffect(() => {
@@ -301,13 +301,13 @@ export default function POSPage() {
                                         title={product.stock <= 0 ? "Out of stock" : "Add to cart"}
                                         disabled={product.stock <= 0}
                                         onClick={() => {
-                                            const existingItem = cart.find(item => item.id === product.id);
+                                            const existingItem = cart.find(item => item.product_id === product.id);
 
                                             if (existingItem) {
                                                 updateItemQuantity(product.id, existingItem.quantity + 1);
                                             } else {
                                                 const { id, name, vat_exempt, price } = product;
-                                                const newItem: Item = { id, name, vat_exempt, price, quantity: 1, maxQuantity: product.stock };
+                                                const newItem: Item = { product_id: id, name: name, vat_exempt: vat_exempt, price: price, quantity: 1, maxQuantity: product.stock };
 
                                                 setCart(prevCart => [...prevCart, newItem]);
                                             }
@@ -344,7 +344,7 @@ export default function POSPage() {
                 <div className="flex flex-col gap-2 bg-white border border-black/25 rounded-md p-4 flex-1 max-h-[300px] custom-scrollbar min-h-3/5 overflow-y-auto">
                     {(cart.length > 0 ) ? cart.map((item: Item, idx: number, _arr: Item[]) => (
                         <CartItem
-                            key={item.id + "-" + idx + "-" + crypto.randomUUID()}
+                            key={item.product_id + "-" + idx + "-" + crypto.randomUUID()}
                             item={item}
                             onUpdateQuantity={updateItemQuantity}
                             onRemoveItem={onItemRemove}

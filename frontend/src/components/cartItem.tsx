@@ -18,8 +18,8 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
         newQuantity = Math.min(newQuantity, item.maxQuantity ?? 0);
         
-        onUpdateQuantity(item.id, newQuantity);
-    }, [currentQuantity, item.id, item.maxQuantity, onUpdateQuantity]);
+        onUpdateQuantity(item.product_id, newQuantity);
+    }, [currentQuantity, item.product_id, item.maxQuantity, onUpdateQuantity]);
 
     return (
         <div className="relative group flex justify-between items-center border-b border-b-black/25 pb-4 py-2">
@@ -30,7 +30,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
             <div className="flex gap-4">
                 <button
-                    onClick={() => { onRemoveItem(item.id) }}
+                    onClick={() => { onRemoveItem(item.product_id) }}
                     title="Remove Item from Cart"
                     className="cursor-pointer text-red-400 text-sm rounded-md border border-red-400 py-2 px-3 hover:bg-red-400 hover:text-white transition-colors duration-30 ease-in-out"
                 >
@@ -39,7 +39,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
 
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={() => onUpdateQuantity(item.id,item.quantity + 1)}
+                        onClick={() => onUpdateQuantity(item.product_id,item.quantity + 1)}
                         className="p-1 rounded-full flex items-center justify-center bg-green-200 text-green-500 hover:bg-green-300 transition-colors duration-200 ease-in-out cursor-pointer"
                     >   
                         <IoIosAdd size={20}/>
@@ -54,7 +54,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartI
                     />
 
                     <button
-                        onClick={() => onUpdateQuantity(item.id, Math.max(0, item.quantity - 1))}
+                        onClick={() => onUpdateQuantity(item.product_id, Math.max(0, item.quantity - 1))}
                         className="p-1 rounded-full flex items-center justify-center bg-red-200 text-red-500 hover:bg-red-300 transition-colors duration-200 ease-in-out cursor-pointer"
                     >
                         <FiMinus size={20} />
