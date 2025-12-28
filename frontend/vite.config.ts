@@ -16,6 +16,8 @@ export default defineConfig({
       '@assets': '/src/assets',
       '@typings': '/src/types',
       '@utils': '/src/utils',
+      '@api': '/src/axios',
+      '@queries': '/src/queries',
       '@': '/src',
     }
   }

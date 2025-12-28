@@ -8,6 +8,8 @@
       "@assets/*": ["src/assets/*"],
       "@typings/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"],
+      "@api/*": ["src/axios/*"],
+      "@queries/*": ["src/queries/*"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
