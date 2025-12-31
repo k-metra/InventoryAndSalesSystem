@@ -28,6 +28,8 @@ class ProductController extends Controller
         $category = $request->query('category');
         $supplier = $request->query('supplier');
 
+        // Happy new year !!!
+
         // True by default
         $prioritizeLowStock = $request->query('prioritizeLowStock') === 'true' || $request->query('prioritizeLowStock') === null;
 
