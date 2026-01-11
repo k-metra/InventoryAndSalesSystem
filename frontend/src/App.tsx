@@ -22,6 +22,7 @@ import SuppliersPage from './pages/dashboard/suppliersPage';
 import CustomersPage from './pages/dashboard/customersPage';
 import SalesPage from './pages/salesPage';
 import POSPage from './pages/dashboard/posPage';
+import SalesHistoryPage from './pages/dashboard/salesHistoryPage';
 
 
 const DashboardHome = lazy(() => import('./pages/dashboard/dashboardHome'));
@@ -75,6 +76,11 @@ function AppContent() {
               <Route
                 path="pos"
                 element={ <POSPage /> }
+              />
+
+              <Route
+                path="sales-history"
+                element={ <SalesHistoryPage /> }
               />
             </Route>
 
